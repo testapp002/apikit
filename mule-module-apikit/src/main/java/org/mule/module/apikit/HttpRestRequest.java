@@ -277,7 +277,7 @@ public class HttpRestRequest
             if (logger.isDebugEnabled())
             {
                 logger.debug(String.format("comparing request media type %s with expected %s\n",
-                                           requestMimeTypeName, mimeTypeName));
+                                           requestMimeTypeName, UrlUtils.getRequestMediaType(mimeTypeName)));
             }
             if (mimeTypeName.equals(requestMimeTypeName))
             {

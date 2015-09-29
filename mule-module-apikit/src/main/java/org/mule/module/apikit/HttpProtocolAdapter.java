@@ -100,7 +100,7 @@ public class HttpProtocolAdapter
 
     public String getRequestMediaType()
     {
-        return requestMediaType != null ? requestMediaType.split(";")[0] : null;
+        return UrlUtils.getRequestMediaType(this.requestMediaType);
     }
 
     public Map<String, Object> getQueryParams()

@@ -100,4 +100,8 @@ public class UrlUtils
         return path;
     }
 
+    public static String getRequestMediaType(String requestMediaType)
+    {
+        return requestMediaType != null ? requestMediaType.split(";")[0] : null;
+    }
 }
