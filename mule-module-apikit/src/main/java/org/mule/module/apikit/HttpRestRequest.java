@@ -48,6 +48,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -141,6 +142,7 @@ public class HttpRestRequest
         for (String expectedKey : action.getQueryParameters().keySet())
         {
             IParameter expected = action.getQueryParameters().get(expectedKey);
+            //Object actual = URLDecoder.decode(((Map) requestEvent.getMessage().getInboundProperty("http.query.params")).get(expectedKey).toString());
             Object actual = ((Map) requestEvent.getMessage().getInboundProperty("http.query.params")).get(expectedKey);
             if (actual == null && expected.isRequired())
             {
