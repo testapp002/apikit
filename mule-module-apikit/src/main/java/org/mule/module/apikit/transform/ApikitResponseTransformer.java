@@ -6,14 +6,14 @@
  */
 package org.mule.module.apikit.transform;
 
-import org.mule.api.MuleMessage;
-import org.mule.api.transformer.DataType;
-import org.mule.api.transformer.Transformer;
-import org.mule.api.transformer.TransformerException;
+import org.mule.runtime.core.api.MuleMessage;
+import org.mule.runtime.api.metadata.DataType;
+import org.mule.runtime.core.api.transformer.Transformer;
+import org.mule.runtime.core.api.transformer.TransformerException;
 import org.mule.module.apikit.RestContentTypeParser;
 import org.mule.module.apikit.exception.ApikitRuntimeException;
 import org.mule.raml.interfaces.model.IMimeType;
-import org.mule.transformer.AbstractMessageTransformer;
+import org.mule.runtime.core.transformer.AbstractMessageTransformer;
 import org.mule.transformer.types.DataTypeFactory;
 import org.mule.transport.NullPayload;
 

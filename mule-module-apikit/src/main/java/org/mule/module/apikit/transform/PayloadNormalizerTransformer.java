@@ -6,12 +6,12 @@
  */
 package org.mule.module.apikit.transform;
 
-import org.mule.api.MuleMessage;
-import org.mule.api.transformer.DataType;
-import org.mule.api.transformer.Transformer;
-import org.mule.api.transformer.TransformerException;
-import org.mule.config.i18n.MessageFactory;
-import org.mule.transformer.AbstractMessageTransformer;
+import org.mule.runtime.core.api.MuleMessage;
+import org.mule.runtime.api.metadata.DataType;
+import org.mule.runtime.core.api.transformer.Transformer;
+import org.mule.runtime.core.api.transformer.TransformerException;
+import org.mule.runtime.core.config.i18n.MessageFactory;
+import org.mule.runtime.core.transformer.AbstractMessageTransformer;
 import org.mule.transformer.types.DataTypeFactory;
 
 public class PayloadNormalizerTransformer extends AbstractMessageTransformer

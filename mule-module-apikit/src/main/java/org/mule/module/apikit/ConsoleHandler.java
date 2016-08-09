@@ -7,11 +7,11 @@
 
 package org.mule.module.apikit;
 
-import org.mule.DefaultMuleEvent;
+import org.mule.runtime.core.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
-import org.mule.api.MuleEvent;
-import org.mule.api.MuleException;
-import org.mule.api.processor.MessageProcessor;
+import org.mule.runtime.core.api.MuleEvent;
+import org.mule.runtime.core.api.MuleException;
+import org.mule.runtime.core.api.processor.MessageProcessor;
 import org.mule.module.apikit.exception.NotFoundException;
 import org.mule.transformer.types.MimeTypes;
 import org.mule.transport.http.HttpConnector;

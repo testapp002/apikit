@@ -6,10 +6,10 @@
  */
 package org.mule.module.apikit;
 
-import static org.mule.transport.http.HttpConnector.HTTP_STATUS_PROPERTY;
+import static org.mule.compatibility.transport.http.HttpConnector.HTTP_STATUS_PROPERTY;
 
-import org.mule.api.MuleEvent;
-import org.mule.exception.CatchMessagingExceptionStrategy;
+import org.mule.runtime.core.api.MuleEvent;
+import org.mule.runtime.core.exception.CatchMessagingExceptionStrategy;
 
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.mule.module.apikit.exception.ApikitRuntimeException;
-import org.mule.util.ClassUtils;
+import org.mule.runtime.core.util.ClassUtils;
 
 public class MappingExceptionListener extends CatchMessagingExceptionStrategy
 {

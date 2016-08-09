@@ -7,14 +7,14 @@
 
 package org.mule.module.apikit.transform;
 
-import org.mule.api.MuleContext;
-import org.mule.api.MuleException;
+import org.mule.runtime.core.api.MuleContext;
+import org.mule.runtime.core.api.MuleException;
 import org.mule.api.transformer.DataType;
-import org.mule.api.transformer.Transformer;
-import org.mule.module.json.transformers.JsonToObject;
-import org.mule.module.json.transformers.ObjectToJson;
-import org.mule.module.xml.transformer.jaxb.JAXBMarshallerTransformer;
-import org.mule.module.xml.transformer.jaxb.JAXBUnmarshallerTransformer;
+import org.mule.runtime.core.api.transformer.Transformer;
+import org.mule.runtime.module.json.transformers.JsonToObject;
+import org.mule.runtime.module.json.transformers.ObjectToJson;
+import org.mule.runtime.module.xml.transformer.jaxb.JAXBMarshallerTransformer;
+import org.mule.runtime.module.xml.transformer.jaxb.JAXBUnmarshallerTransformer;
 import org.mule.transformer.types.MimeTypes;
 
 import com.google.common.cache.CacheLoader;

@@ -9,10 +9,10 @@ package org.mule.module.apikit;
 
 import static org.mule.module.apikit.AbstractConfiguration.APPLICATION_RAML;
 
-import org.mule.api.MuleEvent;
-import org.mule.api.MuleException;
+import org.mule.runtime.core.api.MuleEvent;
+import org.mule.runtime.core.api.MuleException;
 import org.mule.transformer.types.DataTypeFactory;
-import org.mule.transport.http.HttpConstants;
+import org.mule.compatibility.transport.http.HttpConstants;
 
 import org.raml.model.ActionType;
 

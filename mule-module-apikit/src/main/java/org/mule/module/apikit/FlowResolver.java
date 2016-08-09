@@ -6,7 +6,7 @@
  */
 package org.mule.module.apikit;
 
-import org.mule.construct.Flow;
+import org.mule.runtime.core.construct.Flow;
 
 /**
  * Allows the wrapping of flows on demand in order to inject custom logic.

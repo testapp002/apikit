@@ -6,16 +6,16 @@
  */
 package org.mule.module.apikit;
 
-import org.mule.api.MuleEvent;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.mule.api.lifecycle.StartException;
-import org.mule.api.registry.RegistrationException;
+import org.mule.runtime.core.api.MuleEvent;
+import org.mule.runtime.core.api.MuleException;
+import org.mule.runtime.core.api.MuleMessage;
+import org.mule.runtime.core.api.lifecycle.StartException;
+import org.mule.runtime.core.api.registry.RegistrationException;
 import org.mule.api.transport.PropertyScope;
-import org.mule.config.i18n.MessageFactory;
-import org.mule.construct.Flow;
+import org.mule.runtime.core.config.i18n.MessageFactory;
+import org.mule.runtime.core.construct.Flow;
 import org.mule.raml.interfaces.model.IResource;
-import org.mule.util.WildcardAttributeEvaluator;
+import org.mule.runtime.core.util.WildcardAttributeEvaluator;
 
 import java.util.ArrayList;
 import java.util.Arrays;

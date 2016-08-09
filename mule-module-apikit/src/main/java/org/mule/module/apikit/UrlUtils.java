@@ -6,13 +6,13 @@
  */
 package org.mule.module.apikit;
 
-import static org.mule.transport.http.HttpConnector.HTTP_CONTEXT_PATH_PROPERTY;
-import static org.mule.transport.http.HttpConnector.HTTP_REQUEST_PATH_PROPERTY;
+import static org.mule.compatibility.transport.http.HttpConnector.HTTP_CONTEXT_PATH_PROPERTY;
+import static org.mule.compatibility.transport.http.HttpConnector.HTTP_REQUEST_PATH_PROPERTY;
 
-import org.mule.api.MuleEvent;
-import org.mule.api.MuleMessage;
+import org.mule.runtime.core.api.MuleEvent;
+import org.mule.runtime.core.api.MuleMessage;
 import org.mule.module.apikit.exception.ApikitRuntimeException;
-import org.mule.util.StringUtils;
+import org.mule.runtime.core.util.StringUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;

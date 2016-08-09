@@ -6,13 +6,13 @@
  */
 package org.mule.module.apikit;
 
-import org.mule.api.GlobalNameableObject;
-import org.mule.api.MuleEvent;
-import org.mule.api.exception.MessagingExceptionHandlerAcceptor;
-import org.mule.api.processor.MessageProcessorContainer;
-import org.mule.api.processor.MessageProcessorPathElement;
-import org.mule.message.DefaultExceptionPayload;
-import org.mule.processor.AbstractMuleObjectOwner;
+import org.mule.runtime.core.api.GlobalNameableObject;
+import org.mule.runtime.core.api.MuleEvent;
+import org.mule.runtime.core.api.exception.MessagingExceptionHandlerAcceptor;
+import org.mule.runtime.core.api.processor.MessageProcessorContainer;
+import org.mule.runtime.core.api.processor.MessageProcessorPathElement;
+import org.mule.runtime.core.message.DefaultExceptionPayload;
+import org.mule.runtime.core.processor.AbstractMuleObjectOwner;
 
 import java.util.List;
 

@@ -6,7 +6,7 @@
  */
 package org.mule.module.apikit.transform;
 
-import org.mule.api.transformer.DataType;
+import org.mule.runtime.api.metadata.DataType;;
 
 public class DataTypePair
 {

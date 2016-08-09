@@ -6,9 +6,9 @@
  */
 package org.mule.module.apikit.transform;
 
-import org.mule.api.MuleContext;
-import org.mule.api.registry.RegistrationException;
-import org.mule.api.transformer.Transformer;
+import org.mule.runtime.core.api.MuleContext;
+import org.mule.runtime.core.api.registry.RegistrationException;
+import org.mule.runtime.core.api.transformer.Transformer;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;

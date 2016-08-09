@@ -6,11 +6,11 @@
  */
 package org.mule.module.apikit.config;
 
-import org.mule.config.spring.handlers.MuleNamespaceHandler;
-import org.mule.config.spring.parsers.collection.ChildListEntryDefinitionParser;
-import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
-import org.mule.config.spring.parsers.generic.MuleOrphanDefinitionParser;
-import org.mule.config.spring.parsers.specific.ExceptionStrategyDefinitionParser;
+import org.mule.runtime.config.spring.handlers.MuleNamespaceHandler;
+import org.mule.runtime.config.spring.parsers.collection.ChildListEntryDefinitionParser;
+import org.mule.runtime.config.spring.parsers.generic.ChildDefinitionParser;
+import org.mule.runtime.config.spring.parsers.generic.MuleOrphanDefinitionParser;
+import org.mule.runtime.config.spring.parsers.specific.ExceptionStrategyDefinitionParser;
 import org.mule.module.apikit.Configuration;
 import org.mule.module.apikit.Console;
 import org.mule.module.apikit.FlowMapping;

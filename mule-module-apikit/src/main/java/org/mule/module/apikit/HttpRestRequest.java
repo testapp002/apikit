@@ -12,13 +12,13 @@ import static org.mule.module.apikit.transform.ApikitResponseTransformer.BEST_MA
 import static org.mule.module.apikit.transform.ApikitResponseTransformer.CONTRACT_MIME_TYPES;
 
 import org.mule.DefaultMuleMessage;
-import org.mule.api.MuleEvent;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
+import org.mule.runtime.core.api.MuleEvent;
+import org.mule.runtime.core.api.MuleException;
+import org.mule.runtime.core.api.MuleMessage;
 import org.mule.api.transformer.DataType;
-import org.mule.api.transformer.TransformerException;
+import org.mule.runtime.core.api.transformer.TransformerException;
 import org.mule.api.transport.PropertyScope;
-import org.mule.message.ds.StringDataSource;
+import org.mule.runtime.core.message.ds.StringDataSource;
 import org.mule.module.apikit.exception.BadRequestException;
 import org.mule.module.apikit.exception.InvalidFormParameterException;
 import org.mule.module.apikit.exception.InvalidHeaderException;
@@ -32,15 +32,15 @@ import org.mule.module.apikit.validation.RestSchemaValidatorFactory;
 import org.mule.module.apikit.validation.RestXmlSchemaValidator;
 import org.mule.module.apikit.validation.SchemaType;
 import org.mule.module.apikit.validation.cache.SchemaCacheUtils;
-import org.mule.module.http.internal.ParameterMap;
+import org.mule.runtime.module.http.internal.ParameterMap;
 import org.mule.raml.interfaces.model.IAction;
 import org.mule.raml.interfaces.model.IMimeType;
 import org.mule.raml.interfaces.model.IResponse;
 import org.mule.raml.interfaces.model.parameter.IParameter;
 import org.mule.transformer.types.DataTypeFactory;
-import org.mule.transport.http.transformers.FormTransformer;
-import org.mule.util.CaseInsensitiveHashMap;
-import org.mule.util.IOUtils;
+import org.mule.compatibility.transport.http.transformers.FormTransformer;
+import org.mule.runtime.core.util.CaseInsensitiveHashMap;
+import org.mule.runtime.core.util.IOUtils;
 
 import com.google.common.net.MediaType;
 

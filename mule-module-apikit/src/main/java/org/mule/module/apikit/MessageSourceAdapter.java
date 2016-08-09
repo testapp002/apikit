@@ -6,11 +6,11 @@
  */
 package org.mule.module.apikit;
 
-import org.mule.api.endpoint.ImmutableEndpoint;
-import org.mule.api.source.MessageSource;
+import org.mule.compatibility.core.api.endpoint.ImmutableEndpoint;
+import org.mule.runtime.core.api.source.MessageSource;
 import org.mule.module.apikit.exception.ApikitRuntimeException;
-import org.mule.module.http.internal.listener.DefaultHttpListener;
-import org.mule.module.http.internal.listener.DefaultHttpListenerConfig;
+import org.mule.runtime.module.http.internal.listener.DefaultHttpListener;
+import org.mule.runtime.module.http.internal.listener.DefaultHttpListenerConfig;
 
 public class MessageSourceAdapter
 {

@@ -6,12 +6,12 @@
  */
 package org.mule.module.apikit;
 
-import org.mule.api.MuleEvent;
-import org.mule.api.MuleException;
-import org.mule.api.lifecycle.StartException;
-import org.mule.api.registry.RegistrationException;
-import org.mule.config.i18n.MessageFactory;
-import org.mule.construct.Flow;
+import org.mule.runtime.core.api.MuleEvent;
+import org.mule.runtime.core.api.MuleException;
+import org.mule.runtime.core.api.lifecycle.StartException;
+import org.mule.runtime.core.api.registry.RegistrationException;
+import org.mule.runtime.core.config.i18n.MessageFactory;
+import org.mule.runtime.core.construct.Flow;
 import org.mule.raml.interfaces.model.IResource;
 
 import java.util.Map;
