@@ -28,6 +28,7 @@ import org.mule.module.apikit.exception.MuleRestException;
 import org.mule.module.apikit.uri.ResolvedVariables;
 import org.mule.module.apikit.uri.URIPattern;
 import org.mule.module.apikit.uri.URIResolver;
+import org.mule.runtime.core.message.DefaultMuleMessageBuilder;
 import org.mule.runtime.core.processor.AbstractRequestResponseMessageProcessor;
 import org.mule.raml.interfaces.model.IResource;
 import org.mule.raml.interfaces.model.parameter.IParameter;
@@ -264,18 +265,21 @@ public abstract class AbstractRouter extends AbstractRequestResponseMessageProce
                 }
             }
         }
-
-        Map<String, String> uriParams = new HashMap<>();
-        for (String name : resolvedVariables.names())
-        {
-            String value = String.valueOf(resolvedVariables.get(name));
-            event.getMessage().setInvocationProperty(name, value);
-            uriParams.put(name, value);
-        }
-        if (event.getMessage().getInboundProperty(HTTP_URI_PARAMS) != null)
-        {
-            event.getMessage().<Map>getInboundProperty(HTTP_URI_PARAMS).putAll(uriParams);
-        }
+        //TODO: We can use event.getMessage().getAttributes().getUriParams() to read the resolved params.
+        //Map<String, String> uriParams = new HashMap<>();
+        //for (String name : resolvedVariables.names())
+        //{
+        //    String value = String.valueOf(resolvedVariables.get(name));
+        //    event.setFlowVariable(name, value);
+        //    uriParams.put(name, value);
+        //}
+        //if (event.getMessage().getInboundProperty(HTTP_URI_PARAMS) != null)
+        //{
+        //    DefaultMuleMessageBuilder muleMessageBuilder = new DefaultMuleMessageBuilder(event.getMessage());
+        //
+        //    event.getMessage().<Map>getInboundProperty(HTTP_URI_PARAMS).putAll(uriParams);
+        //    ((HttpRequestAttriutes)event.getMessage().getAttributes())(HTTP_URI_PARAMS)
+        //}
     }
 
     protected abstract Flow getFlow(IResource resource, HttpRestRequest request);

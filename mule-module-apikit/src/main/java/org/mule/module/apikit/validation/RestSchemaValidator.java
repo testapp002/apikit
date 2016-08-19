@@ -6,7 +6,7 @@
  */
 package org.mule.module.apikit.validation;
 
-import org.mule.api.MuleEvent;
+import org.mule.runtime.core.api.MuleEvent;
 import org.mule.module.apikit.exception.BadRequestException;
 import org.mule.raml.interfaces.model.IRaml;
 

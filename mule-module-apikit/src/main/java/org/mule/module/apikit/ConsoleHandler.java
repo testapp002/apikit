@@ -8,19 +8,19 @@
 package org.mule.module.apikit;
 
 import org.mule.runtime.core.DefaultMuleEvent;
-import org.mule.DefaultMuleMessage;
+import org.mule.DefaultMuleMessage; // TODO does not exist
 import org.mule.runtime.core.api.MuleEvent;
 import org.mule.runtime.core.api.MuleException;
 import org.mule.runtime.core.api.processor.MessageProcessor;
 import org.mule.module.apikit.exception.NotFoundException;
-import org.mule.transformer.types.MimeTypes;
-import org.mule.transport.http.HttpConnector;
-import org.mule.transport.http.HttpConstants;
-import org.mule.transport.http.components.ResourceNotFoundException;
-import org.mule.transport.http.i18n.HttpMessages;
-import org.mule.util.FilenameUtils;
-import org.mule.util.IOUtils;
-import org.mule.util.StringUtils;
+import org.mule.transformer.types.MimeTypes; // TODO: Does not exist
+import org.mule.transport.http.HttpConnector; //TODO: It is located in the compatbility package
+import org.mule.runtime.module.http.api.HttpConstants;
+import org.mule.runtime.module.http.internal.component.ResourceNotFoundException;
+import org.mule.transport.http.i18n.HttpMessages; // TODO: it is in the compatibility package. it has messages only, check if we can copy this.
+import org.mule.runtime.core.util.FilenameUtils;
+import org.mule.runtime.core.util.IOUtils;
+import org.mule.runtime.core.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

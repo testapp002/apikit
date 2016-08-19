@@ -6,7 +6,7 @@
  */
 package org.mule.module.apikit.validation;
 
-import org.mule.api.MuleContext;
+import org.mule.runtime.core.api.MuleContext;
 
 public final class RestSchemaValidatorFactory
 {

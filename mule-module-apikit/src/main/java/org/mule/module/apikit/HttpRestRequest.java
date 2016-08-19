@@ -125,14 +125,14 @@ public class HttpRestRequest
 
         if (responseMimeTypes != null)
         {
-            requestEvent.getMessage().setInvocationProperty(CONTRACT_MIME_TYPES, responseMimeTypes);
+            requestEvent.setFlowVariable(CONTRACT_MIME_TYPES, responseMimeTypes);
         }
         if (responseRepresentation != null)
         {
-            requestEvent.getMessage().setInvocationProperty(BEST_MATCH_REPRESENTATION, responseRepresentation);
+            requestEvent.setFlowVariable(BEST_MATCH_REPRESENTATION, responseRepresentation);
         }
-        requestEvent.getMessage().setInvocationProperty(APIKIT_ROUTER_REQUEST, "yes");
-        requestEvent.getMessage().setInvocationProperty(ACCEPT_HEADER, adapter.getAcceptableResponseMediaTypes());
+        requestEvent.setFlowVariable(APIKIT_ROUTER_REQUEST, "yes");
+        requestEvent.setFlowVariable(ACCEPT_HEADER, adapter.getAcceptableResponseMediaTypes());
         return requestEvent;
     }
 

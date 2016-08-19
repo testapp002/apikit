@@ -67,7 +67,8 @@ public class MappingExceptionListener extends CatchMessagingExceptionStrategy
     @Override
     protected MuleEvent afterRouting(Exception exception, MuleEvent event)
     {
-        event.getMessage().setOutboundProperty(HTTP_STATUS_PROPERTY, statusCode);
+        //TODO outbound properties cannot be set
+        //event.getMessage().setOutboundProperty(HTTP_STATUS_PROPERTY, statusCode);
         return event;
     }
 

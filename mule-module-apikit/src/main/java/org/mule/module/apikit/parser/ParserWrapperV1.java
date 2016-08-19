@@ -15,7 +15,7 @@ import org.mule.module.apikit.exception.ApikitRuntimeException;
 import org.mule.module.apikit.injector.RamlUpdater;
 import org.mule.raml.implv1.model.RamlImplV1;
 import org.mule.raml.interfaces.model.IRaml;
-import org.mule.util.BeanUtils;
+import org.mule.runtime.core.util.BeanUtils;
 
 import java.io.InputStream;
 import java.util.ArrayList;

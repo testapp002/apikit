@@ -6,9 +6,9 @@
  */
 package org.mule.module.apikit.spi;
 
-import org.mule.api.MuleEvent;
-import org.mule.api.MuleException;
-import org.mule.processor.AbstractRequestResponseMessageProcessor;
+import org.mule.runtime.core.api.MuleEvent;
+import org.mule.runtime.core.api.MuleException;
+import org.mule.runtime.core.processor.AbstractRequestResponseMessageProcessor;
 
 /**
  * Extension (SPI) for the APIKit Module
