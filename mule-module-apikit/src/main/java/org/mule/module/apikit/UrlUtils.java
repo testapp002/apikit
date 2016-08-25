@@ -6,8 +6,8 @@
  */
 package org.mule.module.apikit;
 
-import static org.mule.compatibility.transport.http.HttpConnector.HTTP_CONTEXT_PATH_PROPERTY;
-import static org.mule.compatibility.transport.http.HttpConnector.HTTP_REQUEST_PATH_PROPERTY;
+//import static org.mule.compatibility.transport.http.HttpConnector.HTTP_CONTEXT_PATH_PROPERTY;
+//import static org.mule.compatibility.transport.http.HttpConnector.HTTP_REQUEST_PATH_PROPERTY;
 
 import org.mule.runtime.core.api.MuleEvent;
 import org.mule.runtime.core.api.MuleMessage;
@@ -19,6 +19,8 @@ import java.net.URL;
 
 public class UrlUtils
 {
+    public static final String HTTP_CONTEXT_PATH_PROPERTY = "http.context.path";
+    public static final String HTTP_REQUEST_PATH_PROPERTY = "http.request.path";
 
     public static String getBaseSchemeHostPort(MuleEvent event)
     {

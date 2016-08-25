@@ -6,7 +6,7 @@
  */
 package org.mule.module.apikit;
 
-import static org.mule.compatibility.transport.http.HttpConnector.HTTP_STATUS_PROPERTY;
+//import static org.mule.compatibility.transport.http.HttpConnector.HTTP_STATUS_PROPERTY;
 
 import org.mule.runtime.core.api.MuleEvent;
 import org.mule.runtime.core.exception.CatchMessagingExceptionStrategy;

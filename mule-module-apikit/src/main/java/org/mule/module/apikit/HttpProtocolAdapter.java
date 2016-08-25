@@ -6,9 +6,9 @@
  */
 package org.mule.module.apikit;
 
-import static org.mule.compatibility.transport.http.HttpConnector.HTTP_METHOD_PROPERTY;
-import static org.mule.compatibility.transport.http.HttpConnector.HTTP_QUERY_PARAMS;
-import static org.mule.compatibility.transport.http.HttpConnector.HTTP_REQUEST_PATH_PROPERTY;
+//import static org.mule.compatibility.transport.http.HttpConnector.HTTP_METHOD_PROPERTY;
+//import static org.mule.compatibility.transport.http.HttpConnector.HTTP_QUERY_PARAMS;
+//import static org.mule.compatibility.transport.http.HttpConnector.HTTP_REQUEST_PATH_PROPERTY;
 
 import org.mule.runtime.core.api.MuleEvent;
 import org.mule.runtime.core.api.MuleMessage;
@@ -20,6 +20,9 @@ import java.util.Map;
 
 public class HttpProtocolAdapter
 {
+    public static final String HTTP_METHOD_PROPERTY = "http.method";
+    public static final String HTTP_QUERY_PARAMS = "http.query.params";
+    public static final String HTTP_REQUEST_PATH_PROPERTY = "http.request.path";
 
     private String basePath;
     private URI resourceURI;
