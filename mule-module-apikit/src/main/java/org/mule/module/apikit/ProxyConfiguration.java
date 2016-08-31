@@ -39,12 +39,6 @@ public class ProxyConfiguration extends AbstractConfiguration
     }
 
     @Override
-    protected HttpRestRequest getHttpRestRequest(MuleEvent event)
-    {
-        return new HttpRestProxyRequest(event, this);
-    }
-
-    @Override
     public ResourceLoader getRamlResourceLoader()
     {
         return new CompositeResourceLoader(new RamlUrlResourceLoader(), new ClassPathResourceLoader());
