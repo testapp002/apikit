@@ -9,7 +9,7 @@
 
     <http:listener-config name="httpListenerConfig" host="localhost" port="${proxyPort}"/>
     <http:request-config name="http-request-config" host="localhost" port="${serverPort}" protocol="HTTP"/>
-    <apikit:proxy-config name="proxy-config" raml="proxy.raml" disableValidations="true"/>
+    <apikit:proxy-config name="proxy-config" raml="org/mule/module/apikit/proxy/app-with-raml/proxy.raml" disableValidations="true"/>
 
     <flow name="proxy">
         <http:listener config-ref="httpListenerConfig" path="/proxy/*"/>
