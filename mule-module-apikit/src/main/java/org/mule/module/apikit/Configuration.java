@@ -6,11 +6,12 @@
  */
 package org.mule.module.apikit;
 
+import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
-import org.mule.runtime.core.api.MuleEvent;
+import org.mule.runtime.api.message.MuleEvent;
 import org.mule.runtime.core.api.MuleException;
 import org.mule.runtime.core.api.processor.DynamicPipelineException;
-import org.mule.runtime.core.api.processor.MessageProcessor;
+import org.mule.runtime.core.api.processor.Processor;
 import org.mule.runtime.core.construct.Flow;
 import org.mule.module.apikit.exception.ApikitRuntimeException;
 import org.mule.module.apikit.transform.ApikitResponseTransformer;
@@ -321,10 +322,10 @@ public class Configuration extends AbstractConfiguration
             String flowName = targetFlow.getName() + WRAPPER_FLOW_SUFFIX;
             MuleContext muleContext = targetFlow.getMuleContext();
             Flow wrapper = new Flow(flowName, muleContext);
-            wrapper.setMessageProcessors(Collections.<MessageProcessor>singletonList(new MessageProcessor()
+            wrapper.setMessageProcessors(Collections.<Processor>singletonList(new Processor()
             {
                 @Override
-                public MuleEvent process(MuleEvent muleEvent) throws MuleException
+                public Event process(Event muleEvent) throws MuleException
                 {
                     return targetFlow.process(muleEvent);
                 }

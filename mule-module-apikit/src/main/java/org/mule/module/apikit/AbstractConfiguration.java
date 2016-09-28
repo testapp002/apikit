@@ -8,8 +8,9 @@ package org.mule.module.apikit;
 
 import static org.mule.module.apikit.UrlUtils.getBaseSchemeHostPort;
 
+import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
-import org.mule.runtime.core.api.MuleEvent;
+import org.mule.runtime.api.message.MuleEvent;
 import org.mule.runtime.core.api.MuleException;
 import org.mule.runtime.core.api.config.MuleProperties;
 import org.mule.runtime.core.api.construct.FlowConstruct;
@@ -279,7 +280,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
 
     public String getApikitRaml(MuleEvent event)
     {
-        return getApikitRaml(getBaseSchemeHostPort(event));
+        return getApikitRaml(getBaseSchemeHostPort((Event)event));
     }
 
     /**
@@ -295,7 +296,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         {
             try
             {
-                URL url = new URL(getBaseSchemeHostPort(event));
+                URL url = new URL(getBaseSchemeHostPort((Event) event));
                 schemeHostPort = schemeHostPort.replace(bindAllInterfaces, url.getHost());
 
             }
@@ -487,7 +488,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
     {
         Collection<AbstractConfiguration> configurations = Sets.newHashSet();
         configurations.addAll(muleContext.getRegistry().lookupObjects(Configuration.class));
-        configurations.addAll(muleContext.getRegistry().lookupObjects(ProxyConfiguration.class));
+        //configurations.addAll(muleContext.getRegistry().lookupObjects(ProxyConfiguration.class));
         return configurations;
     }
 
@@ -496,12 +497,13 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         return parserService.getRamlUpdater(api, this);
     }
 
+    //TODO FIX THIS METHOD getFlowConstruct NOT FOUND
     public FlowConstruct getParentFlow(MuleEvent event)
     {
-        if(matchesWrappedFlow(event.getFlowConstruct()))
-        {
-            return this.flowConstruct;
-        }
+        //if(matchesWrappedFlow(event.getFlowConstruct()))
+        //{
+        //    return this.flowConstruct;
+        //}
         return null;
     }
 

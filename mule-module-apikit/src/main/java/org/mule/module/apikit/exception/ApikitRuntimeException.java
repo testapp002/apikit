@@ -7,19 +7,19 @@
 package org.mule.module.apikit.exception;
 
 import org.mule.runtime.core.api.MuleRuntimeException;
-import org.mule.runtime.core.config.i18n.MessageFactory;
+import org.mule.runtime.core.config.i18n.I18nMessageFactory;
 
 public class ApikitRuntimeException extends MuleRuntimeException
 {
 
     public ApikitRuntimeException(String message)
     {
-        super(MessageFactory.createStaticMessage(message));
+        super(I18nMessageFactory.createStaticMessage(message));
     }
 
     public ApikitRuntimeException(String message, Throwable t)
     {
-        super(MessageFactory.createStaticMessage(message), t);
+        super(I18nMessageFactory.createStaticMessage(message), t);
     }
 
     public ApikitRuntimeException(Throwable t)

@@ -11,13 +11,19 @@ import static org.mule.module.apikit.transform.ApikitResponseTransformer.APIKIT_
 import static org.mule.module.apikit.transform.ApikitResponseTransformer.BEST_MATCH_REPRESENTATION;
 import static org.mule.module.apikit.transform.ApikitResponseTransformer.CONTRACT_MIME_TYPES;
 
-import org.mule.DefaultMuleMessage;
-import org.mule.runtime.core.api.MuleEvent;
+//import org.mule.DefaultMuleMessage;
+//import org.mule.runtime.core.api.MuleEvent;
+import org.mule.common.metadata.datatype.DataTypeFactory;
+import org.mule.extension.http.api.HttpRequestAttributes;
+import org.mule.runtime.api.message.Message;
+import org.mule.runtime.api.message.MuleEvent;
+import org.mule.runtime.core.PropertyScope;
+import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleException;
-import org.mule.runtime.core.api.MuleMessage;
-import org.mule.api.transformer.DataType;
+//import org.mule.runtime.core.api.MuleMessage;
+//import org.mule.api.transformer.DataType;
 import org.mule.runtime.core.api.transformer.TransformerException;
-import org.mule.api.transport.PropertyScope;
+//import org.mule.api.transport.PropertyScope;
 import org.mule.runtime.core.message.ds.StringDataSource;
 import org.mule.module.apikit.exception.BadRequestException;
 import org.mule.module.apikit.exception.InvalidFormParameterException;
@@ -37,7 +43,7 @@ import org.mule.raml.interfaces.model.IAction;
 import org.mule.raml.interfaces.model.IMimeType;
 import org.mule.raml.interfaces.model.IResponse;
 import org.mule.raml.interfaces.model.parameter.IParameter;
-import org.mule.transformer.types.DataTypeFactory;
+//import org.mule.transformer.types.DataTypeFactory;
 import org.mule.compatibility.transport.http.transformers.FormTransformer;
 import org.mule.runtime.core.util.CaseInsensitiveHashMap;
 import org.mule.runtime.core.util.IOUtils;
@@ -76,7 +82,7 @@ public class HttpRestRequest
     {
         requestEvent = event;
         this.config = config;
-        adapter = new HttpProtocolAdapter(event);
+        adapter = new HttpProtocolAdapter((Event) event);
     }
 
     public HttpProtocolAdapter getAdapter()
@@ -122,18 +128,19 @@ public class HttpRestRequest
         negotiateInputRepresentation();
         List<String> responseMimeTypes = getResponseMimeTypes();
         String responseRepresentation = negotiateOutputRepresentation(responseMimeTypes);
-
+        //MuleEvent e = new Event.Builder(requestEvent);
+        Event.Builder newRequestEventBuilder = Event.builder((Event)requestEvent);
         if (responseMimeTypes != null)
         {
-            requestEvent.setFlowVariable(CONTRACT_MIME_TYPES, responseMimeTypes);
+            newRequestEventBuilder.addVariable(CONTRACT_MIME_TYPES, responseMimeTypes);
         }
         if (responseRepresentation != null)
         {
-            requestEvent.setFlowVariable(BEST_MATCH_REPRESENTATION, responseRepresentation);
+            newRequestEventBuilder.addVariable(BEST_MATCH_REPRESENTATION, responseRepresentation);
         }
-        requestEvent.setFlowVariable(APIKIT_ROUTER_REQUEST, "yes");
-        requestEvent.setFlowVariable(ACCEPT_HEADER, adapter.getAcceptableResponseMediaTypes());
-        return requestEvent;
+        newRequestEventBuilder.addVariable(APIKIT_ROUTER_REQUEST, "yes");
+        newRequestEventBuilder.addVariable(ACCEPT_HEADER, adapter.getAcceptableResponseMediaTypes());
+        return newRequestEventBuilder.build();
     }
 
     private void processQueryParameters() throws InvalidQueryParameterException
@@ -141,7 +148,8 @@ public class HttpRestRequest
         for (String expectedKey : action.getQueryParameters().keySet())
         {
             IParameter expected = action.getQueryParameters().get(expectedKey);
-            Object actual = ((Map) requestEvent.getMessage().getInboundProperty("http.query.params")).get(expectedKey);
+
+            Object actual = ((HttpRequestAttributes)requestEvent.getMessage().getAttributes()).getQueryParams().get(expectedKey);
             if (actual == null && expected.isRequired())
             {
                 throw new InvalidQueryParameterException("Required query parameter " + expectedKey + " not specified");
@@ -198,21 +206,22 @@ public class HttpRestRequest
         }
     }
 
+    //TODO FIX THIS METHOD. Used to add defalult query params
     private void setQueryParameter(String key, String value)
     {
-        if (requestEvent.getMessage().getInboundProperty("http.headers") != null)
-        {
-            //only set query param as top-level inbound property when using endpoints instead of listeners
-            requestEvent.getMessage().setProperty(key, value, PropertyScope.INBOUND);
-        }
-        Map<String, String> queryParamMap = requestEvent.getMessage().getInboundProperty("http.query.params");
-        if (queryParamMap instanceof ParameterMap)
-        {
-            //overwrite the query-param map with a mutable instance
-            queryParamMap = new HashMap<String, String>(queryParamMap);
-            requestEvent.getMessage().setProperty("http.query.params", queryParamMap, PropertyScope.INBOUND);
-        }
-        queryParamMap.put(key, value);
+        //if (requestEvent.getMessage().getInboundProperty("http.headers") != null)
+        //{
+        //    //only set query param as top-level inbound property when using endpoints instead of listeners
+        //    requestEvent.getMessage().setProperty(key, value, PropertyScope.INBOUND);
+        //}
+        //Map<String, String> queryParamMap = requestEvent.getMessage().getInboundProperty("http.query.params");
+        //if (queryParamMap instanceof ParameterMap)
+        //{
+        //    //overwrite the query-param map with a mutable instance
+        //    queryParamMap = new HashMap<String, String>(queryParamMap);
+        //    requestEvent.getMessage().setProperty("http.query.params", queryParamMap, PropertyScope.INBOUND);
+        //}
+        //queryParamMap.put(key, value);
     }
 
 
@@ -262,35 +271,36 @@ public class HttpRestRequest
         }
     }
 
-    private Map<String,String> getIncomingHeaders(MuleMessage message)
+    private Map<String,String> getIncomingHeaders(Message message)
     {
 
-        Map<String, String> incomingHeaders = new CaseInsensitiveHashMap();
-        if (message.getInboundProperty("http.headers") != null)
-        {
-            incomingHeaders = new CaseInsensitiveHashMap(message.<Map>getInboundProperty("http.headers"));
-        }
-        else
-        {
-            for (String key : message.getInboundPropertyNames())
-            {
-                if (!key.startsWith("http.")) //TODO MULE-8131
-                {
-                    incomingHeaders.put(key, String.valueOf(message.getInboundProperty(key)));
-                }
-            }
-        }
+        Map<String, String> incomingHeaders = ((HttpRestRequest)message.getAttributes()).getIncomingHeaders(message);
+        //if (incomingHeaders != null && incomingHeaders.size() > 0)
+        //{
+        //    incomingHeaders = new CaseInsensitiveHashMap(message.<Map>getInboundProperty("http.headers"));
+        //}
+        //else
+        //{
+        //    for (String key : message.getInboundPropertyNames())
+        //    {
+        //        if (!key.startsWith("http.")) //TODO MULE-8131
+        //        {
+        //            incomingHeaders.put(key, String.valueOf(message.getInboundProperty(key)));
+        //        }
+        //    }
+        //}
         return incomingHeaders;
     }
 
+    //TODO FIX THIS METHOD. Used to add defalult headers
     private void setHeader(String key, String value)
     {
-        requestEvent.getMessage().setProperty(key, value, PropertyScope.INBOUND);
-        if (requestEvent.getMessage().getInboundProperty("http.headers") != null)
-        {
-            //TODO MULE-8131
-            requestEvent.getMessage().<Map<String, String>>getInboundProperty("http.headers").put(key, value);
-        }
+        //requestEvent.getMessage().setProperty(key, value, PropertyScope.INBOUND);
+        //if (requestEvent.getMessage().getInboundProperty("http.headers") != null)
+        //{
+        //    //TODO MULE-8131
+        //    requestEvent.getMessage().<Map<String, String>>getInboundProperty("http.headers").put(key, value);
+        //}
     }
 
     private void negotiateInputRepresentation() throws MuleRestException
@@ -362,26 +372,28 @@ public class HttpRestRequest
         }
     }
 
+    //TODO FIX METHOD. ENCODING CANNOT BE GET FROM THE EVENT. WE HAVE TO USE THE ENCODING OF THE PAYLOAD OR THE SYSTEM.UTILS ONE.
     @SuppressWarnings("unchecked")
     private void validateUrlencodedForm(Map<String, List<IParameter>> formParameters) throws BadRequestException
     {
         Map<String, String> paramMap;
-        try
-        {
-            if (requestEvent.getMessage().getPayload() instanceof Map)
-            {
+        //try
+        //{
+            //if (requestEvent.getMessage().getPayload() instanceof Map)
+            //{
                 paramMap = (Map<String, String>) requestEvent.getMessage().getPayload();
-            }
-            else
-            {
-                paramMap = (Map) new FormTransformer().transformMessage(requestEvent.getMessage(), requestEvent.getEncoding());
-            }
-        }
-        catch (TransformerException e)
-        {
-            logger.warn("Cannot validate url-encoded form", e);
-            return;
-        }
+            //}
+            //else
+            //{
+                //String encoding = requestEvent.getMessage().getPayload().getDataType().toString();
+                //paramMap = (Map) new FormTransformer().transformMessage(requestEvent.getMessage(), requestEvent.getEncoding());
+            //}
+        //}
+        //catch (TransformerException e)
+        //{
+        //    logger.warn("Cannot validate url-encoded form", e);
+        //    return;
+        //}
 
         for (String expectedKey : formParameters.keySet())
         {
@@ -411,38 +423,41 @@ public class HttpRestRequest
                 }
             }
         }
-        requestEvent.getMessage().setPayload(paramMap);
+        //TODO FIX THIS METHOD. SET PAYLOAD OF THE MESSAGE
+//        requestEvent.getMessage().setPayload(paramMap);
     }
 
+
+    //TODO FIX THIS METHOD
     private void validateMultipartForm(Map<String, List<IParameter>> formParameters) throws BadRequestException
     {
-        for (String expectedKey : formParameters.keySet())
-        {
-            if (formParameters.get(expectedKey).size() != 1)
-            {
-                //do not perform validation when multi-type parameters are used
-                continue;
-            }
-            IParameter expected = formParameters.get(expectedKey).get(0);
-            DataHandler dataHandler = requestEvent.getMessage().getInboundAttachment(expectedKey);
-            if (dataHandler == null && expected.isRequired())
-            {
-                //perform only 'required' validation to avoid consuming the stream
-                throw new InvalidFormParameterException("Required form parameter " + expectedKey + " not specified");
-            }
-            if (dataHandler == null && expected.getDefaultValue() != null)
-            {
-                DataHandler defaultDataHandler = new DataHandler(new StringDataSource(expected.getDefaultValue(), expectedKey));
-                try
-                {
-                    ((DefaultMuleMessage) requestEvent.getMessage()).addInboundAttachment(expectedKey, defaultDataHandler);
-                }
-                catch (Exception e)
-                {
-                    logger.warn("Cannot set default part " + expectedKey, e);
-                }
-            }
-        }
+        //for (String expectedKey : formParameters.keySet())
+        //{
+        //    if (formParameters.get(expectedKey).size() != 1)
+        //    {
+        //        //do not perform validation when multi-type parameters are used
+        //        continue;
+        //    }
+        //    IParameter expected = formParameters.get(expectedKey).get(0);
+        //    DataHandler dataHandler = requestEvent.getMessage().getInboundAttachment(expectedKey);
+        //    if (dataHandler == null && expected.isRequired())
+        //    {
+        //        //perform only 'required' validation to avoid consuming the stream
+        //        throw new InvalidFormParameterException("Required form parameter " + expectedKey + " not specified");
+        //    }
+        //    if (dataHandler == null && expected.getDefaultValue() != null)
+        //    {
+        //        DataHandler defaultDataHandler = new DataHandler(new StringDataSource(expected.getDefaultValue(), expectedKey));
+        //        try
+        //        {
+        //            ((DefaultMuleMessage) requestEvent.getMessage()).addInboundAttachment(expectedKey, defaultDataHandler);
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            logger.warn("Cannot set default part " + expectedKey, e);
+        //        }
+        //    }
+        //}
     }
 
     private void validateSchemaV2(IMimeType mimeType) throws BadRequestException
@@ -468,7 +483,7 @@ public class HttpRestRequest
         }
     }
 
-    private String getPayloadAsString(MuleMessage message) throws BadRequestException
+    private String getPayloadAsString(Message message) throws BadRequestException
     {
         Object input = message.getPayload();
         String charset = RestXmlSchemaValidator.getHeaderCharset(message);
@@ -479,10 +494,10 @@ public class HttpRestRequest
             {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 IOUtils.copyLarge((InputStream) input, baos);
-                DataType<ByteArrayInputStream> dataType = DataTypeFactory.create(ByteArrayInputStream.class, message.getDataType().getMimeType());
-                dataType.setEncoding(message.getEncoding());
+               // DataType<ByteArrayInputStream> dataType = DataTypeFactory.create(ByteArrayInputStream.class, message.getPayload().getDataType().getMimeType());
+                //dataType.setEncoding(message.getEncoding());
                 byte[] bytes = baos.toByteArray();
-                message.setPayload(new ByteArrayInputStream(bytes), dataType);
+                //message.setPayload(new ByteArrayInputStream(bytes), dataType);
                 input = byteArrayToString(bytes, charset);
             }
             catch (IOException e)
@@ -521,11 +536,12 @@ public class HttpRestRequest
         return IOUtils.toString(new ByteArrayInputStream(StreamUtils.trimBom(bytes)), charset);
     }
 
+    //TODO FIX THIS METHOD
     private void validateSchema(String mimeTypeName) throws MuleRestException
     {
-        SchemaType schemaType = mimeTypeName.contains("json") ? SchemaType.JSONSchema : SchemaType.XMLSchema;
-        RestSchemaValidator validator = RestSchemaValidatorFactory.getInstance().createValidator(schemaType, requestEvent.getMuleContext());
-        validator.validate(config.getName(), SchemaCacheUtils.getSchemaCacheKey(action, mimeTypeName), requestEvent, config.getApi());
+        //SchemaType schemaType = mimeTypeName.contains("json") ? SchemaType.JSONSchema : SchemaType.XMLSchema;
+        //RestSchemaValidator validator = RestSchemaValidatorFactory.getInstance().createValidator(schemaType, requestEvent.getMuleContext());
+        //validator.validate(config.getName(), SchemaCacheUtils.getSchemaCacheKey(action, mimeTypeName), requestEvent, config.getApi());
     }
 
     private String negotiateOutputRepresentation(List<String> mimeTypes) throws MuleRestException

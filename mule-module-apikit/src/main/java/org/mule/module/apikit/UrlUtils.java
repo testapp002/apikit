@@ -9,8 +9,9 @@ package org.mule.module.apikit;
 //import static org.mule.compatibility.transport.http.HttpConnector.HTTP_CONTEXT_PATH_PROPERTY;
 //import static org.mule.compatibility.transport.http.HttpConnector.HTTP_REQUEST_PATH_PROPERTY;
 
-import org.mule.runtime.core.api.MuleEvent;
-import org.mule.runtime.core.api.MuleMessage;
+import org.mule.extension.http.api.HttpRequestAttributes;
+import org.mule.runtime.api.message.Message;
+import org.mule.runtime.core.api.Event;
 import org.mule.module.apikit.exception.ApikitRuntimeException;
 import org.mule.runtime.core.util.StringUtils;
 
@@ -22,7 +23,7 @@ public class UrlUtils
     public static final String HTTP_CONTEXT_PATH_PROPERTY = "http.context.path";
     public static final String HTTP_REQUEST_PATH_PROPERTY = "http.request.path";
 
-    public static String getBaseSchemeHostPort(MuleEvent event)
+    public static String getBaseSchemeHostPort(Event event)
     {
         String host = event.getMessage().getInboundProperty("host");
         String chHost = System.getProperty("fullDomain");
@@ -33,12 +34,12 @@ public class UrlUtils
         return getScheme(event.getMessage()) + "://" + host;
     }
 
-    public static String getScheme(MuleMessage message)
+    public static String getScheme(Message message)
     {
-        String scheme = message.getInboundProperty("http.scheme");
+        String scheme = ((HttpRequestAttributes)message.getAttributes()).getScheme();
         if (scheme == null)
         {
-            String endpoint = message.getInboundProperty("http.context.uri");
+            String endpoint = ((HttpRequestAttributes)message.getAttributes()).getRequestUri(); //TODO CHECK IF THIS IS THE CORRECT PROPERTY//.getInboundProperty("http.context.uri");
             if (endpoint == null)
             {
                 throw new ApikitRuntimeException("Cannot figure out the request scheme");
@@ -73,9 +74,9 @@ public class UrlUtils
         return url.getProtocol() + "://" + url.getAuthority();
     }
 
-    public static String getResourceRelativePath(MuleMessage message)
+    public static String getResourceRelativePath(Message message)
     {
-        String path = message.getInboundProperty(HTTP_REQUEST_PATH_PROPERTY);
+        String path = ((HttpRequestAttributes)message.getAttributes()).getRequestPath();
         String basePath = getBasePath(message);
         path = path.substring(basePath.length());
         if (!path.startsWith("/") && !path.isEmpty())
@@ -85,12 +86,12 @@ public class UrlUtils
         return path;
     }
 
-    public static String getBasePath(MuleMessage message)
+    public static String getBasePath(Message message)
     {
-        String path = message.getInboundProperty(HTTP_CONTEXT_PATH_PROPERTY);
+        String path = ((HttpRequestAttributes)message.getAttributes()).getRelativePath();//TODO CHECK IF THIS IS THE CORRECT PROPERTY message.getInboundProperty(HTTP_CONTEXT_PATH_PROPERTY);
         if (path == null)
         {
-            path = message.getInboundProperty("http.listener.path");
+            path = ((HttpRequestAttributes)message.getAttributes()).getListenerPath();
             if (path != null && path.endsWith("/*"))
             {
                 path = path.substring(0, path.length() - 2);
@@ -103,9 +104,9 @@ public class UrlUtils
         return path;
     }
 
-    public static String getQueryString(MuleMessage message)
+    public static String getQueryString(Message message)
     {
-        String queryString = message.getInboundProperty("http.query.string");
+        String queryString = ((HttpRequestAttributes)message.getAttributes()).getQueryString();
         return queryString == null ? "" : queryString;
     }
 

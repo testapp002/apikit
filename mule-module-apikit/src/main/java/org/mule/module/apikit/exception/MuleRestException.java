@@ -7,18 +7,18 @@
 package org.mule.module.apikit.exception;
 
 import org.mule.runtime.core.api.MuleException;
-import org.mule.runtime.core.config.i18n.Message;
-import org.mule.runtime.core.config.i18n.MessageFactory;
+import org.mule.runtime.core.config.i18n.I18nMessage;
+import org.mule.runtime.core.config.i18n.I18nMessageFactory;
 
 public class MuleRestException extends MuleException
 {
 
     public MuleRestException(String message)
     {
-        super(MessageFactory.createStaticMessage(message));
+        super(I18nMessageFactory.createStaticMessage(message));
     }
 
-    public MuleRestException(Message message, Throwable cause)
+    public MuleRestException(I18nMessage message, Throwable cause)
     {
         super(message, cause);
     }

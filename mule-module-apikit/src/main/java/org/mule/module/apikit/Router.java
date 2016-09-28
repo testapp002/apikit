@@ -6,11 +6,12 @@
  */
 package org.mule.module.apikit;
 
-import org.mule.runtime.core.api.MuleEvent;
+import org.mule.runtime.api.message.MuleEvent;
+import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleException;
 import org.mule.runtime.core.api.lifecycle.StartException;
 import org.mule.runtime.core.api.registry.RegistrationException;
-import org.mule.runtime.core.config.i18n.MessageFactory;
+import org.mule.runtime.core.config.i18n.I18nMessageFactory;
 import org.mule.runtime.core.construct.Flow;
 import org.mule.raml.interfaces.model.IResource;
 
@@ -47,7 +48,7 @@ public class Router extends AbstractRouter
             }
             catch (RegistrationException e)
             {
-                throw new StartException(MessageFactory.createStaticMessage("APIKit configuration not Found"), this);
+                throw new StartException(I18nMessageFactory.createStaticMessage("APIKit configuration not Found"), this);
             }
         }
         config.loadApiDefinition(flowConstruct);
@@ -60,7 +61,7 @@ public class Router extends AbstractRouter
     }
 
     @Override
-    protected MuleEvent handleEvent(MuleEvent event, String path) throws MuleException
+    protected Event handleEvent(Event event, String path) throws MuleException
     {
         //check for console request
         if (getConfig().isConsoleEnabled() && path.startsWith("/" + getConfig().getConsolePath()))
@@ -89,13 +90,14 @@ public class Router extends AbstractRouter
         return flow;
     }
 
-    @Override
-    protected MuleEvent doProcessRouterResponse(MuleEvent event, Integer successStatus)
+    //TODO FIX METHOD OUTBOUND PROPERTIES
+    //@Override
+    protected Event doProcessRouterResponse(Event event, Integer successStatus)
     {
-        if (event.getMessage().getOutboundProperty("http.status") == null)
-        {
-            event.getMessage().setOutboundProperty("http.status", successStatus);
-        }
+        //if (event.getMessage().getOutboundProperty("http.status") == null)
+        //{
+        //    event.getMessage().setOutboundProperty("http.status", successStatus);
+        //}
         return event;
     }
 

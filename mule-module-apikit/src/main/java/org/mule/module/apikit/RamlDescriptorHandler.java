@@ -9,9 +9,10 @@ package org.mule.module.apikit;
 
 import static org.mule.module.apikit.AbstractConfiguration.APPLICATION_RAML;
 
-import org.mule.runtime.core.api.MuleEvent;
+import org.mule.runtime.core.api.Event;
+//import org.mule.runtime.core.api.MuleEvent;
 import org.mule.runtime.core.api.MuleException;
-import org.mule.transformer.types.DataTypeFactory;
+//import org.mule.transformer.types.DataTypeFactory;
 import org.mule.compatibility.transport.http.HttpConstants;
 
 import org.raml.model.ActionType;
@@ -46,23 +47,23 @@ public class RamlDescriptorHandler
         return path.equals(config.getApi().getUri());
     }
 
-    public MuleEvent processConsoleRequest(MuleEvent event) throws MuleException
+    public Event processConsoleRequest(Event event) throws MuleException
     {
         return process(event, config.getApikitRamlConsole(event));
     }
 
-    public MuleEvent processRouterRequest(MuleEvent event) throws MuleException
+    public Event processRouterRequest(Event event) throws MuleException
     {
         return process(event, config.getApikitRaml(event));
     }
-
-    private MuleEvent process(MuleEvent event, String raml) throws MuleException
+    //TODO FIX METHOD
+    private Event process(Event event, String raml) throws MuleException
     {
-        event.getMessage().setPayload(raml, DataTypeFactory.create(String.class, APPLICATION_RAML));
-        event.getMessage().setOutboundProperty(HttpConstants.HEADER_CONTENT_TYPE, APPLICATION_RAML);
-        event.getMessage().setOutboundProperty(HttpConstants.HEADER_EXPIRES, -1); //avoid IE ajax response caching
-        event.getMessage().setOutboundProperty(HttpConstants.HEADER_CONTENT_LENGTH, raml.length());
-        event.getMessage().setOutboundProperty("Access-Control-Allow-Origin", "*");
+        //event.getMessage().setPayload(raml, DataTypeFactory.create(String.class, APPLICATION_RAML));
+        //event.getMessage().setOutboundProperty(HttpConstants.HEADER_CONTENT_TYPE, APPLICATION_RAML);
+        //event.getMessage().setOutboundProperty(HttpConstants.HEADER_EXPIRES, -1); //avoid IE ajax response caching
+        //event.getMessage().setOutboundProperty(HttpConstants.HEADER_CONTENT_LENGTH, raml.length());
+        //event.getMessage().setOutboundProperty("Access-Control-Allow-Origin", "*");
         return event;
     }
 }

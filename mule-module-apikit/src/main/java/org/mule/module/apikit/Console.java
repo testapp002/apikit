@@ -6,8 +6,8 @@
  */
 package org.mule.module.apikit;
 
+import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
-import org.mule.runtime.core.api.MuleEvent;
 import org.mule.runtime.core.api.MuleException;
 import org.mule.runtime.core.api.construct.FlowConstruct;
 import org.mule.runtime.core.api.construct.FlowConstructAware;
@@ -15,12 +15,12 @@ import org.mule.runtime.core.api.context.MuleContextAware;
 import org.mule.runtime.core.api.lifecycle.Initialisable;
 import org.mule.runtime.core.api.lifecycle.InitialisationException;
 import org.mule.runtime.core.api.lifecycle.Startable;
-import org.mule.runtime.core.api.processor.MessageProcessor;
-import org.mule.runtime.core.config.i18n.MessageFactory;
+import org.mule.runtime.core.api.processor.Processor;
+import org.mule.runtime.core.config.i18n.I18nMessageFactory;
 
 import java.util.Collection;
 
-public class Console implements MessageProcessor, Initialisable, Startable, MuleContextAware, FlowConstructAware
+public class Console implements Processor, Initialisable, Startable, MuleContextAware, FlowConstructAware
 {
 
     private AbstractConfiguration config;
@@ -64,7 +64,7 @@ public class Console implements MessageProcessor, Initialisable, Startable, Mule
             Collection<AbstractConfiguration> configurations = AbstractConfiguration.getAllConfigurations(muleContext);
             if (configurations.size() != 1)
             {
-                throw new InitialisationException(MessageFactory.createStaticMessage("APIKit configuration not Found"), this);
+                throw new InitialisationException(I18nMessageFactory.createStaticMessage("APIKit configuration not Found"), this);
             }
             config = configurations.iterator().next();
         }
@@ -80,7 +80,7 @@ public class Console implements MessageProcessor, Initialisable, Startable, Mule
     }
 
     @Override
-    public MuleEvent process(MuleEvent event) throws MuleException
+    public Event process(Event event) throws MuleException
     {
         HttpRestRequest request = new HttpRestRequest(event, getConfig());
 

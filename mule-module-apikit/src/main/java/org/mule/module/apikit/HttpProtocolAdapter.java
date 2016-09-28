@@ -10,8 +10,12 @@ package org.mule.module.apikit;
 //import static org.mule.compatibility.transport.http.HttpConnector.HTTP_QUERY_PARAMS;
 //import static org.mule.compatibility.transport.http.HttpConnector.HTTP_REQUEST_PATH_PROPERTY;
 
-import org.mule.runtime.core.api.MuleEvent;
-import org.mule.runtime.core.api.MuleMessage;
+import org.mule.extension.http.api.HttpAttributes;
+import org.mule.extension.http.api.HttpRequestAttributes;
+import org.mule.runtime.api.message.Message;
+import org.mule.runtime.core.api.Event;
+//import org.mule.runtime.core.api.MuleEvent;
+//import org.mule.runtime.core.api.MuleMessage;
 import org.mule.runtime.core.util.StringUtils;
 
 import java.net.URI;
@@ -31,18 +35,18 @@ public class HttpProtocolAdapter
     private String requestMediaType;
     private Map<String, Object> queryParams;
 
-    public HttpProtocolAdapter(MuleEvent event)
+    public HttpProtocolAdapter(Event event)
     {
-        MuleMessage message = event.getMessage();
+        Message message = event.getMessage();
         this.basePath = UrlUtils.getBasePath(message);
-        String hostHeader = message.getInboundProperty("host");
+        String hostHeader = ((HttpRequestAttributes)message.getAttributes()).getHeaders().get("host");
         if (hostHeader == null)
         {
             throw new IllegalArgumentException("host header cannot be null");
         }
         String host = hostHeader;
         int port = 80;
-        String requestPath = message.getInboundProperty(HTTP_REQUEST_PATH_PROPERTY);
+        String requestPath = ((HttpRequestAttributes)message.getAttributes()).getRequestPath();
         if (hostHeader.contains(":"))
         {
             host = hostHeader.substring(0, hostHeader.indexOf(':'));
@@ -57,24 +61,25 @@ public class HttpProtocolAdapter
             throw new IllegalArgumentException("Cannot parse URI", e);
         }
 
-        method = message.getInboundProperty(HTTP_METHOD_PROPERTY);
+        method = ((HttpRequestAttributes)message.getAttributes()).getMethod();
 
-        if (!StringUtils.isBlank((String) message.getInboundProperty("accept")))
+        if (!StringUtils.isBlank((String) ((HttpRequestAttributes)message.getAttributes()).getHeaders().get("accept")))
         {
-            this.acceptableResponseMediaTypes = message.getInboundProperty("accept");
+            this.acceptableResponseMediaTypes = ((HttpRequestAttributes)message.getAttributes()).getHeaders().get("accept");
         }
 
-        if (!StringUtils.isBlank((String) message.getInboundProperty("content-type")))
+        if (!StringUtils.isBlank((String)((HttpRequestAttributes)message.getAttributes()).getHeaders().get("content-type")))
         {
-            this.requestMediaType = message.getInboundProperty("content-type");
+            this.requestMediaType = ((HttpRequestAttributes)message.getAttributes()).getHeaders().get("content-type");
         }
-        if (this.requestMediaType == null
-            && !StringUtils.isBlank((String) message.getOutboundProperty("content-type")))
-        {
-            this.requestMediaType = message.getOutboundProperty("content-type");
-        }
+        //TODO FIX METHOD
+        //if (this.requestMediaType == null
+        //    && !StringUtils.isBlank((String) message.getOutboundProperty("content-type")))
+        //{
+        //    this.requestMediaType = message.getOutboundProperty("content-type");
+        //}
 
-        this.queryParams = message.getInboundProperty(HTTP_QUERY_PARAMS);
+//        this.queryParams = ((HttpRequestAttributes)message.getAttributes()).getQueryParams();
     }
 
     public String getBasePath()

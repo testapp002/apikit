@@ -6,9 +6,10 @@
  */
 package org.mule.module.apikit.spi;
 
-import org.mule.runtime.core.api.MuleEvent;
+import org.mule.runtime.api.message.MuleEvent;
+import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleException;
-import org.mule.runtime.core.processor.AbstractRequestResponseMessageProcessor;
+import org.mule.runtime.core.api.processor.Processor;
 
 /**
  * Extension (SPI) for the APIKit Module
@@ -22,7 +23,7 @@ public interface RouterService
      * @param event
      * @return
      */
-    MuleEvent processBlockingRequest(MuleEvent event, AbstractRequestResponseMessageProcessor router) throws MuleException;
+    Event processBlockingRequest(Event event, Processor router) throws MuleException;
 
     /**
      * Returns true if the path of the HTTP request matches a predefined condition

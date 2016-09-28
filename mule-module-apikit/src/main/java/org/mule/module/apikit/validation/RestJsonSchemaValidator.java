@@ -6,14 +6,15 @@
  */
 package org.mule.module.apikit.validation;
 
+import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
-import org.mule.runtime.core.api.MuleEvent;
+//import org.mule.runtime.core.api.MuleEvent;
 import org.mule.runtime.core.api.registry.RegistrationException;
-import org.mule.api.transformer.DataType;
+//import org.mule.api.transformer.DataType;
 import org.mule.module.apikit.exception.BadRequestException;
 import org.mule.module.apikit.validation.cache.JsonSchemaCache;
 import org.mule.raml.interfaces.model.IRaml;
-import org.mule.transformer.types.DataTypeFactory;
+//import org.mule.transformer.types.DataTypeFactory;
 import org.mule.runtime.core.util.IOUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -44,8 +45,9 @@ public class RestJsonSchemaValidator extends AbstractRestSchemaValidator
         super(muleContext);
     }
 
+    //TODO FIX THIS METHOD
     @Override
-    public void validate(String configId, String schemaPath, MuleEvent muleEvent, IRaml api) throws BadRequestException
+    public void validate(String configId, String schemaPath, Event muleEvent, IRaml api) throws BadRequestException
     {
         try
         {
@@ -56,9 +58,9 @@ public class RestJsonSchemaValidator extends AbstractRestSchemaValidator
                 logger.debug("transforming payload to perform JSON Schema validation");
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 IOUtils.copyLarge((InputStream) input, baos);
-                DataType<ByteArrayInputStream> dataType = DataTypeFactory.create(ByteArrayInputStream.class, muleEvent.getMessage().getDataType().getMimeType());
-                dataType.setEncoding(muleEvent.getEncoding());
-                muleEvent.getMessage().setPayload(new ByteArrayInputStream(baos.toByteArray()), dataType);
+                //DataType<ByteArrayInputStream> dataType = DataTypeFactory.create(ByteArrayInputStream.class, muleEvent.getMessage().getDataType().getMimeType());
+                //dataType.setEncoding(muleEvent.getEncoding());
+                //muleEvent.getMessage().setPayload(new ByteArrayInputStream(baos.toByteArray()), dataType);
 
                 //convert to string to remove BOM
                 String str = StreamUtils.toString(new ByteArrayInputStream(baos.toByteArray()));
