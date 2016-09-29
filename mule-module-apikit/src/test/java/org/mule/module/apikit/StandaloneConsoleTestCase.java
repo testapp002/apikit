@@ -12,7 +12,7 @@ import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.mule.module.apikit.Configuration.APPLICATION_RAML;
 
-import org.mule.tck.junit4.FunctionalTestCase;
+import org.mule.functional.junit4.FunctionalTestCase;
 import org.mule.tck.junit4.rule.DynamicPort;
 
 import com.jayway.restassured.RestAssured;

@@ -6,8 +6,8 @@
  */
 package org.mule.module.apikit.leagues;
 
-import org.mule.api.annotations.ContainsTransformerMethods;
-import org.mule.api.annotations.Transformer;
+//import org.mule.api.annotations.ContainsTransformerMethods;
+//import org.mule.api.annotations.Transformer;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 
-@ContainsTransformerMethods
+//@ContainsTransformerMethods
 @XmlRootElement
 @JsonAutoDetect
 public class Teams
@@ -54,14 +54,14 @@ public class Teams
         return null;
     }
 
-    @Transformer(resultMimeType = "application/json")
+//    @Transformer(resultMimeType = "application/json")
     public String toJson(Teams teams) throws IOException
     {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(teams);
     }
 
-    @Transformer(resultMimeType = "text/xml")
+//    @Transformer(resultMimeType = "text/xml")
     public String toXml(Teams teams) throws IOException, JAXBException
     {
         JAXBContext context = JAXBContext.newInstance(getClass());

@@ -10,7 +10,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-import org.mule.tck.junit4.FunctionalTestCase;
+import org.mule.functional.junit4.FunctionalTestCase;
 
 import java.util.Collection;
 

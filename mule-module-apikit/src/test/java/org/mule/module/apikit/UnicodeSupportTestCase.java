@@ -10,7 +10,7 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import org.mule.tck.junit4.FunctionalTestCase;
+import org.mule.functional.junit4.FunctionalTestCase;
 import org.mule.tck.junit4.rule.DynamicPort;
 
 import com.jayway.restassured.RestAssured;

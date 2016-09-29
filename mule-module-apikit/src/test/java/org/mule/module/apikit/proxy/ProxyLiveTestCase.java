@@ -9,7 +9,7 @@ package org.mule.module.apikit.proxy;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.containsString;
 
-import org.mule.tck.junit4.FunctionalTestCase;
+import org.mule.functional.junit4.FunctionalTestCase;
 
 import com.jayway.restassured.RestAssured;
 

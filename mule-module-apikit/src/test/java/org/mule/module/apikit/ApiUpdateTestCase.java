@@ -11,13 +11,17 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.mule.api.lifecycle.InitialisationException;
-import org.mule.construct.Flow;
+//import org.mule.api.lifecycle.InitialisationException;
+//import org.mule.construct.Flow;
 import org.mule.module.apikit.exception.ApikitRuntimeException;
 import org.mule.module.apikit.uri.URIPattern;
-import org.mule.module.http.internal.listener.DefaultHttpListener;
-import org.mule.module.http.internal.listener.DefaultHttpListenerConfig;
+//import org.mule.module.http.internal.listener.DefaultHttpListener;
+//import org.mule.module.http.internal.listener.DefaultHttpListenerConfig;
 import org.mule.raml.interfaces.model.IAction;
+import org.mule.runtime.core.api.lifecycle.InitialisationException;
+import org.mule.runtime.core.construct.Flow;
+import org.mule.runtime.module.http.internal.listener.DefaultHttpListener;
+import org.mule.runtime.module.http.internal.listener.DefaultHttpListenerConfig;
 import org.mule.tck.junit4.AbstractMuleContextTestCase;
 
 import org.junit.Before;

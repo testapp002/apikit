@@ -6,12 +6,17 @@
  */
 package org.mule.module.apikit;
 
-import org.mule.api.construct.FlowConstruct;
-import org.mule.api.construct.Pipeline;
-import org.mule.api.processor.DefaultMessageProcessorPathElement;
-import org.mule.api.processor.MessageProcessor;
-import org.mule.tck.junit4.FunctionalTestCase;
-import org.mule.util.NotificationUtils;
+//import org.mule.api.construct.FlowConstruct;
+//import org.mule.api.construct.Pipeline;
+//import org.mule.api.processor.DefaultMessageProcessorPathElement;
+//import org.mule.api.processor.MessageProcessor;
+import org.mule.functional.junit4.FunctionalTestCase;
+import org.mule.runtime.core.api.construct.FlowConstruct;
+import org.mule.runtime.core.api.construct.Pipeline;
+import org.mule.runtime.core.api.processor.DefaultMessageProcessorPathElement;
+import org.mule.runtime.core.api.processor.Processor;
+import org.mule.runtime.core.util.NotificationUtils;
+//import org.mule.util.NotificationUtils;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -44,7 +49,7 @@ public class MessageProcessorNotificationPathTestCase extends FunctionalTestCase
         FlowConstruct flow = getFlowConstruct(unescape(flowName));
         DefaultMessageProcessorPathElement flowElement = new DefaultMessageProcessorPathElement(null, flowName);
         ((Pipeline) flow).addMessageProcessorPathElements(flowElement);
-        Map<MessageProcessor, String> messageProcessorPaths = NotificationUtils.buildPathResolver(flowElement).getFlowMap();
+        Map<Processor, String> messageProcessorPaths = NotificationUtils.buildPathResolver(flowElement).getFlowMap();
         String[] flowPaths = messageProcessorPaths.values().toArray(new String[]{});
         Arrays.sort(expectedPaths);
         Arrays.sort(flowPaths);

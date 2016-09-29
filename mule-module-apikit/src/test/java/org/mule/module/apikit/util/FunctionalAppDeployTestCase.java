@@ -13,17 +13,23 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import org.mule.api.config.MuleProperties;
-import org.mule.module.launcher.DeploymentListener;
-import org.mule.module.launcher.MuleDeploymentService;
-import org.mule.module.launcher.MulePluginClassLoaderManager;
-import org.mule.module.launcher.application.Application;
-import org.mule.module.launcher.application.ApplicationStatus;
+//import org.mule.api.config.MuleProperties;
+//import org.mule.module.launcher.DeploymentListener;
+//import org.mule.module.launcher.MuleDeploymentService;
+//import org.mule.module.launcher.MulePluginClassLoaderManager;
+//import org.mule.module.launcher.application.Application;
+//import org.mule.module.launcher.application.ApplicationStatus;
+import org.mule.runtime.core.api.config.MuleProperties;
+import org.mule.runtime.core.util.FileUtils;
+import org.mule.runtime.module.deployment.api.DeploymentListener;
+import org.mule.runtime.module.deployment.api.application.Application;
+import org.mule.runtime.module.deployment.api.application.ApplicationStatus;
+import org.mule.runtime.module.deployment.internal.MuleDeploymentService;
 import org.mule.tck.junit4.AbstractMuleContextTestCase;
 import org.mule.tck.probe.JUnitProbe;
 import org.mule.tck.probe.PollingProber;
 import org.mule.tck.probe.Prober;
-import org.mule.util.FileUtils;
+//import org.mule.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,7 +62,8 @@ public class FunctionalAppDeployTestCase extends AbstractMuleContextTestCase
 
         applicationDeploymentListener = mock(DeploymentListener.class);
         //domainDeploymentListener = mock(DeploymentListener.class);
-        deploymentService = new MuleDeploymentService(new MulePluginClassLoaderManager());
+        //TODO FIX
+        //deploymentService = new MuleDeploymentService(new MulePluginClassLoaderManager());
         deploymentService.addDeploymentListener(applicationDeploymentListener);
         //deploymentService.addDomainDeploymentListener(domainDeploymentListener);
     }

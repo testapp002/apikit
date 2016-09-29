@@ -10,14 +10,22 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-import org.mule.api.MuleContext;
-import org.mule.api.endpoint.InboundEndpoint;
-import org.mule.api.lifecycle.InitialisationException;
-import org.mule.api.processor.LoggerMessageProcessor;
-import org.mule.api.processor.MessageProcessor;
-import org.mule.construct.Flow;
-import org.mule.context.DefaultMuleContextFactory;
-import org.mule.endpoint.EndpointURIEndpointBuilder;
+//import org.mule.api.MuleContext;
+//import org.mule.api.endpoint.InboundEndpoint;
+//import org.mule.api.lifecycle.InitialisationException;
+//import org.mule.api.processor.LoggerMessageProcessor;
+//import org.mule.api.processor.MessageProcessor;
+//import org.mule.construct.Flow;
+//import org.mule.context.DefaultMuleContextFactory;
+//import org.mule.endpoint.EndpointURIEndpointBuilder;
+import org.mule.compatibility.core.api.endpoint.InboundEndpoint;
+import org.mule.compatibility.core.endpoint.EndpointURIEndpointBuilder;
+import org.mule.runtime.core.api.MuleContext;
+import org.mule.runtime.core.api.lifecycle.InitialisationException;
+import org.mule.runtime.core.api.processor.LoggerMessageProcessor;
+import org.mule.runtime.core.api.processor.Processor;
+import org.mule.runtime.core.construct.Flow;
+import org.mule.runtime.core.context.DefaultMuleContextFactory;
 import org.mule.tck.junit4.AbstractMuleTestCase;
 import org.mule.tck.junit4.rule.DynamicPort;
 
@@ -34,6 +42,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.python.netty.channel.ChannelOutboundBuffer;
 
 public class JavaConfigurationTestCase extends AbstractMuleTestCase
 {
@@ -94,21 +103,22 @@ public class JavaConfigurationTestCase extends AbstractMuleTestCase
             //http endpoint
             if (inboundEndpoint != null)
             {
-                muleContext.getRegistry().registerEndpoint(inboundEndpoint);
+                //TODO FIX
+                //muleContext.getRegistry().registerEndpoint(inboundEndpoint);
             }
 
             //action-resource flow
             final Flow flow = new Flow("get:/leagues", muleContext);
             LoggerMessageProcessor loggerMessageProcessor = new LoggerMessageProcessor();
             loggerMessageProcessor.setMessage("Payload is #[payload]");
-            flow.setMessageProcessors(Collections.<MessageProcessor>singletonList(loggerMessageProcessor));
+            flow.setMessageProcessors(Collections.<Processor>singletonList(loggerMessageProcessor));
             muleContext.getRegistry().registerFlowConstruct(flow);
 
             //gateway flow
             Flow routerFlow = new Flow("RestRouterFlow", muleContext);
             routerFlow.setMessageSource(inboundEndpoint);
             final Router apikitRouter = configureApikitRouter(muleContext);
-            routerFlow.setMessageProcessors(Arrays.<MessageProcessor>asList(apikitRouter));
+            routerFlow.setMessageProcessors(Arrays.<Processor>asList(apikitRouter));
             muleContext.getRegistry().registerFlowConstruct(routerFlow);
 
             //start app

@@ -10,7 +10,7 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 import static org.mule.module.apikit.AbstractConfiguration.APPLICATION_RAML;
 
-import org.mule.tck.junit4.FunctionalTestCase;
+import org.mule.functional.junit4.FunctionalTestCase;
 import org.mule.tck.junit4.rule.DynamicPort;
 
 import com.jayway.restassured.RestAssured;

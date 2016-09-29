@@ -6,33 +6,41 @@
  */
 package org.mule.module.apikit.transform;
 
-import org.mule.runtime.core.api.MuleMessage;
+import org.mule.extension.http.api.HttpRequestAttributes;
+import org.mule.runtime.core.api.Event;
+//import org.mule.runtime.core.api.MuleMessage;
 import org.mule.runtime.api.metadata.DataType;
 import org.mule.runtime.core.api.transformer.Transformer;
 import org.mule.runtime.core.api.transformer.TransformerException;
-import org.mule.runtime.core.config.i18n.MessageFactory;
+import org.mule.runtime.core.config.i18n.I18nMessageFactory;
+//import org.mule.runtime.core.config.i18n.MessageFactory;
 import org.mule.runtime.core.transformer.AbstractMessageTransformer;
-import org.mule.transformer.types.DataTypeFactory;
+//import org.mule.transformer.types.DataTypeFactory;
+import org.mule.common.metadata.datatype.DataTypeFactory;
+
+
+import java.nio.charset.Charset;
 
 public class PayloadNormalizerTransformer extends AbstractMessageTransformer
 {
 
     @Override
-    public Object transformMessage(MuleMessage message, String encoding) throws TransformerException
+    public Object transformMessage(Event event, Charset encoding) throws TransformerException
     {
-        DataType sourceDataType = DataTypeFactory.create(message.getPayload().getClass(), (String) message.getInboundProperty("content-type"));
-        DataType resultDataType = getReturnDataType();
-
-        Transformer transformer;
-        try
-        {
-            transformer = TransformerCache.getTransformerCache(muleContext).get(new DataTypePair(sourceDataType, resultDataType));
-        }
-        catch (Exception e)
-        {
-            throw new TransformerException(MessageFactory.createStaticMessage(e.getMessage()), e);
-        }
-
-        return transformer.transform(message.getPayload());
+        return event.getMessage().getPayload();
+        //DataType sourceDataType = DataTypeFactory.create(event.getMessage().getPayload().getClass(), (String) ((HttpRequestAttributes)event.getMessage().getAttributes()).getHeaders().get("content-type"));
+        //DataType resultDataType = getReturnDataType();
+        //
+        //Transformer transformer;
+        //try
+        //{
+        //    transformer = TransformerCache.getTransformerCache(muleContext).get(new DataTypePair(sourceDataType, resultDataType));
+        //}
+        //catch (Exception e)
+        //{
+        //    throw new TransformerException(I18nMessageFactory.createStaticMessage(e.getMessage()), e);
+        //}
+        //
+        //return transformer.transform(event.getMessage().getPayload());
     }
 }
