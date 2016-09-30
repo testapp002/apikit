@@ -11,6 +11,7 @@ import static org.mule.runtime.module.http.api.HttpConstants.RequestProperties.H
 //import org.mule.runtime.core.DefaultMuleEvent;
 //import org.mule.runtime.core.message.MuleEvent;
 //import org.mule.runtime.api.message.MuleEvent;
+import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.runtime.core.NonBlockingVoidMuleEvent;
 //import org.mule.runtime.core.OptimizedRequestContext;
 import org.mule.runtime.core.VoidMuleEvent;
@@ -33,10 +34,12 @@ import org.mule.module.apikit.uri.URIPattern;
 import org.mule.module.apikit.uri.URIResolver;
 //import org.mule.runtime.core.message.DefaultMuleMessageBuilder;
 import org.mule.runtime.core.exception.MessagingException;
+import org.mule.runtime.core.message.DefaultMessageBuilder;
 import org.mule.runtime.core.processor.AbstractInterceptingMessageProcessor;
 import org.mule.runtime.core.processor.AbstractRequestResponseMessageProcessor;
 import org.mule.raml.interfaces.model.IResource;
 import org.mule.raml.interfaces.model.parameter.IParameter;
+import org.mule.runtime.module.http.internal.ParameterMap;
 
 import com.google.common.cache.LoadingCache;
 
@@ -168,12 +171,12 @@ public abstract class AbstractRouter extends AbstractInterceptingMessageProcesso
         }
 
         URIPattern uriPattern;
-        URIResolver uriResolver;
+        //URIResolver uriResolver;
         path = path.isEmpty() ? "/" : path;
         try
         {
             uriPattern = getUriPatternCache().get(path);
-            uriResolver = getUriResolverCache().get(path);
+          //  uriResolver = getUriResolverCache().get(path);
         }
         catch (ExecutionException e)
         {
@@ -190,9 +193,9 @@ public abstract class AbstractRouter extends AbstractInterceptingMessageProcesso
             throw new MethodNotAllowedException(resource.getUri(), request.getMethod());
         }
 
-        ResolvedVariables resolvedVariables = uriResolver.resolve(uriPattern);
+        //ResolvedVariables resolvedVariables = uriResolver.resolve(uriPattern);
 
-        processUriParameters(resolvedVariables, resource, event);
+        processUriParameters(resource, event);
 
         Flow flow = getFlow(resource, request);
         if (flow == null)
@@ -227,10 +230,10 @@ public abstract class AbstractRouter extends AbstractInterceptingMessageProcesso
         return config.routingTable;
     }
 
-    private LoadingCache<String, URIResolver> getUriResolverCache()
-    {
-        return config.uriResolverCache;
-    }
+    //private LoadingCache<String, URIResolver> getUriResolverCache()
+    //{
+    //    return config.uriResolverCache;
+    //}
 
     private LoadingCache<String, URIPattern> getUriPatternCache()
     {
@@ -244,11 +247,12 @@ public abstract class AbstractRouter extends AbstractInterceptingMessageProcesso
         return config.getHttpRestRequest(event);
     }
 
-    private void processUriParameters(ResolvedVariables resolvedVariables, IResource resource, Event event) throws InvalidUriParameterException
+    private void processUriParameters(IResource resource, Event event) throws InvalidUriParameterException
     {
+        ParameterMap resolvedVariables = ((HttpRequestAttributes)event.getMessage().getAttributes()).getUriParams();
         if (logger.isDebugEnabled())
         {
-            for (String name : resolvedVariables.names())
+            for (String name : resolvedVariables.keySet())
             {
                 logger.debug("        uri parameter: " + name + "=" + resolvedVariables.get(name));
             }
@@ -268,21 +272,6 @@ public abstract class AbstractRouter extends AbstractInterceptingMessageProcesso
                 }
             }
         }
-        //TODO: We can use event.getMessage().getAttributes().getUriParams() to read the resolved params.
-        //Map<String, String> uriParams = new HashMap<>();
-        //for (String name : resolvedVariables.names())
-        //{
-        //    String value = String.valueOf(resolvedVariables.get(name));
-        //    event.setFlowVariable(name, value);
-        //    uriParams.put(name, value);
-        //}
-        //if (event.getMessage().getInboundProperty(HTTP_URI_PARAMS) != null)
-        //{
-        //    DefaultMuleMessageBuilder muleMessageBuilder = new DefaultMuleMessageBuilder(event.getMessage());
-        //
-        //    event.getMessage().<Map>getInboundProperty(HTTP_URI_PARAMS).putAll(uriParams);
-        //    ((HttpRequestAttriutes)event.getMessage().getAttributes())(HTTP_URI_PARAMS)
-        //}
     }
 
     protected abstract Flow getFlow(IResource resource, HttpRestRequest request);

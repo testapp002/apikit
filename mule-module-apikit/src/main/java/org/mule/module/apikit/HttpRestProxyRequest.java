@@ -10,31 +10,31 @@ import org.mule.runtime.core.api.Event;
 import org.mule.module.apikit.exception.NotAcceptableException;
 import org.mule.module.apikit.exception.UnsupportedMediaTypeException;
 
-public class HttpRestProxyRequest extends HttpRestRequest
-{
-
-    public HttpRestProxyRequest(Event event, AbstractConfiguration config)
-    {
-        super(event, config);
-    }
-
-    @Override
-    protected void handleUnsupportedMediaType() throws UnsupportedMediaTypeException
-    {
-        if (config.isDisableValidations())
-        {
-            return;
-        }
-        super.handleUnsupportedMediaType();
-    }
-
-    @Override
-    protected String handleNotAcceptable() throws NotAcceptableException
-    {
-        if (config.isDisableValidations())
-        {
-            return null;
-        }
-        return super.handleNotAcceptable();
-    }
-}
+//public class HttpRestProxyRequest extends HttpRestRequest
+//{
+//
+//    public HttpRestProxyRequest(Event event, AbstractConfiguration config)
+//    {
+//        super(event, config);
+//    }
+//
+//    @Override
+//    protected void handleUnsupportedMediaType() throws UnsupportedMediaTypeException
+//    {
+//        if (config.isDisableValidations())
+//        {
+//            return;
+//        }
+//        super.handleUnsupportedMediaType();
+//    }
+//
+//    @Override
+//    protected String handleNotAcceptable() throws NotAcceptableException
+//    {
+//        if (config.isDisableValidations())
+//        {
+//            return null;
+//        }
+//        return super.handleNotAcceptable();
+//    }
+//}

@@ -498,14 +498,15 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
     }
 
     //TODO FIX THIS METHOD getFlowConstruct NOT FOUND
-    public FlowConstruct getParentFlow(MuleEvent event)
-    {
-        //if(matchesWrappedFlow(event.getFlowConstruct()))
-        //{
-        //    return this.flowConstruct;
-        //}
-        return null;
-    }
+    //IS THIS METHOD NEEDED?
+    //public FlowConstruct getParentFlow(MuleEvent event)
+    //{
+    //    if(matchesWrappedFlow(event.getFlowConstruct()))
+    //    {
+    //        return this.flowConstruct;
+    //    }
+    //    return null;
+    //}
 
     private boolean matchesWrappedFlow(final FlowConstruct flowConstruct)
     {

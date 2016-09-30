@@ -18,7 +18,9 @@ import org.mule.runtime.core.api.processor.Processor;
 import org.mule.runtime.core.config.i18n.I18nMessage;
 //import org.mule.transformer.types.MimeTypes; // TODO: Does not exist
 //import org.mule.transport.http.HttpConnector; //TODO: It is located in the compatbility package
+import org.mule.runtime.core.message.DefaultMessageBuilder;
 import org.mule.runtime.module.http.api.HttpConstants;
+import org.mule.runtime.module.http.internal.HttpMessageBuilder;
 import org.mule.runtime.module.http.internal.component.ResourceNotFoundException;
 //import org.mule.transport.http.i18n.HttpMessages; // TODO: it is in the compatibility package. it has messages only, check if we can copy this.
 import org.mule.runtime.core.util.FilenameUtils;
@@ -240,6 +242,10 @@ public class ConsoleHandler implements Processor
                 mimetype = DEFAULT_MIME_TYPE;
             }
             //TODO FIX OUTBOUND PROPERTY
+
+            Event.Builder event2 = Event.builder(event);
+            DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder(event.getMessage());
+            messageBuilder.payload(buffer);
 
             //resultEvent = new DefaultMuleEvent(new DefaultMuleMessage(buffer, event.getMuleContext()), event);
             //resultEvent.getMessage().setOutboundProperty(HttpConnector.HTTP_STATUS_PROPERTY,
