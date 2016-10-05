@@ -17,11 +17,13 @@ import org.mule.common.metadata.datatype.DataTypeFactory;
 import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.runtime.api.message.Message;
 import org.mule.runtime.api.message.MuleEvent;
+import org.mule.runtime.api.message.MultiPartPayload;
 import org.mule.runtime.core.PropertyScope;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleException;
 //import org.mule.runtime.core.api.MuleMessage;
 //import org.mule.api.transformer.DataType;
+import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.core.api.transformer.TransformerException;
 //import org.mule.api.transport.PropertyScope;
 import org.mule.runtime.core.message.ds.StringDataSource;
@@ -128,7 +130,6 @@ public class HttpRestRequest
         negotiateInputRepresentation();
         List<String> responseMimeTypes = getResponseMimeTypes();
         String responseRepresentation = negotiateOutputRepresentation(responseMimeTypes);
-        //MuleEvent e = new Event.Builder(requestEvent);
         Event.Builder newRequestEventBuilder = Event.builder((Event)requestEvent);
         if (responseMimeTypes != null)
         {
@@ -206,22 +207,11 @@ public class HttpRestRequest
         }
     }
 
-    //TODO FIX THIS METHOD. Used to add defalult query params
     private void setQueryParameter(String key, String value)
     {
-        //if (requestEvent.getMessage().getInboundProperty("http.headers") != null)
-        //{
-        //    //only set query param as top-level inbound property when using endpoints instead of listeners
-        //    requestEvent.getMessage().setProperty(key, value, PropertyScope.INBOUND);
-        //}
-        //Map<String, String> queryParamMap = requestEvent.getMessage().getInboundProperty("http.query.params");
-        //if (queryParamMap instanceof ParameterMap)
-        //{
-        //    //overwrite the query-param map with a mutable instance
-        //    queryParamMap = new HashMap<String, String>(queryParamMap);
-        //    requestEvent.getMessage().setProperty("http.query.params", queryParamMap, PropertyScope.INBOUND);
-        //}
-        //queryParamMap.put(key, value);
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put(key,value);
+        requestEvent = EventHelper.addQueryParameters((Event)requestEvent, queryParams);
     }
 
 
@@ -292,9 +282,21 @@ public class HttpRestRequest
         return incomingHeaders;
     }
 
-    //TODO FIX THIS METHOD. Used to add defalult headers
+    //TODO FIX THIS METHOD. Used to add defalult headers //FIXED
     private void setHeader(String key, String value)
     {
+        Event.Builder builder = Event.builder((Event)requestEvent);
+        InternalMessage.Builder messageBuilder = InternalMessage.builder(requestEvent.getMessage());
+
+        HttpRequestAttributes oldAttributes = ((HttpRequestAttributes)requestEvent.getMessage().getAttributes());
+        ParameterMap headers = oldAttributes.getHeaders();
+        headers.put(key, value);
+        HttpRequestAttributes newAttributes = new HttpRequestAttributes(headers, oldAttributes.getListenerPath(), oldAttributes.getRelativePath(), oldAttributes.getVersion(), oldAttributes.getScheme(), oldAttributes.getMethod(), oldAttributes.getRequestPath(), oldAttributes.getRequestUri(), oldAttributes.getQueryString(), oldAttributes.getQueryParams(), oldAttributes.getUriParams(), oldAttributes.getRemoteAddress(), oldAttributes.getClientCertificate());
+
+
+        messageBuilder.attributes(newAttributes);
+        requestEvent = builder.message(messageBuilder.build()).build();
+
         //requestEvent.getMessage().setProperty(key, value, PropertyScope.INBOUND);
         //if (requestEvent.getMessage().getInboundProperty("http.headers") != null)
         //{
@@ -423,41 +425,41 @@ public class HttpRestRequest
                 }
             }
         }
-        //TODO FIX THIS METHOD. SET PAYLOAD OF THE MESSAGE
-//        requestEvent.getMessage().setPayload(paramMap);
+        requestEvent = EventHelper.setPayload((Event) requestEvent, paramMap);
     }
 
 
     //TODO FIX THIS METHOD
     private void validateMultipartForm(Map<String, List<IParameter>> formParameters) throws BadRequestException
     {
-        //for (String expectedKey : formParameters.keySet())
-        //{
-        //    if (formParameters.get(expectedKey).size() != 1)
-        //    {
-        //        //do not perform validation when multi-type parameters are used
-        //        continue;
-        //    }
-        //    IParameter expected = formParameters.get(expectedKey).get(0);
-        //    DataHandler dataHandler = requestEvent.getMessage().getInboundAttachment(expectedKey);
-        //    if (dataHandler == null && expected.isRequired())
-        //    {
-        //        //perform only 'required' validation to avoid consuming the stream
-        //        throw new InvalidFormParameterException("Required form parameter " + expectedKey + " not specified");
-        //    }
-        //    if (dataHandler == null && expected.getDefaultValue() != null)
-        //    {
-        //        DataHandler defaultDataHandler = new DataHandler(new StringDataSource(expected.getDefaultValue(), expectedKey));
-        //        try
-        //        {
-        //            ((DefaultMuleMessage) requestEvent.getMessage()).addInboundAttachment(expectedKey, defaultDataHandler);
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            logger.warn("Cannot set default part " + expectedKey, e);
-        //        }
-        //    }
-        //}
+        for (String expectedKey : formParameters.keySet())
+        {
+            if (formParameters.get(expectedKey).size() != 1)
+            {
+                //do not perform validation when multi-type parameters are used
+                continue;
+            }
+            IParameter expected = formParameters.get(expectedKey).get(0);
+            DataHandler dataHandler = requestEvent.getMessage().getInboundAttachment(expectedKey);
+            if (dataHandler == null && expected.isRequired())
+            {
+                //perform only 'required' validation to avoid consuming the stream
+                throw new InvalidFormParameterException("Required form parameter " + expectedKey + " not specified");
+            }
+            if (dataHandler == null && expected.getDefaultValue() != null)
+            {
+                DataHandler defaultDataHandler = new DataHandler(new StringDataSource(expected.getDefaultValue(), expectedKey));
+                try
+                {
+
+                    ((DefaultMuleMessage) requestEvent.getMessage()).addInboundAttachment(expectedKey, defaultDataHandler);
+                }
+                catch (Exception e)
+                {
+                    logger.warn("Cannot set default part " + expectedKey, e);
+                }
+            }
+        }
     }
 
     private void validateSchemaV2(IMimeType mimeType) throws BadRequestException
@@ -494,7 +496,7 @@ public class HttpRestRequest
             {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 IOUtils.copyLarge((InputStream) input, baos);
-               // DataType<ByteArrayInputStream> dataType = DataTypeFactory.create(ByteArrayInputStream.class, message.getPayload().getDataType().getMimeType());
+                //DataType<ByteArrayInputStream> dataType = DataTypeFactory.create(ByteArrayInputStream.class, message.getPayload().getDataType().getMimeType());
                 //dataType.setEncoding(message.getEncoding());
                 byte[] bytes = baos.toByteArray();
                 //message.setPayload(new ByteArrayInputStream(bytes), dataType);

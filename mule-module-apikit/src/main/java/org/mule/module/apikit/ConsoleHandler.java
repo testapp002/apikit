@@ -8,16 +8,16 @@
 package org.mule.module.apikit;
 
 //import org.mule.runtime.core.DefaultMuleEvent;
-//import org.mule.DefaultMuleMessage; // TODO does not exist
+import org.mule.compatibility.transport.http.HttpConnector;
+import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.core.api.Event;
 //import org.mule.runtime.core.api.MuleEvent;
 import org.mule.runtime.core.api.MuleException;
 //import org.mule.runtime.core.api.processor.MessageProcessor;
 import org.mule.module.apikit.exception.NotFoundException;
+import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.core.api.processor.Processor;
 import org.mule.runtime.core.config.i18n.I18nMessage;
-//import org.mule.transformer.types.MimeTypes; // TODO: Does not exist
-//import org.mule.transport.http.HttpConnector; //TODO: It is located in the compatbility package
 import org.mule.runtime.core.message.DefaultMessageBuilder;
 import org.mule.runtime.module.http.api.HttpConstants;
 import org.mule.runtime.module.http.internal.HttpMessageBuilder;
@@ -27,12 +27,16 @@ import org.mule.runtime.core.util.FilenameUtils;
 import org.mule.runtime.core.util.IOUtils;
 import org.mule.runtime.core.util.StringUtils;
 
+import com.google.common.net.HttpHeaders;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +58,13 @@ public class ConsoleHandler implements Processor
     private static final String CONSOLE_ATTRIBUTES_PLACEHOLDER = "console-attributes-placeholder";
     private static final String DEFAULT_API_RESOURCES_PATH = "api/";
     private static final String RAML_QUERY_STRING = "raml";
+
+    public static final int SC_MOVED_PERMANENTLY = 301;
+    public static final String HEADER_LOCATION = "Location"; // [Response]
+    public static final int SC_OK = org.mule.runtime.module.http.api.HttpConstants.HttpStatus.OK.getStatusCode();
+    public static final String HEADER_CONTENT_LENGTH = "Content-Length"; // [Entity]
+    public static final String HEADER_EXPIRES = "Expires"; // [Entity]
+
 
     private String cachedIndexHtml;
     private String embeddedConsolePath;
@@ -168,10 +179,9 @@ public class ConsoleHandler implements Processor
             if (path.equals(embeddedConsolePath) && !(contextPath.endsWith("/") && standalone))
             {
                 // client redirect
-
-                //TODO FIX OUTBOUND PROPERTY
-                //event.getMessage().setOutboundProperty(HttpConnector.HTTP_STATUS_PROPERTY,
-                //                                       String.valueOf(HttpConstants.SC_MOVED_PERMANENTLY));
+                Map<String, String> headers = new HashMap<>();
+                headers.put(HttpConnector.HTTP_STATUS_PROPERTY,
+                            String.valueOf(SC_MOVED_PERMANENTLY));
                 String scheme = UrlUtils.getScheme(event.getMessage());
                 String host = event.getMessage().getInboundProperty("Host");
                 String requestPath = event.getMessage().getInboundProperty("http.request.path");
@@ -180,9 +190,9 @@ public class ConsoleHandler implements Processor
                 {
                     redirectLocation += "?" + queryString;
                 }
-                //TODO FIX OUTBOUND PROPERTY
 
-                //event.getMessage().setOutboundProperty(HttpConstants.HEADER_LOCATION, redirectLocation);
+                headers.put(HEADER_LOCATION, redirectLocation);
+                event = EventHelper.addOutboundProperties(event, headers);
                 return event;
             }
             if (path.equals(embeddedConsolePath) || path.equals(embeddedConsolePath + "/") || path.equals(embeddedConsolePath + "/index.html"))
@@ -241,27 +251,25 @@ public class ConsoleHandler implements Processor
             {
                 mimetype = DEFAULT_MIME_TYPE;
             }
-            //TODO FIX OUTBOUND PROPERTY
+            Event.Builder builder = Event.builder(event.getContext());
+            InternalMessage.Builder messageBuilder = InternalMessage.builder().payload(buffer);
+            builder.message(messageBuilder.build());
+            resultEvent = builder.build();
+            Map<String, String> headers = new HashMap<>();
+            headers.put(HttpConnector.HTTP_STATUS_PROPERTY, String.valueOf(SC_OK));
+            headers.put(HttpHeaders.CONTENT_TYPE, mimetype);
+            headers.put(HEADER_CONTENT_LENGTH, Integer.toString(buffer.length));
+            headers.put("Access-Control-Allow-Origin", "*");
 
-            Event.Builder event2 = Event.builder(event);
-            DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder(event.getMessage());
-            messageBuilder.payload(buffer);
-
-            //resultEvent = new DefaultMuleEvent(new DefaultMuleMessage(buffer, event.getMuleContext()), event);
-            //resultEvent.getMessage().setOutboundProperty(HttpConnector.HTTP_STATUS_PROPERTY,
-            //                                             String.valueOf(HttpConstants.SC_OK));
-            //resultEvent.getMessage().setOutboundProperty(HttpConstants.HEADER_CONTENT_TYPE, mimetype);
-            //resultEvent.getMessage().setOutboundProperty(HttpConstants.HEADER_CONTENT_LENGTH, buffer.length);
-            //resultEvent.getMessage().setOutboundProperty("Access-Control-Allow-Origin", "*");
-            //
-            //if (addContentEncodingHeader)
-            //{
-            //    resultEvent.getMessage().setOutboundProperty("Content-Encoding", "gzip");
-            //}
-            //if (mimetype.equals(MimeTypes.HTML))
-            //{
-            //    resultEvent.getMessage().setOutboundProperty(HttpConstants.HEADER_EXPIRES, -1); //avoid IE ajax response caching
-            //}
+            if (addContentEncodingHeader)
+            {
+                headers.put("Content-Encoding", "gzip");
+            }
+            if (mimetype.equals(MediaType.HTML))
+            {
+                headers.put(HEADER_EXPIRES, "-1"); //avoid IE ajax response caching
+            }
+            resultEvent = EventHelper.addOutboundProperties(resultEvent,headers);
         }
         catch (IOException e)
         {
@@ -269,8 +277,7 @@ public class ConsoleHandler implements Processor
             throw new ResourceNotFoundException(null, null);// fileNotFound(RESOURCE_BASE + path)
         }
 
-//        return resultEvent;
-        return null;
+        return resultEvent;
     }
 
     private String getMimeType(String path)

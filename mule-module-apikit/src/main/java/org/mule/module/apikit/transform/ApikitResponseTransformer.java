@@ -7,6 +7,8 @@
 package org.mule.module.apikit.transform;
 
 import org.mule.common.metadata.datatype.DataTypeFactory;
+import org.mule.extension.http.api.HttpRequestAttributes;
+import org.mule.module.apikit.EventHelper;
 import org.mule.runtime.api.message.Message;
 //import org.mule.runtime.core.api.MuleMessage;
 import org.mule.runtime.api.metadata.DataType;
@@ -25,6 +27,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.net.MediaType;
 
+import java.beans.EventHandler;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.List;
@@ -61,74 +64,74 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
         return transformToExpectedContentType(event.getMessage(), responseRepresentation, responseMimeTypes, acceptedHeader);
     }
 
-    public Object transformToExpectedContentType(Message message, String responseRepresentation, List<String> responseMimeTypes,
+    public Object transformToExpectedContentType(Event event, String responseRepresentation, List<String> responseMimeTypes,
                                                  String acceptedHeader) throws TransformerException
     {
-        return message.getPayload();
         //TODO FIX METHOD
-        //Object payload = message.getPayload();
-        //String msgMimeType = null;
-        //DataType<?> dataType = message.getDataType();
-        //if (dataType != null && dataType.getMimeType() != null)
-        //{
-        //    msgMimeType = dataType.getMimeType() + ";charset=" + message.getEncoding();
-        //}
-        //String msgContentType = message.getOutboundProperty("Content-Type");
-        //
-        //// user is in charge of setting content-type when using */*
-        //if ("*/*".equals(responseRepresentation))
-        //{
-        //    if (msgContentType == null)
-        //    {
-        //        throw new ApikitRuntimeException("Content-Type must be set in the flow when declaring */* response type");
-        //    }
-        //    return payload;
-        //}
-        //
-        //if (payload instanceof NullPayload)
-        //{
-        //    if (logger.isDebugEnabled())
-        //    {
-        //        logger.debug("Response transformation not required. Message payload type is NullPayload");
-        //    }
-        //    return payload;
-        //}
-        //
-        //Collection<String> conjunctionTypes = getBestMatchMediaTypes(responseMimeTypes, acceptedHeader);
-        //String msgAcceptedContentType = acceptedContentType(msgMimeType, msgContentType, conjunctionTypes);
-        //if (msgAcceptedContentType != null)
-        //{
-        //    message.setOutboundProperty("Content-Type", msgAcceptedContentType);
-        //    if (logger.isDebugEnabled())
-        //    {
-        //        logger.debug("Response transformation not required. Message payload type is " + msgAcceptedContentType);
-        //    }
-        //    return payload;
-        //}
-        //DataType sourceDataType = DataTypeFactory.create(message.getPayload().getClass(), msgMimeType);
-        //DataType resultDataType = DataTypeFactory.create(String.class, responseRepresentation);
-        //
-        //if (logger.isDebugEnabled())
-        //{
-        //    logger.debug(String.format("Resolving transformer between [source=%s] and [result=%s]", sourceDataType, resultDataType));
-        //}
-        //
-        //Transformer transformer;
-        //try
-        //{
-        //    transformer = TransformerCache.getTransformerCache(muleContext).get(new DataTypePair(sourceDataType, resultDataType));
-        //    if (logger.isDebugEnabled())
-        //    {
-        //        logger.debug(String.format("Transformer resolved to [transformer=%s]", transformer));
-        //    }
-        //    Object newPayload = transformer.transform(message.getPayload());
-        //    message.setOutboundProperty("Content-Type", responseRepresentation);
-        //    return newPayload;
-        //}
-        //catch (Exception e)
-        //{
-        //    throw new TransformerException(this, e);
-        //}
+        Object payload = event.getMessage().getPayload();
+        String msgMimeType = null;
+        DataType dataType = event.getMessage().getPayload().getDataType();
+        if (dataType != null && dataType.getMediaType() != null)
+        {
+            msgMimeType = dataType.getMediaType() + ";charset=" + event.getMessage().getEncoding();
+        }
+        String msgContentType = ((HttpRequestAttributes)event.getMessage().getAttributes()).getHeaders().get("Content-Type");
+
+        // user is in charge of setting content-type when using */*
+        if ("*/*".equals(responseRepresentation))
+        {
+            if (msgContentType == null)
+            {
+                throw new ApikitRuntimeException("Content-Type must be set in the flow when declaring */* response type");
+            }
+            return event;
+        }
+
+        if (payload == null)
+        {
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Response transformation not required. Message payload type is NullPayload");
+            }
+            return event;
+        }
+
+        Collection<String> conjunctionTypes = getBestMatchMediaTypes(responseMimeTypes, acceptedHeader);
+        String msgAcceptedContentType = acceptedContentType(msgMimeType, msgContentType, conjunctionTypes);
+        if (msgAcceptedContentType != null)
+        {
+            event = EventHelper.addHeader(event, "Content-Type", msgAcceptedContentType);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Response transformation not required. Message payload type is " + msgAcceptedContentType);
+            }
+            return event;
+        }
+        DataType sourceDataType = DataTypeFactory.create(message.getPayload().getClass(), msgMimeType);
+        DataType resultDataType = DataTypeFactory.create(String.class, responseRepresentation);
+
+        if (logger.isDebugEnabled())
+        {
+            logger.debug(String.format("Resolving transformer between [source=%s] and [result=%s]", sourceDataType, resultDataType));
+        }
+
+        Transformer transformer;
+        try
+        {
+            transformer = TransformerCache.getTransformerCache(muleContext).get(new DataTypePair(sourceDataType, resultDataType));
+            if (logger.isDebugEnabled())
+            {
+                logger.debug(String.format("Transformer resolved to [transformer=%s]", transformer));
+            }
+            Object newPayload = transformer.transform(message.getPayload());
+
+            message = EventHelper.addHeadersToMessage(message, "Content-Type", responseRepresentation);
+            return newPayload;
+        }
+        catch (Exception e)
+        {
+            throw new TransformerException(this, e);
+        }
 
     }
 

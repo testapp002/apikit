@@ -6,14 +6,18 @@
  */
 package org.mule.module.apikit;
 
+import org.mule.extension.http.api.HttpRequestAttributes;
+import org.mule.extension.http.api.HttpResponseAttributes;
 import org.mule.runtime.api.message.MuleEvent;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleException;
 import org.mule.runtime.core.api.lifecycle.StartException;
+import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.core.api.registry.RegistrationException;
 import org.mule.runtime.core.config.i18n.I18nMessageFactory;
 import org.mule.runtime.core.construct.Flow;
 import org.mule.raml.interfaces.model.IResource;
+import org.mule.runtime.module.http.internal.ParameterMap;
 
 import java.util.Map;
 
@@ -90,14 +94,17 @@ public class Router extends AbstractRouter
         return flow;
     }
 
-    //TODO FIX METHOD OUTBOUND PROPERTIES
-    //@Override
+    @Override
     protected Event doProcessRouterResponse(Event event, Integer successStatus)
     {
-        //if (event.getMessage().getOutboundProperty("http.status") == null)
-        //{
-        //    event.getMessage().setOutboundProperty("http.status", successStatus);
-        //}
+        HttpResponseAttributes httpResponseAttributes = ((HttpResponseAttributes)event.getMessage().getAttributes());
+        if (httpResponseAttributes.getHeaders().get("http.status") == null)
+        {
+            Event.Builder builder = Event.builder(event);
+            Map<String,String> headers = (Map<String, String>) event.getVariable("_outboundHeaders_");
+            headers.put("http.status", Integer.toString(successStatus));
+            builder.addVariable("_outboundHeaders_", headers);
+        }
         return event;
     }
 

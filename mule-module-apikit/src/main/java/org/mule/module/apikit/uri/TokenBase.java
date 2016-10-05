@@ -105,7 +105,7 @@ abstract class TokenBase implements Token
      * <p/>
      * If the expression is already stripped, this method returns the same string.
      *
-     * @param The expression to 'strip'.
+     * @param exp The expression to 'strip'.
      * @return The raw expression (without the curly brackets).
      */
     protected final static String strip(String exp)

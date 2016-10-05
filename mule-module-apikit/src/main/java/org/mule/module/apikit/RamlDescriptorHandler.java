@@ -9,11 +9,19 @@ package org.mule.module.apikit;
 
 import static org.mule.module.apikit.AbstractConfiguration.APPLICATION_RAML;
 
+import org.mule.common.metadata.datatype.DataTypeFactory;
+import org.mule.extension.http.api.HttpRequestAttributes;
+import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.core.api.Event;
 //import org.mule.runtime.core.api.MuleEvent;
 import org.mule.runtime.core.api.MuleException;
 //import org.mule.transformer.types.DataTypeFactory;
 import org.mule.compatibility.transport.http.HttpConstants;
+import org.mule.runtime.core.api.message.InternalMessage;
+import org.mule.runtime.module.http.internal.ParameterMap;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.raml.model.ActionType;
 
@@ -56,14 +64,17 @@ public class RamlDescriptorHandler
     {
         return process(event, config.getApikitRaml(event));
     }
-    //TODO FIX METHOD
+
     private Event process(Event event, String raml) throws MuleException
     {
-        //event.getMessage().setPayload(raml, DataTypeFactory.create(String.class, APPLICATION_RAML));
-        //event.getMessage().setOutboundProperty(HttpConstants.HEADER_CONTENT_TYPE, APPLICATION_RAML);
-        //event.getMessage().setOutboundProperty(HttpConstants.HEADER_EXPIRES, -1); //avoid IE ajax response caching
-        //event.getMessage().setOutboundProperty(HttpConstants.HEADER_CONTENT_LENGTH, raml.length());
-        //event.getMessage().setOutboundProperty("Access-Control-Allow-Origin", "*");
+        Map<String,String> headers = (Map<String, String>) event.getVariable("_outboundHeaders_");
+        headers.put(HttpConstants.HEADER_CONTENT_TYPE, APPLICATION_RAML);
+        headers.put(HttpConstants.HEADER_EXPIRES, "-1");//avoid IE ajax response caching
+        headers.put(HttpConstants.HEADER_CONTENT_LENGTH, Integer.toString(raml.length()));
+        headers.put("Access-Control-Allow-Origin", "*");
+
+        event = EventHelper.addOutboundProperties(event,headers);
+        event = EventHelper.setPayload(event, raml, "application", "raml+yaml");
         return event;
     }
 }

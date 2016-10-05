@@ -6,21 +6,14 @@
  */
 package org.mule.module.apikit;
 
-//import static org.mule.compatibility.transport.http.HttpConnector.HTTP_METHOD_PROPERTY;
-//import static org.mule.compatibility.transport.http.HttpConnector.HTTP_QUERY_PARAMS;
-//import static org.mule.compatibility.transport.http.HttpConnector.HTTP_REQUEST_PATH_PROPERTY;
-
-import org.mule.extension.http.api.HttpAttributes;
 import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.runtime.api.message.Message;
 import org.mule.runtime.core.api.Event;
-//import org.mule.runtime.core.api.MuleEvent;
-//import org.mule.runtime.core.api.MuleMessage;
 import org.mule.runtime.core.util.StringUtils;
+import org.mule.runtime.module.http.internal.ParameterMap;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
 
 public class HttpProtocolAdapter
 {
@@ -33,7 +26,7 @@ public class HttpProtocolAdapter
     private String method;
     private String acceptableResponseMediaTypes;
     private String requestMediaType;
-    private Map<String, Object> queryParams;
+    private ParameterMap queryParams;
 
     public HttpProtocolAdapter(Event event)
     {
@@ -72,14 +65,13 @@ public class HttpProtocolAdapter
         {
             this.requestMediaType = ((HttpRequestAttributes)message.getAttributes()).getHeaders().get("content-type");
         }
-        //TODO FIX METHOD
-        //if (this.requestMediaType == null
-        //    && !StringUtils.isBlank((String) message.getOutboundProperty("content-type")))
-        //{
-        //    this.requestMediaType = message.getOutboundProperty("content-type");
-        //}
+        if (this.requestMediaType == null
+            && !StringUtils.isBlank((String)((HttpRequestAttributes)message.getAttributes()).getHeaders().get("content-type")))
+        {
+            this.requestMediaType = ((HttpRequestAttributes)message.getAttributes()).getHeaders().get("content-type");
+        }
 
-//        this.queryParams = ((HttpRequestAttributes)message.getAttributes()).getQueryParams();
+        this.queryParams = ((HttpRequestAttributes)message.getAttributes()).getQueryParams();
     }
 
     public String getBasePath()
@@ -111,7 +103,7 @@ public class HttpProtocolAdapter
         return requestMediaType != null ? requestMediaType.split(";")[0] : null;
     }
 
-    public Map<String, Object> getQueryParams()
+    public ParameterMap getQueryParams()
     {
         return queryParams;
     }

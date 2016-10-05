@@ -8,6 +8,7 @@
 package org.mule.module.apikit.transform;
 
 import org.mule.runtime.api.metadata.DataType;
+import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.MuleException;
 //import org.mule.api.transformer.DataType;
@@ -52,79 +53,77 @@ public class TransformerCacheLoader extends CacheLoader<DataTypePair, Transforme
                                              DataType sourceDataType,
                                              DataType resultDataType) throws MuleException
     {
-        //TODO FIX METHOD
-        //if (sourceDataType.getMimeType().equals(MimeTypes.JSON)
-        //    || sourceDataType.getMimeType().equals(MimeTypes.APPLICATION_JSON)
-        //    || sourceDataType.getMimeType().endsWith("+json"))
-        //{
-        //    JsonToObject jto = new JsonToObject();
-        //    jto.setReturnDataType(resultDataType);
-        //    jto.setMapper(new ObjectMapper());
-        //    muleContext.getRegistry().applyProcessorsAndLifecycle(jto);
-        //    return jto;
-        //}
-        //else if (resultDataType.getMimeType().equals(MimeTypes.JSON)
-        //         || resultDataType.getMimeType().equals(MimeTypes.APPLICATION_JSON)
-        //         || resultDataType.getMimeType().endsWith("+json"))
-        //{
-        //    ObjectToJson otj = new ObjectToJson();
-        //    otj.setSourceClass(sourceDataType.getType());
-        //    otj.setReturnDataType(resultDataType);
-        //    otj.setMapper(new ObjectMapper());
-        //    muleContext.getRegistry().applyProcessorsAndLifecycle(otj);
-        //    return otj;
-        //}
-        //else if (sourceDataType.getMimeType().equals(MimeTypes.XML)
-        //         || sourceDataType.getMimeType().equals(MimeTypes.APPLICATION_XML)
-        //         || sourceDataType.getMimeType().endsWith("+xml"))
-        //{
-        //    try
-        //    {
-        //        JAXBUnmarshallerTransformer jmt = new JAXBUnmarshallerTransformer(
-        //            JAXBContext.newInstance(resultDataType.getType()), resultDataType);
-        //        muleContext.getRegistry().applyProcessorsAndLifecycle(jmt);
-        //        return jmt;
-        //    }
-        //    catch (JAXBException e)
-        //    {
-        //        LOGGER.error("Unable to create JAXB unmarshaller for " + resultDataType, e);
-        //    }
-        //}
-        //else if (resultDataType.getMimeType().equals(MimeTypes.XML)
-        //         || resultDataType.getMimeType().equals(MimeTypes.APPLICATION_XML)
-        //         || resultDataType.getMimeType().endsWith("+xml"))
-        //{
-        //    try
-        //    {
-        //        TransientAnnotationReader reader = new TransientAnnotationReader();
-        //        reader.addTransientField(Throwable.class.getDeclaredField("stackTrace"));
-        //        reader.addTransientMethod(Throwable.class.getDeclaredMethod("getStackTrace"));
-        //
-        //        Map<String, Object> jaxbConfig = new HashMap<String, Object>();
-        //        jaxbConfig.put(JAXBRIContext.ANNOTATION_READER, reader);
-        //
-        //        JAXBContext jaxbContext = JAXBContext.newInstance(new Class[]{sourceDataType.getType()},
-        //            jaxbConfig);
-        //        JAXBMarshallerTransformer jut = new JAXBMarshallerTransformer(jaxbContext, resultDataType);
-        //        jut.setSourceClass(sourceDataType.getType());
-        //        muleContext.getRegistry().applyProcessorsAndLifecycle(jut);
-        //        return jut;
-        //    }
-        //    catch (JAXBException e)
-        //    {
-        //        LOGGER.error("Unable to create JAXB marshaller for " + resultDataType, e);
-        //    }
-        //    catch (NoSuchMethodException e)
-        //    {
-        //        LOGGER.error("Unable to create JAXB marshaller for " + resultDataType, e);
-        //    }
-        //    catch (NoSuchFieldException e)
-        //    {
-        //        LOGGER.error("Unable to create JAXB marshaller for " + resultDataType, e);
-        //    }
-        //
-        //}
+        if (sourceDataType.getMediaType().equals(MediaType.JSON)
+            || sourceDataType.getMediaType().equals(MediaType.APPLICATION_JSON)
+            || sourceDataType.getMediaType().toString().endsWith("+json"))
+        {
+            JsonToObject jto = new JsonToObject();
+            jto.setReturnDataType(resultDataType);
+            jto.setMapper(new ObjectMapper());
+            muleContext.getRegistry().applyProcessorsAndLifecycle(jto);
+            return jto;
+        }
+        else if (resultDataType.getMediaType().equals(MediaType.JSON)
+                 || resultDataType.getMediaType().equals(MediaType.APPLICATION_JSON)
+                 || resultDataType.getMediaType().toString().endsWith("+json"))
+        {
+            ObjectToJson otj = new ObjectToJson();
+            otj.setSourceClass(sourceDataType.getType());
+            otj.setReturnDataType(resultDataType);
+            otj.setMapper(new ObjectMapper());
+            muleContext.getRegistry().applyProcessorsAndLifecycle(otj);
+            return otj;
+        }
+        else if (sourceDataType.getMediaType().equals(MediaType.XML)
+                 || sourceDataType.getMediaType().equals(MediaType.APPLICATION_XML)
+                 || sourceDataType.getMediaType().toString().endsWith("+xml"))
+        {
+            try
+            {
+                JAXBUnmarshallerTransformer jmt = new JAXBUnmarshallerTransformer(
+                    JAXBContext.newInstance(resultDataType.getType()), resultDataType);
+                muleContext.getRegistry().applyProcessorsAndLifecycle(jmt);
+                return jmt;
+            }
+            catch (JAXBException e)
+            {
+                LOGGER.error("Unable to create JAXB unmarshaller for " + resultDataType, e);
+            }
+        }
+        else if (resultDataType.getMediaType().equals(MediaType.XML)
+                 || resultDataType.getMediaType().equals(MediaType.APPLICATION_XML)
+                 || resultDataType.getMediaType().toString().endsWith("+xml"))
+        {
+            try
+            {
+                TransientAnnotationReader reader = new TransientAnnotationReader();
+                reader.addTransientField(Throwable.class.getDeclaredField("stackTrace"));
+                reader.addTransientMethod(Throwable.class.getDeclaredMethod("getStackTrace"));
 
+                Map<String, Object> jaxbConfig = new HashMap<String, Object>();
+                jaxbConfig.put(JAXBRIContext.ANNOTATION_READER, reader);
+
+                JAXBContext jaxbContext = JAXBContext.newInstance(new Class[]{sourceDataType.getType()},
+                    jaxbConfig);
+                JAXBMarshallerTransformer jut = new JAXBMarshallerTransformer(jaxbContext, resultDataType);
+                jut.setSourceClass(sourceDataType.getType());
+                muleContext.getRegistry().applyProcessorsAndLifecycle(jut);
+                return jut;
+            }
+            catch (JAXBException e)
+            {
+                LOGGER.error("Unable to create JAXB marshaller for " + resultDataType, e);
+            }
+            catch (NoSuchMethodException e)
+            {
+                LOGGER.error("Unable to create JAXB marshaller for " + resultDataType, e);
+            }
+            catch (NoSuchFieldException e)
+            {
+                LOGGER.error("Unable to create JAXB marshaller for " + resultDataType, e);
+            }
+
+        }
         return muleContext.getRegistry().lookupTransformer(sourceDataType, resultDataType);
     }
 
