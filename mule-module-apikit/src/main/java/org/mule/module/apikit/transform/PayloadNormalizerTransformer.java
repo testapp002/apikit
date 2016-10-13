@@ -27,20 +27,19 @@ public class PayloadNormalizerTransformer extends AbstractMessageTransformer
     @Override
     public Object transformMessage(Event event, Charset encoding) throws TransformerException
     {
-        return event.getMessage().getPayload();
-        //DataType sourceDataType = DataTypeFactory.create(event.getMessage().getPayload().getClass(), (String) ((HttpRequestAttributes)event.getMessage().getAttributes()).getHeaders().get("content-type"));
-        //DataType resultDataType = getReturnDataType();
-        //
-        //Transformer transformer;
-        //try
-        //{
-        //    transformer = TransformerCache.getTransformerCache(muleContext).get(new DataTypePair(sourceDataType, resultDataType));
-        //}
-        //catch (Exception e)
-        //{
-        //    throw new TransformerException(I18nMessageFactory.createStaticMessage(e.getMessage()), e);
-        //}
-        //
-        //return transformer.transform(event.getMessage().getPayload());
+        DataType sourceDataType = null;//DataTypeFactory.create(event.getMessage().getPayload().getClass(), (String) ((HttpRequestAttributes)event.getMessage().getAttributes()).getHeaders().get("content-type"));
+        DataType resultDataType = getReturnDataType();
+
+        Transformer transformer;
+        try
+        {
+            transformer = TransformerCache.getTransformerCache(muleContext).get(new DataTypePair(sourceDataType, resultDataType));
+        }
+        catch (Exception e)
+        {
+            throw new TransformerException(I18nMessageFactory.createStaticMessage(e.getMessage()), e);
+        }
+
+        return transformer.transform(event.getMessage().getPayload());
     }
 }

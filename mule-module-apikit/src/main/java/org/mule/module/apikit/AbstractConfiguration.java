@@ -22,7 +22,7 @@ import org.mule.runtime.core.construct.Flow;
 import org.mule.module.apikit.exception.ApikitRuntimeException;
 import org.mule.module.apikit.exception.NotFoundException;
 import org.mule.module.apikit.injector.RamlUpdater;
-import org.mule.module.apikit.spi.RouterService;
+//import org.mule.module.apikit.spi.RouterService;
 import org.mule.module.apikit.uri.URIPattern;
 import org.mule.module.apikit.uri.URIResolver;
 import org.mule.raml.interfaces.model.IAction;
@@ -85,7 +85,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
     private List<String> consoleUrls = new ArrayList<String>();
     private boolean started;
     protected boolean extensionEnabled = false;
-    private RouterService routerExtension = null;
+    //private RouterService routerExtension = null;
     private String appHome;
     private ParserService parserService;
 
@@ -231,31 +231,32 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
 
     public String getEndpointAddress(FlowConstruct flowConstruct)
     {
-        MessageSourceAdapter adapter = new MessageSourceAdapter(((Flow) flowConstruct).getMessageSource());
-        String address = adapter.getAddress();
-        String path = adapter.getPath();
-        String scheme = adapter.getScheme();
-        String chAddress = System.getProperty("fullDomain");
-        String chBaseUri = scheme + "://" + chAddress + path;
-        if (logger.isDebugEnabled())
-        {
-            if (api != null)
-            {
-                logger.debug("yaml baseUri: " + api.getBaseUri());
-            }
-            logger.debug("mule baseUri: " + address);
-            logger.debug("chub baseUri: " + chBaseUri);
-        }
-        if (chAddress != null)
-        {
-            address = chBaseUri;
-        }
-        if (address.endsWith("/"))
-        {
-            logger.debug("removing trailing slash from baseuri -> " + address);
-            address = address.substring(0, address.length() - 1);
-        }
-        return address;
+        return "http://localhost:8081/api";
+        //MessageSourceAdapter adapter = new MessageSourceAdapter(((Flow) flowConstruct).getMessageSource());
+        //String address = adapter.getAddress();
+        //String path = adapter.getPath();
+        //String scheme = adapter.getScheme();
+        //String chAddress = System.getProperty("fullDomain");
+        //String chBaseUri = scheme + "://" + chAddress + path;
+        //if (logger.isDebugEnabled())
+        //{
+        //    if (api != null)
+        //    {
+        //        logger.debug("yaml baseUri: " + api.getBaseUri());
+        //    }
+        //    logger.debug("mule baseUri: " + address);
+        //    logger.debug("chub baseUri: " + chBaseUri);
+        //}
+        //if (chAddress != null)
+        //{
+        //    address = chBaseUri;
+        //}
+        //if (address.endsWith("/"))
+        //{
+        //    logger.debug("removing trailing slash from baseuri -> " + address);
+        //    address = address.substring(0, address.length() - 1);
+        //}
+        //return address;
     }
 
     /**
@@ -541,20 +542,20 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
 
     public void setExtensionEnabled(boolean extensionEnabled)
     {
-        if (extensionEnabled)
-        {
-            ServiceLoader<RouterService> loader = ServiceLoader.load(RouterService.class);
-            Iterator<RouterService> it = loader.iterator();
-            if (it.hasNext())
-            {
-                this.extensionEnabled = true;
-                routerExtension = it.next();
-            }
-        }
+        //if (extensionEnabled)
+        //{
+        //    ServiceLoader<RouterService> loader = ServiceLoader.load(RouterService.class);
+        //    Iterator<RouterService> it = loader.iterator();
+        //    if (it.hasNext())
+        //    {
+        //        this.extensionEnabled = true;
+        //        routerExtension = it.next();
+        //    }
+        //}
     }
 
-    public RouterService getRouterExtension()
-    {
-        return this.routerExtension;
-    }
+    //public RouterService getRouterExtension()
+    //{
+    //    return this.routerExtension;
+    //}
 }

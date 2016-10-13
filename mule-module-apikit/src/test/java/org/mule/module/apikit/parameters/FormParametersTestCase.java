@@ -8,7 +8,11 @@ package org.mule.module.apikit.parameters;
 
 import static com.jayway.restassured.RestAssured.given;
 
+import org.mule.functional.junit4.ExtensionFunctionalTestCase;
 import org.mule.functional.junit4.FunctionalTestCase;
+import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
+import org.mule.functional.junit4.runners.ArtifactClassLoaderRunnerConfig;
+import org.mule.functional.junit4.runners.RunnerDelegateTo;
 import org.mule.tck.junit4.rule.DynamicPort;
 
 import com.jayway.restassured.RestAssured;
@@ -21,8 +25,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-@RunWith(Parameterized.class)
-public class FormParametersTestCase extends FunctionalTestCase
+@ArtifactClassLoaderRunnerConfig(plugins = {"org.mule.modules:mule-module-sockets", "org.mule.modules:mule-module-http-ext"},
+        providedInclusions = "org.mule.modules:mule-module-sockets")
+@RunnerDelegateTo(Parameterized.class)
+public class FormParametersTestCase extends MuleArtifactFunctionalTestCase
 {
 
     @Rule
@@ -40,7 +46,7 @@ public class FormParametersTestCase extends FunctionalTestCase
     public static Collection<Object[]> parameters()
     {
         return Arrays.asList(new Object[][] {
-                {"org/mule/module/apikit/parameters/form-parameters-endpoint-config.xml"},
+                //{"org/mule/module/apikit/parameters/form-parameters-endpoint-config.xml"},
                 {"org/mule/module/apikit/parameters/form-parameters-config.xml"}
         });
     }

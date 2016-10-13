@@ -6,6 +6,8 @@
  */
 package org.mule.module.apikit.validation;
 
+import org.mule.common.metadata.datatype.DataTypeFactory;
+import org.mule.module.apikit.EventHelper;
 import org.mule.runtime.api.message.Message;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
@@ -16,6 +18,7 @@ import org.mule.module.apikit.exception.BadRequestException;
 import org.mule.module.apikit.validation.cache.XmlSchemaCache;
 import org.mule.raml.interfaces.model.IRaml;
 //import org.mule.transformer.types.DataTypeFactory;
+import org.mule.runtime.core.metadata.DefaultDataTypeBuilderFactory;
 import org.mule.runtime.module.http.api.HttpConstants;
 import org.mule.runtime.core.util.IOUtils;
 
@@ -63,13 +66,14 @@ public class RestXmlSchemaValidator extends AbstractRestSchemaValidator
             String charset = getHeaderCharset(muleEvent.getMessage());
             if (input instanceof InputStream)
             {
-                //logger.debug("transforming payload to perform XSD validation");
-                //ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                //IOUtils.copyLarge((InputStream) input, baos);
+                logger.debug("transforming payload to perform XSD validation");
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                IOUtils.copyLarge((InputStream) input, baos);
+
                 //DataType<ByteArrayInputStream> dataType = DataTypeFactory.create(ByteArrayInputStream.class, muleEvent.getMessage().getDataType().getMimeType());
                 //dataType.setEncoding(messageEncoding);
-                //muleEvent.getMessage().setPayload(new ByteArrayInputStream(baos.toByteArray()), dataType);
-                //data = loadDocument(new ByteArrayInputStream(baos.toByteArray()), charset);
+                //muleEvent = EventHelper.setPayload(muleEvent, new ByteArrayInputStream(baos.toByteArray()), dataType);
+                data = loadDocument(new ByteArrayInputStream(baos.toByteArray()), charset);
                 data = null; // TODO REMOVE
             }
             else if (input instanceof String)

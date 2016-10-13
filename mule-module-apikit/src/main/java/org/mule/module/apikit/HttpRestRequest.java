@@ -440,7 +440,7 @@ public class HttpRestRequest
                 continue;
             }
             IParameter expected = formParameters.get(expectedKey).get(0);
-            DataHandler dataHandler = requestEvent.getMessage().getInboundAttachment(expectedKey);
+            DataHandler dataHandler = null;//requestEvent.getMessage().getInboundAttachment(expectedKey);
             if (dataHandler == null && expected.isRequired())
             {
                 //perform only 'required' validation to avoid consuming the stream
@@ -452,7 +452,7 @@ public class HttpRestRequest
                 try
                 {
 
-                    ((DefaultMuleMessage) requestEvent.getMessage()).addInboundAttachment(expectedKey, defaultDataHandler);
+                    //((DefaultMuleMessage) requestEvent.getMessage()).addInboundAttachment(expectedKey, defaultDataHandler);
                 }
                 catch (Exception e)
                 {
@@ -538,12 +538,11 @@ public class HttpRestRequest
         return IOUtils.toString(new ByteArrayInputStream(StreamUtils.trimBom(bytes)), charset);
     }
 
-    //TODO FIX THIS METHOD
     private void validateSchema(String mimeTypeName) throws MuleRestException
     {
-        //SchemaType schemaType = mimeTypeName.contains("json") ? SchemaType.JSONSchema : SchemaType.XMLSchema;
-        //RestSchemaValidator validator = RestSchemaValidatorFactory.getInstance().createValidator(schemaType, requestEvent.getMuleContext());
-        //validator.validate(config.getName(), SchemaCacheUtils.getSchemaCacheKey(action, mimeTypeName), requestEvent, config.getApi());
+        SchemaType schemaType = mimeTypeName.contains("json") ? SchemaType.JSONSchema : SchemaType.XMLSchema;
+        RestSchemaValidator validator = RestSchemaValidatorFactory.getInstance().createValidator(schemaType, config.getMuleContext());
+        validator.validate(config.getName(), SchemaCacheUtils.getSchemaCacheKey(action, mimeTypeName), (Event)requestEvent, config.getApi());
     }
 
     private String negotiateOutputRepresentation(List<String> mimeTypes) throws MuleRestException

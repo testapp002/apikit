@@ -6,7 +6,7 @@
  */
 package org.mule.module.apikit;
 
-import org.mule.compatibility.core.api.endpoint.ImmutableEndpoint;
+//import org.mule.compatibility.core.api.endpoint.ImmutableEndpoint;
 import org.mule.runtime.core.api.source.MessageSource;
 import org.mule.module.apikit.exception.ApikitRuntimeException;
 import org.mule.runtime.module.http.internal.listener.DefaultHttpListener;
@@ -15,81 +15,85 @@ import org.mule.runtime.module.http.internal.listener.DefaultHttpListenerConfig;
 public class MessageSourceAdapter
 {
 
-    private IMessageSource delegate;
+    //private IMessageSource delegate;
+    //
+    //public MessageSourceAdapter(MessageSource messageSource)
+    //{
+    //    //if (messageSource instanceof ImmutableEndpoint)
+    //    //{
+    //    //    delegate = new MessageSourceEndpointAdapter((ImmutableEndpoint) messageSource);
+    //    //}
+    //    //else
+    //    if (messageSource instanceof DefaultHttpListener)
+    //    {
+    //        delegate = new MessageSourceListenerAdapter((DefaultHttpListener) messageSource);
+    //    }
+    //    else if (messageSource == null)
+    //    {
+    //        throw new ApikitRuntimeException("Flow endpoint is null, APIKIT requires a listener ref in each of it's flows");
+    //    }
+    //    else
+    //    {
+    //        throw new ApikitRuntimeException("Message Source Type NOT SUPPORTED: " + messageSource.getClass());
+    //    }
+    //
+    //}
+    //
+    //@Override
+    //public String getAddress()
+    //{
+    //    return delegate.getAddress();
+    //}
+    //
+    //@Override
+    //public String getPath()
+    //{
+    //    return delegate.getPath();
+    //}
+    //
+    //@Override
+    //public String getScheme()
+    //{
+    //    return delegate.getScheme();
+    //}
+    //
+    //private interface IMessageSource
+    //{
+    //    String getAddress();
+    //    String getPath();
+    //    String getScheme();
+    //}
 
-    public MessageSourceAdapter(MessageSource messageSource)
-    {
-        if (messageSource instanceof ImmutableEndpoint)
-        {
-            delegate = new MessageSourceEndpointAdapter((ImmutableEndpoint) messageSource);
-        }
-        else if (messageSource instanceof DefaultHttpListener)
-        {
-            delegate = new MessageSourceListenerAdapter((DefaultHttpListener) messageSource);
-        }
-        else if (messageSource == null)
-        {
-            throw new ApikitRuntimeException("Flow endpoint is null, APIKIT requires a listener ref in each of it's flows");
-        }
-        else
-        {
-            throw new ApikitRuntimeException("Message Source Type NOT SUPPORTED: " + messageSource.getClass());
-        }
+    //private class MessageSourceEndpointAdapter implements IMessageSource
+    //{
 
-    }
+        //private ImmutableEndpoint endpoint;
 
-    public String getAddress()
-    {
-        return delegate.getAddress();
-    }
+        //public MessageSourceEndpointAdapter(ImmutableEndpoint messageSource)
+        //{
+        //    endpoint = messageSource;
+        //}
 
-    public String getPath()
-    {
-        return delegate.getPath();
-    }
+        //@Override
+        //public String getAddress()
+        //{
+        //    return endpoint.getAddress();
+        //}
+        //
+        //@Override
+        //public String getPath()
+        //{
+        //    return endpoint.getEndpointURI().getPath();
+        //}
+        //
+        //@Override
+        //public String getScheme()
+        //{
+        //    return endpoint.getEndpointURI().getScheme();
+        //}
+//    }
 
-    public String getScheme()
-    {
-        return delegate.getScheme();
-    }
-
-    private interface IMessageSource
-    {
-        String getAddress();
-        String getPath();
-        String getScheme();
-    }
-
-    private class MessageSourceEndpointAdapter implements IMessageSource
-    {
-
-        private ImmutableEndpoint endpoint;
-
-        public MessageSourceEndpointAdapter(ImmutableEndpoint messageSource)
-        {
-            endpoint = messageSource;
-        }
-
-        @Override
-        public String getAddress()
-        {
-            return endpoint.getAddress();
-        }
-
-        @Override
-        public String getPath()
-        {
-            return endpoint.getEndpointURI().getPath();
-        }
-
-        @Override
-        public String getScheme()
-        {
-            return endpoint.getEndpointURI().getScheme();
-        }
-    }
-
-    private class MessageSourceListenerAdapter implements IMessageSource
+    private class MessageSourceListenerAdapter //implements IMessageSource
     {
 
         private DefaultHttpListener listener;
@@ -101,20 +105,20 @@ public class MessageSourceAdapter
             config = (DefaultHttpListenerConfig) messageSource.getConfig();
         }
 
-        @Override
+        //@Override
         public String getAddress()
         {
             return String.format("%s://%s:%s%s", getScheme(), config.getHost(), config.getPort(), getPath());
         }
 
-        @Override
+        //@Override
         public String getPath()
         {
             String path = listener.getPath();
             return path.endsWith("/*") ? path.substring(0, path.length() - 2) : path;
         }
 
-        @Override
+        //@Override
         public String getScheme()
         {
             return config.getTlsContext() != null ? "https" : "http";

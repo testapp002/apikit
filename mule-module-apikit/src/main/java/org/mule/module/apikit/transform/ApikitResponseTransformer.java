@@ -8,6 +8,7 @@ package org.mule.module.apikit.transform;
 
 import org.mule.common.metadata.datatype.DataTypeFactory;
 import org.mule.extension.http.api.HttpRequestAttributes;
+import org.mule.extension.http.api.HttpResponseAttributes;
 import org.mule.module.apikit.EventHelper;
 import org.mule.runtime.api.message.Message;
 //import org.mule.runtime.core.api.MuleMessage;
@@ -54,14 +55,13 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
         if (responseRepresentation == null)
         {
             // clear response payload unless response status is manually set
-        //TODO FIX METHOD
-            //if (message.getOutboundProperty("http.status") == null)
-            //{
-            //    message.setPayload(NullPayload.getInstance());
-            //}
-            //return message;
+            if (((HttpResponseAttributes)event.getMessage().getAttributes()).getHeaders().get("http.status") == null)
+            {
+                event = EventHelper.setNullPayload(event);
+            }
+            return event;
         }
-        return transformToExpectedContentType(event.getMessage(), responseRepresentation, responseMimeTypes, acceptedHeader);
+        return transformToExpectedContentType(event, responseRepresentation, responseMimeTypes, acceptedHeader);
     }
 
     public Object transformToExpectedContentType(Event event, String responseRepresentation, List<String> responseMimeTypes,
@@ -73,7 +73,7 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
         DataType dataType = event.getMessage().getPayload().getDataType();
         if (dataType != null && dataType.getMediaType() != null)
         {
-            msgMimeType = dataType.getMediaType() + ";charset=" + event.getMessage().getEncoding();
+            msgMimeType = dataType.getMediaType() + ";charset="; //+ event.getMessage().getEncoding();
         }
         String msgContentType = ((HttpRequestAttributes)event.getMessage().getAttributes()).getHeaders().get("Content-Type");
 
@@ -107,8 +107,8 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
             }
             return event;
         }
-        DataType sourceDataType = DataTypeFactory.create(message.getPayload().getClass(), msgMimeType);
-        DataType resultDataType = DataTypeFactory.create(String.class, responseRepresentation);
+        DataType sourceDataType = null;//DataTypeFactory.create(event.getMessage().getPayload().getClass(), msgMimeType);
+        DataType resultDataType = null;//DataTypeFactory.create(String.class, responseRepresentation);
 
         if (logger.isDebugEnabled())
         {
@@ -123,10 +123,10 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
             {
                 logger.debug(String.format("Transformer resolved to [transformer=%s]", transformer));
             }
-            Object newPayload = transformer.transform(message.getPayload());
-
-            message = EventHelper.addHeadersToMessage(message, "Content-Type", responseRepresentation);
-            return newPayload;
+            Object newPayload = transformer.transform(event.getMessage().getPayload());
+            event = EventHelper.setPayload(event, newPayload);
+            event = EventHelper.addHeader(event, "Content-Type", responseRepresentation);
+            return event;
         }
         catch (Exception e)
         {

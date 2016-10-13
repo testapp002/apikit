@@ -11,7 +11,7 @@
     <name>APIKit examples</name>
 
     <modules>
-        <module>leagues</module>
+        <!--<module>leagues</module>-->
         <module>studio-example</module>
     </modules>
 
