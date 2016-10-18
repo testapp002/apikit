@@ -164,7 +164,7 @@ public class ConsoleHandler implements Processor
     {
 
         String path = UrlUtils.getResourceRelativePath(event.getMessage());
-        String contextPath = UrlUtils.getBasePath(event.getMessage());
+        String contextPath = UrlUtils.getRelativePath(event.getMessage());
         String queryString = UrlUtils.getQueryString(event.getMessage());
 
         if (logger.isDebugEnabled())

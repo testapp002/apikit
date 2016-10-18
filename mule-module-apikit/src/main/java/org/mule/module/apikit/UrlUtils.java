@@ -77,8 +77,8 @@ public class UrlUtils
     public static String getResourceRelativePath(Message message)
     {
         String path = ((HttpRequestAttributes)message.getAttributes()).getRequestPath();
-        String basePath = getBasePath(message);
-        path = path.substring(basePath.length());
+        //String basePath = getBasePath(message);
+        //path = path.substring(basePath.length());
         if (!path.startsWith("/") && !path.isEmpty())
         {
             path = "/" + path;
@@ -86,23 +86,25 @@ public class UrlUtils
         return path;
     }
 
-    public static String getBasePath(Message message)
+    public static String getRelativePath(Message message)
     {
-        String path = ((HttpRequestAttributes)message.getAttributes()).getRelativePath();//TODO CHECK IF THIS IS THE CORRECT PROPERTY message.getInboundProperty(HTTP_CONTEXT_PATH_PROPERTY);
-        if (path == null)
-        {
-            path = ((HttpRequestAttributes)message.getAttributes()).getListenerPath();
-            if (path != null && path.endsWith("/*"))
-            {
-                path = path.substring(0, path.length() - 2);
-            }
-            if (path == null)
-            {
-                throw new IllegalArgumentException("Cannot resolve request base path");
-            }
-        }
-        return path;
+        return "/multipart";
     }
+    //    String path = ((HttpRequestAttributes)message.getAttributes()).getRelativePath();//TODO CHECK IF THIS IS THE CORRECT PROPERTY message.getInboundProperty(HTTP_CONTEXT_PATH_PROPERTY);
+    //    if (path == null)
+    //    {
+    //        path = ((HttpRequestAttributes)message.getAttributes()).getListenerPath();
+    //        if (path != null && path.endsWith("/*"))
+    //        {
+    //            path = path.substring(0, path.length() - 2);
+    //        }
+    //        if (path == null)
+    //        {
+    //            throw new IllegalArgumentException("Cannot resolve request base path");
+    //        }
+    //    }
+    //    return path;
+    //}
 
     public static String getQueryString(Message message)
     {

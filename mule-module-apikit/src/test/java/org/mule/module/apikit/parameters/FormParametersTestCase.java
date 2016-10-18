@@ -77,7 +77,7 @@ public class FormParametersTestCase extends MuleArtifactFunctionalTestCase
                 .multiPart("third", "true")
                 .multiPart("payload", "3.4")
                 .expect().response().statusCode(201)
-                .when().post("/api/multipart");
+                .when().post("/test/api/multipart");
     }
 
     @Test
@@ -87,7 +87,7 @@ public class FormParametersTestCase extends MuleArtifactFunctionalTestCase
                 .multiPart("third", "true")
                 .multiPart("payload", "3.4")
                 .expect().response().statusCode(400)
-                .when().post("/api/multipart");
+                .when().post("/test/api/multipart");
     }
 
     @Test
@@ -98,7 +98,7 @@ public class FormParametersTestCase extends MuleArtifactFunctionalTestCase
                 .formParam("second", "segundo")
                 .formParam("third", "true")
                 .expect().response().statusCode(201)
-                .when().post("/api/url-encoded");
+                .when().post("/test/api/url-encoded");
     }
 
     @Test
@@ -108,7 +108,7 @@ public class FormParametersTestCase extends MuleArtifactFunctionalTestCase
                 .formParam("second", "segundo")
                 .formParam("third", "true")
                 .expect().response().statusCode(400)
-                .when().post("/api/url-encoded");
+                .when().post("/test/api/url-encoded");
     }
 
     @Test
@@ -119,7 +119,7 @@ public class FormParametersTestCase extends MuleArtifactFunctionalTestCase
                 .formParam("second", "segundo")
                 .formParam("third", "35")
                 .expect().response().statusCode(400)
-                .when().post("/api/url-encoded");
+                .when().post("/test/api/url-encoded");
     }
 
     @Test
@@ -129,7 +129,7 @@ public class FormParametersTestCase extends MuleArtifactFunctionalTestCase
                 .formParam("first", "prime")
                 .formParam("second", "second")
                 .expect().response().statusCode(400)
-                .when().post("/api/url-encoded");
+                .when().post("/test/api/url-encoded");
     }
 
 }

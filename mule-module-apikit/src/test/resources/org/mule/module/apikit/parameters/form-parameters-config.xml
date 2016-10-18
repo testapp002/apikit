@@ -24,7 +24,7 @@
         <!--http://www.mulesoft.org/schema/mule/httpn http://www.mulesoft.org/schema/mule/httpn/current/mule-httpn.xsd-->
         <!--http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd">-->
 
-    <httpn:listener-config name="httpListenerConfig">
+    <httpn:listener-config name="httpListenerConfig" basePath="/test">
         <httpn:listener-connection host="localhost" port="${serverPort}"/>
     </httpn:listener-config>
 

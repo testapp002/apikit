@@ -94,11 +94,12 @@ public class HttpRestRequest
 
     public String getResourcePath()
     {
-        String path = adapter.getResourceURI().getPath();
-        String basePath = adapter.getBasePath();
-        int start = basePath.endsWith("/") ? basePath.length() - 1 : basePath.length();
-        int end = path.endsWith("/") ? path.length() - 1 : path.length();
-        return URICoder.decode(path.substring(start, end));
+        String path = adapter.getRelativePath();
+        return URICoder.decode(path);
+        //String basePath = adapter.getBasePath();
+        //int start = basePath.endsWith("/") ? basePath.length() - 1 : basePath.length();
+        //int end = path.endsWith("/") ? path.length() - 1 : path.length();
+        //return URICoder.decode(path.substring(start, end));
     }
 
     public String getMethod()

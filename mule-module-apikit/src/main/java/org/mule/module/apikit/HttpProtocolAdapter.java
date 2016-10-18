@@ -21,7 +21,7 @@ public class HttpProtocolAdapter
     public static final String HTTP_QUERY_PARAMS = "http.query.params";
     public static final String HTTP_REQUEST_PATH_PROPERTY = "http.request.path";
 
-    private String basePath;
+    private String relativePath;
     private URI resourceURI;
     private String method;
     private String acceptableResponseMediaTypes;
@@ -31,7 +31,7 @@ public class HttpProtocolAdapter
     public HttpProtocolAdapter(Event event)
     {
         Message message = event.getMessage();
-        this.basePath = UrlUtils.getBasePath(message);
+        this.relativePath = UrlUtils.getRelativePath(message);
         String hostHeader = ((HttpRequestAttributes)message.getAttributes()).getHeaders().get("host");
         if (hostHeader == null)
         {
@@ -74,9 +74,9 @@ public class HttpProtocolAdapter
         this.queryParams = ((HttpRequestAttributes)message.getAttributes()).getQueryParams();
     }
 
-    public String getBasePath()
+    public String getRelativePath()
     {
-        return basePath;
+        return relativePath;
     }
 
     public URI getResourceURI()
