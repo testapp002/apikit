@@ -97,13 +97,15 @@ public class Router extends AbstractRouter
     @Override
     protected Event doProcessRouterResponse(Event event, Integer successStatus)
     {
-        HttpResponseAttributes httpResponseAttributes = ((HttpResponseAttributes)event.getMessage().getAttributes());
-        if (httpResponseAttributes.getHeaders().get("http.status") == null)
+        //TODO CASTING ATTRIBUTES TO HTTPRESPONSEATTRIBUTES FAILS
+        HttpRequestAttributes httpRequestAttributes = ((HttpRequestAttributes)event.getMessage().getAttributes());
+        if (httpRequestAttributes.getHeaders().get("http.status") == null)
         {
-            Event.Builder builder = Event.builder(event);
-            Map<String,String> headers = (Map<String, String>) event.getVariable("_outboundHeaders_");
-            headers.put("http.status", Integer.toString(successStatus));
-            builder.addVariable("_outboundHeaders_", headers);
+            event = EventHelper.addOutboundProperty(event, "http.status", Integer.toString(successStatus));
+            //Event.Builder builder = Event.builder(event);
+            //Map<String,String> headers = (Map<String, String>) event.getVariable("_outboundHeaders_");
+            //headers.put("http.status", Integer.toString(successStatus));
+            //builder.addVariable("_outboundHeaders_", headers);
         }
         return event;
     }

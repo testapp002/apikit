@@ -12,6 +12,7 @@ import org.mule.extension.http.api.HttpResponseAttributes;
 import org.mule.module.apikit.EventHelper;
 import org.mule.runtime.api.message.Message;
 //import org.mule.runtime.core.api.MuleMessage;
+import org.mule.runtime.api.metadata.CollectionDataType;
 import org.mule.runtime.api.metadata.DataType;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.transformer.Transformer;
@@ -20,6 +21,8 @@ import org.mule.module.apikit.RestContentTypeParser;
 import org.mule.module.apikit.exception.ApikitRuntimeException;
 import org.mule.raml.interfaces.model.IMimeType;
 import org.mule.runtime.core.transformer.AbstractMessageTransformer;
+import org.mule.runtime.core.util.SystemUtils;
+import org.mule.runtime.core.util.generics.GenericsUtils;
 //import org.mule.transformer.types.DataTypeFactory;
 //import org.mule.transport.NullPayload;
 
@@ -32,6 +35,9 @@ import java.beans.EventHandler;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+
+import org.relaxng.datatype.DatatypeBuilder;
 
 public class ApikitResponseTransformer extends AbstractMessageTransformer
 {
@@ -49,9 +55,9 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
             // request not originated from an apikit router
             return event;
         }
-        String responseRepresentation = event.getVariable(BEST_MATCH_REPRESENTATION).toString();
-        List<String> responseMimeTypes = (List<String>) event.getVariable(CONTRACT_MIME_TYPES);
-        String acceptedHeader = event.getVariable(ACCEPT_HEADER).toString();
+        String responseRepresentation = event.getVariable(BEST_MATCH_REPRESENTATION).getValue().toString();
+        List<String> responseMimeTypes = (List<String>) event.getVariable(CONTRACT_MIME_TYPES).getValue();
+        String acceptedHeader = event.getVariable(ACCEPT_HEADER).getValue().toString();
         if (responseRepresentation == null)
         {
             // clear response payload unless response status is manually set
@@ -67,13 +73,20 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
     public Object transformToExpectedContentType(Event event, String responseRepresentation, List<String> responseMimeTypes,
                                                  String acceptedHeader) throws TransformerException
     {
-        //TODO FIX METHOD
         Object payload = event.getMessage().getPayload();
-        String msgMimeType = null;
+        //String msgMimeType = null;
         DataType dataType = event.getMessage().getPayload().getDataType();
+        Charset charset = null;
         if (dataType != null && dataType.getMediaType() != null)
         {
-            msgMimeType = dataType.getMediaType() + ";charset="; //+ event.getMessage().getEncoding();
+            //TODO FIX METHOD
+            Optional<Charset> payloadEncoding = event.getMessage().getPayload().getDataType().getMediaType().getCharset();
+            charset = payloadEncoding.orElse(SystemUtils.getDefaultEncoding(this.muleContext));
+            //charset = payloadEncoding.get();
+
+            //msgMimeType = dataType.getMediaType() + ";charset=" + event.getMessage().getPayload().getDataType().getMediaType(); //+ event.getMessage().getEncoding();
+        //event.getMessage().getPayload().getDataType().getMediaType().getCharset()
+            SystemUtils.getDefaultEncoding(this.muleContext);
         }
         String msgContentType = ((HttpRequestAttributes)event.getMessage().getAttributes()).getHeaders().get("Content-Type");
 
@@ -97,7 +110,7 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
         }
 
         Collection<String> conjunctionTypes = getBestMatchMediaTypes(responseMimeTypes, acceptedHeader);
-        String msgAcceptedContentType = acceptedContentType(msgMimeType, msgContentType, conjunctionTypes);
+        String msgAcceptedContentType = acceptedContentType(dataType.getMediaType().toString(), msgContentType, conjunctionTypes);
         if (msgAcceptedContentType != null)
         {
             event = EventHelper.addHeader(event, "Content-Type", msgAcceptedContentType);
@@ -107,8 +120,17 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
             }
             return event;
         }
-        DataType sourceDataType = null;//DataTypeFactory.create(event.getMessage().getPayload().getClass(), msgMimeType);
-        DataType resultDataType = null;//DataTypeFactory.create(String.class, responseRepresentation);
+        org.mule.runtime.api.metadata.DataTypeBuilder sourceDataTypeBuilder = DataType.builder();
+        sourceDataTypeBuilder.type(event.getMessage().getPayload().getClass());
+        sourceDataTypeBuilder.mediaType(dataType.getMediaType());
+        sourceDataTypeBuilder.charset(charset);
+        DataType sourceDataType = sourceDataTypeBuilder.build();//DataTypeFactory.create(event.getMessage().getPayload().getClass(), msgMimeType);
+
+        org.mule.runtime.api.metadata.DataTypeBuilder resultDataTypeBuilder = DataType.builder();
+        resultDataTypeBuilder.type(String.class);
+        resultDataTypeBuilder.mediaType(responseRepresentation);
+//        resultDataTypeBuilder.charset(charset);
+        DataType resultDataType = resultDataTypeBuilder.build();//DataTypeFactory.create(String.class, responseRepresentation);
 
         if (logger.isDebugEnabled())
         {
@@ -123,9 +145,9 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
             {
                 logger.debug(String.format("Transformer resolved to [transformer=%s]", transformer));
             }
-            Object newPayload = transformer.transform(event.getMessage().getPayload());
+            Object newPayload = transformer.transform(event.getMessage().getPayload().getValue());
             event = EventHelper.setPayload(event, newPayload);
-            event = EventHelper.addHeader(event, "Content-Type", responseRepresentation);
+            event = EventHelper.addOutboundProperty(event, "Content-Type", responseRepresentation);
             return event;
         }
         catch (Exception e)

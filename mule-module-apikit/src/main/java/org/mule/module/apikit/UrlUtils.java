@@ -88,7 +88,7 @@ public class UrlUtils
 
     public static String getRelativePath(Message message)
     {
-        return "/multipart";
+        return "/";//((HttpRequestAttributes)message.getAttributes()).getRelativePath();
     }
     //    String path = ((HttpRequestAttributes)message.getAttributes()).getRelativePath();//TODO CHECK IF THIS IS THE CORRECT PROPERTY message.getInboundProperty(HTTP_CONTEXT_PATH_PROPERTY);
     //    if (path == null)

@@ -8,6 +8,7 @@ package org.mule.module.apikit;
 
 
 import org.mule.extension.http.api.HttpRequestAttributes;
+import org.mule.extension.http.api.HttpResponseAttributes;
 import org.mule.runtime.api.message.Message;
 import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.core.api.Event;
@@ -31,7 +32,11 @@ public class EventHelper
     public static Event addOutboundProperties(Event event, Map<String, String> headers)
     {
         Event.Builder builder = Event.builder(event);
-        Map<String, String> outboundHeaders = (Map<String, String>) event.getVariable(outboundHeadersName);
+        Map<String, String> outboundHeaders = new HashMap<>();
+        if (event.getVariable(outboundHeadersName) != null)
+        {
+            outboundHeaders = new HashMap<>((Map<String, String>) event.getVariable(outboundHeadersName).getValue());
+        }
         outboundHeaders.putAll(headers);
         builder.addVariable(outboundHeadersName, outboundHeaders);
         return builder.build();
@@ -48,7 +53,7 @@ public class EventHelper
     public static Message addHeadersToMessage(Message message, Map<String, String> headers)
     {
         HttpRequestAttributes oldAttributes = ((HttpRequestAttributes)message.getAttributes());
-        ParameterMap inboundHeaders = oldAttributes.getHeaders();
+        ParameterMap inboundHeaders = new ParameterMap(oldAttributes.getHeaders());
         inboundHeaders.putAll(headers);
         HttpRequestAttributes newAttributes = new HttpRequestAttributes(inboundHeaders, oldAttributes.getListenerPath(), oldAttributes.getRelativePath(), oldAttributes.getVersion(), oldAttributes.getScheme(), oldAttributes.getMethod(), oldAttributes.getRequestPath(), oldAttributes.getRequestUri(), oldAttributes.getQueryString(), oldAttributes.getQueryParams(), oldAttributes.getUriParams(), oldAttributes.getRemoteAddress(), oldAttributes.getClientCertificate());
         InternalMessage.Builder messageBuilder = InternalMessage.builder(message);
@@ -88,7 +93,7 @@ public class EventHelper
         InternalMessage.Builder messageBuilder = InternalMessage.builder(event.getMessage());
 
         HttpRequestAttributes oldAttributes = ((HttpRequestAttributes) event.getMessage().getAttributes());
-        ParameterMap inboundQueryParams = oldAttributes.getQueryParams();
+        ParameterMap inboundQueryParams = new ParameterMap(oldAttributes.getQueryParams());
         inboundQueryParams.putAll(queryParams);
         HttpRequestAttributes newAttributes = new HttpRequestAttributes(oldAttributes.getHeaders(), oldAttributes.getListenerPath(), oldAttributes.getRelativePath(), oldAttributes.getVersion(), oldAttributes.getScheme(), oldAttributes.getMethod(), oldAttributes.getRequestPath(), oldAttributes.getRequestUri(), oldAttributes.getQueryString(), inboundQueryParams, oldAttributes.getUriParams(), oldAttributes.getRemoteAddress(), oldAttributes.getClientCertificate());
 
@@ -103,13 +108,29 @@ public class EventHelper
         InternalMessage.Builder messageBuilder = InternalMessage.builder(event.getMessage());
 
         HttpRequestAttributes oldAttributes = ((HttpRequestAttributes) event.getMessage().getAttributes());
-        ParameterMap inboundHeaders = oldAttributes.getHeaders();
-        inboundHeaders.putAll(headers);
-        HttpRequestAttributes newAttributes = new HttpRequestAttributes(inboundHeaders, oldAttributes.getListenerPath(), oldAttributes.getRelativePath(), oldAttributes.getVersion(), oldAttributes.getScheme(), oldAttributes.getMethod(), oldAttributes.getRequestPath(), oldAttributes.getRequestUri(), oldAttributes.getQueryString(), oldAttributes.getQueryParams(), oldAttributes.getUriParams(), oldAttributes.getRemoteAddress(), oldAttributes.getClientCertificate());
+        ParameterMap newHeaders = new ParameterMap(oldAttributes.getHeaders());
+        newHeaders.putAll(headers);
+        HttpRequestAttributes newAttributes = new HttpRequestAttributes(newHeaders, oldAttributes.getListenerPath(), oldAttributes.getRelativePath(), oldAttributes.getVersion(), oldAttributes.getScheme(), oldAttributes.getMethod(), oldAttributes.getRequestPath(), oldAttributes.getRequestUri(), oldAttributes.getQueryString(), oldAttributes.getQueryParams(), oldAttributes.getUriParams(), oldAttributes.getRemoteAddress(), oldAttributes.getClientCertificate());
 
         messageBuilder.attributes(newAttributes);
         return builder.message(messageBuilder.build()).build();
     }
+
+    public static Event addResponseHeaders(Event event, Map<String, String> headers)
+    {
+        Event.Builder builder = Event.builder(event);
+        InternalMessage.Builder messageBuilder = InternalMessage.builder(event.getMessage());
+
+        HttpResponseAttributes oldAttributes = ((HttpResponseAttributes) event.getMessage().getAttributes());
+        ParameterMap newHeaders = new ParameterMap(oldAttributes.getHeaders());
+        newHeaders.putAll(headers);
+        HttpResponseAttributes newAttributes = new HttpResponseAttributes(oldAttributes.getStatusCode(), oldAttributes.getReasonPhrase(), newHeaders);
+//        HttpRequestAttributes newAttributes = new HttpResponseAttributes(oldAttributes. inboundHeaders, oldAttributes.getListenerPath(), oldAttributes.getRelativePath(), oldAttributes.getVersion(), oldAttributes.getScheme(), oldAttributes.getMethod(), oldAttributes.getRequestPath(), oldAttributes.getRequestUri(), oldAttributes.getQueryString(), oldAttributes.getQueryParams(), oldAttributes.getUriParams(), oldAttributes.getRemoteAddress(), oldAttributes.getClientCertificate());
+
+        messageBuilder.attributes(newAttributes);
+        return builder.message(messageBuilder.build()).build();
+    }
+
 
     public static Event addHeader(Event event, String key, String value)
     {
@@ -117,6 +138,11 @@ public class EventHelper
         headers.put(key, value);
         return addHeaders(event, headers);
     }
-
+    public static Event addResponseHeader(Event event, String key, String value)
+    {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(key, value);
+        return addResponseHeaders(event, headers);
+    }
 
 }
