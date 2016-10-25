@@ -11,6 +11,8 @@ package org.mule.module.apikit;
 //import org.mule.api.processor.DefaultMessageProcessorPathElement;
 //import org.mule.api.processor.MessageProcessor;
 import org.mule.functional.junit4.FunctionalTestCase;
+import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
+import org.mule.functional.junit4.runners.ArtifactClassLoaderRunnerConfig;
 import org.mule.runtime.core.api.construct.FlowConstruct;
 import org.mule.runtime.core.api.construct.Pipeline;
 import org.mule.runtime.core.api.processor.DefaultMessageProcessorPathElement;
@@ -29,7 +31,9 @@ import org.junit.Test;
 /**
  * Test Message processor path are generated correctly.
  */
-public class MessageProcessorNotificationPathTestCase extends FunctionalTestCase
+@ArtifactClassLoaderRunnerConfig(plugins = {"org.mule.modules:mule-module-sockets", "org.mule.modules:mule-module-http-ext"},
+        providedInclusions = "org.mule.modules:mule-module-sockets")
+public class MessageProcessorNotificationPathTestCase extends MuleArtifactFunctionalTestCase
 {
     @Override
     protected String getConfigFile()

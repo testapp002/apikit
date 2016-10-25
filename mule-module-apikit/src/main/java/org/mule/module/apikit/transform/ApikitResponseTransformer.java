@@ -53,7 +53,7 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
         if (event.getVariable(APIKIT_ROUTER_REQUEST) == null)
         {
             // request not originated from an apikit router
-            return event;
+            return event.getMessage();
         }
         String responseRepresentation = event.getVariable(BEST_MATCH_REPRESENTATION).getValue().toString();
         List<String> responseMimeTypes = (List<String>) event.getVariable(CONTRACT_MIME_TYPES).getValue();
@@ -65,7 +65,7 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
             {
                 event = EventHelper.setNullPayload(event);
             }
-            return event;
+            return event.getMessage();
         }
         return transformToExpectedContentType(event, responseRepresentation, responseMimeTypes, acceptedHeader);
     }
@@ -86,7 +86,7 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
 
             //msgMimeType = dataType.getMediaType() + ";charset=" + event.getMessage().getPayload().getDataType().getMediaType(); //+ event.getMessage().getEncoding();
         //event.getMessage().getPayload().getDataType().getMediaType().getCharset()
-            SystemUtils.getDefaultEncoding(this.muleContext);
+            //SystemUtils.getDefaultEncoding(this.muleContext);
         }
         String msgContentType = ((HttpRequestAttributes)event.getMessage().getAttributes()).getHeaders().get("Content-Type");
 
@@ -97,7 +97,7 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
             {
                 throw new ApikitRuntimeException("Content-Type must be set in the flow when declaring */* response type");
             }
-            return event;
+            return event.getMessage();
         }
 
         if (payload == null)
@@ -106,7 +106,7 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
             {
                 logger.debug("Response transformation not required. Message payload type is NullPayload");
             }
-            return event;
+            return event.getMessage();
         }
 
         Collection<String> conjunctionTypes = getBestMatchMediaTypes(responseMimeTypes, acceptedHeader);
@@ -118,7 +118,7 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
             {
                 logger.debug("Response transformation not required. Message payload type is " + msgAcceptedContentType);
             }
-            return event;
+            return event.getMessage();
         }
         org.mule.runtime.api.metadata.DataTypeBuilder sourceDataTypeBuilder = DataType.builder();
         sourceDataTypeBuilder.type(event.getMessage().getPayload().getClass());
@@ -146,9 +146,10 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
                 logger.debug(String.format("Transformer resolved to [transformer=%s]", transformer));
             }
             Object newPayload = transformer.transform(event.getMessage().getPayload().getValue());
-            event = EventHelper.setPayload(event, newPayload);
-            event = EventHelper.addOutboundProperty(event, "Content-Type", responseRepresentation);
-            return event;
+            event = EventHelper.setPayload(event, newPayload, responseRepresentation);
+            //event = EventHelper.addOutboundProperty(event, "Content-Type", responseRepresentation);
+
+            return event.getMessage();
         }
         catch (Exception e)
         {

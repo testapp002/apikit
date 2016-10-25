@@ -12,6 +12,8 @@ import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
 import org.mule.functional.junit4.FunctionalTestCase;
+import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
+import org.mule.functional.junit4.runners.ArtifactClassLoaderRunnerConfig;
 import org.mule.tck.junit4.rule.DynamicPort;
 
 import com.jayway.restassured.RestAssured;
@@ -20,7 +22,9 @@ import com.jayway.restassured.response.Response;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class XxeAttackTestCase extends FunctionalTestCase
+@ArtifactClassLoaderRunnerConfig(plugins = {"org.mule.modules:mule-module-sockets", "org.mule.modules:mule-module-http-ext"},
+        providedInclusions = "org.mule.modules:mule-module-sockets")
+public class XxeAttackTestCase extends MuleArtifactFunctionalTestCase
 {
     @Rule
     public DynamicPort serverPort = new DynamicPort("serverPort");

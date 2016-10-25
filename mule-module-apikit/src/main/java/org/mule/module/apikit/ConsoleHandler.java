@@ -163,8 +163,8 @@ public class ConsoleHandler implements Processor
     public Event process(Event event) throws MuleException
     {
 
-        String path = UrlUtils.getResourceRelativePath(event.getMessage());
-        String contextPath = UrlUtils.getRelativePath(event.getMessage());
+        String path = UrlUtils.getRelativePath(event.getMessage());
+        String contextPath = UrlUtils.getBasePath(event.getMessage());
         String queryString = UrlUtils.getQueryString(event.getMessage());
 
         if (logger.isDebugEnabled())
@@ -251,7 +251,7 @@ public class ConsoleHandler implements Processor
             {
                 mimetype = DEFAULT_MIME_TYPE;
             }
-            Event.Builder builder = Event.builder(event.getContext());
+            Event.Builder builder = Event.builder(event);
             InternalMessage.Builder messageBuilder = InternalMessage.builder().payload(buffer);
             builder.message(messageBuilder.build());
             resultEvent = builder.build();

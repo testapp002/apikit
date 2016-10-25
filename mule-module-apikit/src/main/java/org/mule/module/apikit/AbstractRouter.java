@@ -171,12 +171,12 @@ public abstract class AbstractRouter extends AbstractInterceptingMessageProcesso
         }
 
         URIPattern uriPattern;
-        //URIResolver uriResolver;
+        URIResolver uriResolver;
         path = path.isEmpty() ? "/" : path;
         try
         {
             uriPattern = getUriPatternCache().get(path);
-          //  uriResolver = getUriResolverCache().get(path);
+            uriResolver = getUriResolverCache().get(path);
         }
         catch (ExecutionException e)
         {
@@ -193,9 +193,9 @@ public abstract class AbstractRouter extends AbstractInterceptingMessageProcesso
             throw new MethodNotAllowedException(resource.getUri(), request.getMethod());
         }
 
-        //ResolvedVariables resolvedVariables = uriResolver.resolve(uriPattern);
+        ResolvedVariables resolvedVariables = uriResolver.resolve(uriPattern);
 
-        processUriParameters(resource, event);
+        processUriParameters(resource, event, resolvedVariables);
 
         Flow flow = getFlow(resource, request);
         if (flow == null)
@@ -230,10 +230,10 @@ public abstract class AbstractRouter extends AbstractInterceptingMessageProcesso
         return config.routingTable;
     }
 
-    //private LoadingCache<String, URIResolver> getUriResolverCache()
-    //{
-    //    return config.uriResolverCache;
-    //}
+    private LoadingCache<String, URIResolver> getUriResolverCache()
+    {
+        return config.uriResolverCache;
+    }
 
     private LoadingCache<String, URIPattern> getUriPatternCache()
     {
@@ -247,12 +247,12 @@ public abstract class AbstractRouter extends AbstractInterceptingMessageProcesso
         return config.getHttpRestRequest(event);
     }
 
-    private void processUriParameters(IResource resource, Event event) throws InvalidUriParameterException
+    private void processUriParameters(IResource resource, Event event, ResolvedVariables resolvedVariables) throws InvalidUriParameterException
     {
-        ParameterMap resolvedVariables = ((HttpRequestAttributes)event.getMessage().getAttributes()).getUriParams();
+        //ParameterMap resolvedVariables = ((HttpRequestAttributes)event.getMessage().getAttributes()).getUriParams();
         if (logger.isDebugEnabled())
         {
-            for (String name : resolvedVariables.keySet())
+            for (String name : resolvedVariables.names())
             {
                 logger.debug("        uri parameter: " + name + "=" + resolvedVariables.get(name));
             }

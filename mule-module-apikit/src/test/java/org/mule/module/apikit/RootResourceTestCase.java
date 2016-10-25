@@ -54,8 +54,9 @@ public class RootResourceTestCase extends MuleArtifactFunctionalTestCase
         given().header("Accept", "text/plain")
                 .expect()
                 .response().body(containsString("root"))
-                .header("Content-type", "text/plain").statusCode(200)
-                .when().get("/api");
+                .header("Content-type", "text/plain")
+                .statusCode(200)
+                .when().get("/base/api/test2/test");
     }
 
     @Test
@@ -65,7 +66,7 @@ public class RootResourceTestCase extends MuleArtifactFunctionalTestCase
                 .expect()
                 .response().body(containsString("root"))
                 .header("Content-type", "text/plain").statusCode(200)
-                .when().get("/api/");
+                .when().get("/base/api/test2/test/");
     }
 
     @Test
@@ -75,7 +76,7 @@ public class RootResourceTestCase extends MuleArtifactFunctionalTestCase
                 .expect()
                 .response().body(containsString("under"))
                 .header("Content-type", "text/plain").statusCode(200)
-                .when().get("/api//under");
+                .when().get("/base/api/test2/test//under");
     }
 
     @Test
@@ -85,7 +86,7 @@ public class RootResourceTestCase extends MuleArtifactFunctionalTestCase
                 .expect()
                 .response().body(containsString("not found"))
                 .header("Content-type", "text/plain").statusCode(404)
-                .when().get("/api/under");
+                .when().get("/base/api/test2/test/under");
     }
 
     @Test
@@ -95,7 +96,7 @@ public class RootResourceTestCase extends MuleArtifactFunctionalTestCase
                 .expect()
                 .response().body(containsString("level"))
                 .header("Content-type", "text/plain").statusCode(200)
-                .when().get("/api/level");
+                .when().get("/base/api/test2/test/level");
     }
 
     @Test
@@ -105,7 +106,7 @@ public class RootResourceTestCase extends MuleArtifactFunctionalTestCase
                 .expect()
                 .response().body(containsString("flat-child"))
                 .header("Content-type", "text/plain").statusCode(200)
-                .when().get("/api/flat/child");
+                .when().get("/base/api/test2/test/flat/child");
     }
 
 

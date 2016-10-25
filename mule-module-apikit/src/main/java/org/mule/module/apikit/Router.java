@@ -17,6 +17,7 @@ import org.mule.runtime.core.api.registry.RegistrationException;
 import org.mule.runtime.core.config.i18n.I18nMessageFactory;
 import org.mule.runtime.core.construct.Flow;
 import org.mule.raml.interfaces.model.IResource;
+import org.mule.runtime.core.message.NullAttributes;
 import org.mule.runtime.module.http.internal.ParameterMap;
 
 import java.util.Map;
@@ -97,9 +98,13 @@ public class Router extends AbstractRouter
     @Override
     protected Event doProcessRouterResponse(Event event, Integer successStatus)
     {
+        HttpRequestAttributes httpRequestAttributes = null;
         //TODO CASTING ATTRIBUTES TO HTTPRESPONSEATTRIBUTES FAILS
-        HttpRequestAttributes httpRequestAttributes = ((HttpRequestAttributes)event.getMessage().getAttributes());
-        if (httpRequestAttributes.getHeaders().get("http.status") == null)
+        if (!(event.getMessage().getAttributes() instanceof NullAttributes))
+        {
+            httpRequestAttributes = ((HttpRequestAttributes) event.getMessage().getAttributes());
+        }
+        if (httpRequestAttributes != null && httpRequestAttributes.getHeaders().get("http.status") == null && EventHelper.getOutboundProperty(event, "http.status") == null)
         {
             event = EventHelper.addOutboundProperty(event, "http.status", Integer.toString(successStatus));
             //Event.Builder builder = Event.builder(event);
@@ -107,6 +112,8 @@ public class Router extends AbstractRouter
             //headers.put("http.status", Integer.toString(successStatus));
             //builder.addVariable("_outboundHeaders_", headers);
         }
+        //event = EventHelper.addOutboundProperty(event, "Content-type", "text/plain");
+
         return event;
     }
 

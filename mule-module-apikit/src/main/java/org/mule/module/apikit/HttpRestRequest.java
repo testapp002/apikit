@@ -265,7 +265,7 @@ public class HttpRestRequest
     private Map<String,String> getIncomingHeaders(Message message)
     {
 
-        Map<String, String> incomingHeaders = ((HttpRestRequest)message.getAttributes()).getIncomingHeaders(message);
+        Map<String, String> incomingHeaders = ((HttpRequestAttributes)message.getAttributes()).getHeaders();//((HttpRestRequest)message.getAttributes()).getIncomingHeaders(message);
         //if (incomingHeaders != null && incomingHeaders.size() > 0)
         //{
         //    incomingHeaders = new CaseInsensitiveHashMap(message.<Map>getInboundProperty("http.headers"));
@@ -384,7 +384,7 @@ public class HttpRestRequest
         //{
             //if (requestEvent.getMessage().getPayload() instanceof Map)
             //{
-                paramMap = (Map<String, String>) requestEvent.getMessage().getPayload();
+                paramMap = (Map<String, String>) requestEvent.getMessage().getPayload().getValue();
             //}
             //else
             //{
@@ -426,6 +426,7 @@ public class HttpRestRequest
                 }
             }
         }
+        //TODO SETPAYLOAD SHOULD USE A MIMETYPE
         requestEvent = EventHelper.setPayload((Event) requestEvent, paramMap);
     }
 

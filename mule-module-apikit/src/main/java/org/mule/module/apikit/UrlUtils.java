@@ -86,25 +86,49 @@ public class UrlUtils
         return path;
     }
 
+    private static int getEndOfBasePathIndex(String baseAndApiPath, String requestPath)
+    {
+        int amountOfSlashesInBasePath = 0;
+        for (int i = 0; i < baseAndApiPath.length(); i++)
+        {
+            if (Character.compare(baseAndApiPath.charAt(i),'/') == 0)
+            {
+                amountOfSlashesInBasePath++;
+            }
+        }
+        int amountOfSlashesInRequestPath = 0;
+        int character = 0;
+        for (; character < requestPath.length() && amountOfSlashesInRequestPath < amountOfSlashesInBasePath; character++)
+        {
+            if (Character.compare(requestPath.charAt(character),'/') == 0)
+            {
+                amountOfSlashesInRequestPath++;
+            }
+        }
+
+        return character;
+    }
     public static String getRelativePath(Message message)
     {
-        return "/";//((HttpRequestAttributes)message.getAttributes()).getRelativePath();
+        String baseAndApiPath = ((HttpRequestAttributes)message.getAttributes()).getListenerPath();
+        String requestPath = ((HttpRequestAttributes)message.getAttributes()).getRequestPath();
+
+        int character = getEndOfBasePathIndex(baseAndApiPath, requestPath);
+        String relativePath = requestPath.substring(character);
+        for(; character > 0 && Character.compare(requestPath.charAt(character - 1),'/') == 0; character--)
+        {
+            relativePath = "/" + relativePath;
+        }
+        return relativePath;
     }
-    //    String path = ((HttpRequestAttributes)message.getAttributes()).getRelativePath();//TODO CHECK IF THIS IS THE CORRECT PROPERTY message.getInboundProperty(HTTP_CONTEXT_PATH_PROPERTY);
-    //    if (path == null)
-    //    {
-    //        path = ((HttpRequestAttributes)message.getAttributes()).getListenerPath();
-    //        if (path != null && path.endsWith("/*"))
-    //        {
-    //            path = path.substring(0, path.length() - 2);
-    //        }
-    //        if (path == null)
-    //        {
-    //            throw new IllegalArgumentException("Cannot resolve request base path");
-    //        }
-    //    }
-    //    return path;
-    //}
+
+    public static String getBasePath(Message message)
+    {
+        String baseAndApiPath = ((HttpRequestAttributes)message.getAttributes()).getListenerPath();
+        String requestPath = ((HttpRequestAttributes)message.getAttributes()).getRequestPath();
+        int character = getEndOfBasePathIndex(baseAndApiPath, requestPath);
+        return requestPath.substring(0, character);
+    }
 
     public static String getQueryString(Message message)
     {

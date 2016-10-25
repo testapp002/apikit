@@ -1,24 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesoft.org/schema/mule/core"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:http="http://www.mulesoft.org/schema/mule/http"
       xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit"
-      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-        http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd">
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:httpn="http://www.mulesoft.org/schema/mule/httpn"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+      http://www.mulesoft.org/schema/mule/httpn http://www.mulesoft.org/schema/mule/httpn/current/mule-httpn.xsd
+      http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
+      http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 
 
     <apikit:config name="router-config" raml="org/mule/module/apikit/contenttype/content-routing.yaml"
                    consoleEnabled="false"/>
 
+    <httpn:listener-config name="httpListenerConfigDefault">
+        <httpn:listener-connection host="localhost" port="${serverPort}"/>
+    </httpn:listener-config>
+
     <flow name="doorway">
-        <http:inbound-endpoint port="${serverPort}" host="localhost" path="api"/>
+        <httpn:listener config-ref="httpListenerConfigDefault" path="/api/*">
+            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router/>
-        <exception-strategy ref="Global_Mapping_Exception_Strategy"/>
     </flow>
 
     <flow name="console">
-        <http:inbound-endpoint port="${serverPort}" host="localhost" path="console"/>
+        <httpn:listener config-ref="httpListenerConfigDefault" path="/console/*">
+            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:console/>
     </flow>
 
@@ -39,27 +50,6 @@
         <set-property propertyName="incoming-content-type" value="#[message.inboundProperties['content-type']]"/>
     </flow>
 
-    <apikit:mapping-exception-strategy name="Global_Mapping_Exception_Strategy">
-        <apikit:mapping statusCode="404">
-            <apikit:exception value="org.mule.module.apikit.exception.NotFoundException"/>
-            <set-payload value="resource not found"/>
-        </apikit:mapping>
-        <apikit:mapping statusCode="405">
-            <apikit:exception value="org.mule.module.apikit.exception.MethodNotAllowedException"/>
-            <set-payload value="method not allowed"/>
-        </apikit:mapping>
-        <apikit:mapping statusCode="415">
-            <apikit:exception value="org.mule.module.apikit.exception.UnsupportedMediaTypeException"/>
-            <set-payload value="unsupported media type"/>
-        </apikit:mapping>
-        <apikit:mapping statusCode="406">
-            <apikit:exception value="org.mule.module.apikit.exception.NotAcceptableException"/>
-            <set-payload value="not acceptable"/>
-        </apikit:mapping>
-        <apikit:mapping statusCode="400">
-            <apikit:exception value="org.mule.module.apikit.exception.BadRequestException"/>
-            <set-payload value="bad request"/>
-        </apikit:mapping>
-    </apikit:mapping-exception-strategy>
+
 
 </mule>

@@ -1,34 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:httpn="http://www.mulesoft.org/schema/mule/httpn"
       xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit"
       xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/httpn http://www.mulesoft.org/schema/mule/httpn/current/mule-httpn.xsd
         http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd">
 
 
     <apikit:config name="raml08" raml="org/mule/module/apikit/schema/encoding-08.raml" consoleEnabled="false"/>
     <apikit:config name="raml10" raml="org/mule/module/apikit/schema/encoding.raml" consoleEnabled="false"/>
 
+    <httpn:listener-config name="api-httpListenerConfig">
+        <httpn:listener-connection host="localhost" port="${serverPort}"/>
+    </httpn:listener-config>
+
     <flow name="doorway10">
-        <http:inbound-endpoint port="${serverPort}" host="localhost" path="api10"/>
+        <httpn:listener config-ref="api-httpListenerConfig" path="/api10/*">
+            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="raml10"/>
     </flow>
 
     <flow name="doorway08">
-        <http:inbound-endpoint port="${serverPort}" host="localhost" path="api08"/>
+        <httpn:listener config-ref="api-httpListenerConfig" path="/api08/*">
+            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="raml08"/>
     </flow>
 
     <flow name="doorway10string">
-        <http:inbound-endpoint port="${serverPort}" host="localhost" path="api10str"/>
-        <object-to-string-transformer/>
+        <httpn:listener config-ref="api-httpListenerConfig" path="/api10str/*">
+            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+       <object-to-string-transformer/>
         <apikit:router config-ref="raml10"/>
     </flow>
 
     <flow name="doorway08string">
-        <http:inbound-endpoint port="${serverPort}" host="localhost" path="api08str"/>
+        <httpn:listener config-ref="api-httpListenerConfig" path="/api08str/*">
+            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <object-to-string-transformer/>
         <apikit:router config-ref="raml08"/>
     </flow>

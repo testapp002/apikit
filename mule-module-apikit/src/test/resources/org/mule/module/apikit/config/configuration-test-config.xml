@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesoft.org/schema/mule/core"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:http="http://www.mulesoft.org/schema/mule/http"
       xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit"
-      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-        http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd">
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:httpn="http://www.mulesoft.org/schema/mule/httpn"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+      http://www.mulesoft.org/schema/mule/httpn http://www.mulesoft.org/schema/mule/httpn/current/mule-httpn.xsd
+      http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
+      http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 
 
     <apikit:config name="default" raml="org/mule/module/apikit/config/config.yaml"/>
@@ -18,36 +20,71 @@
         <apikit:flow-mapping resource="/resource" action="get" flow-ref="retrieve"/>
     </apikit:config>
 
+    <httpn:listener-config name="httpListenerConfigDefault">
+        <httpn:listener-connection host="localhost" port="${serverPortDefault}"/>
+    </httpn:listener-config>
+
+    <httpn:listener-config name="httpListenerConfigCustom">
+        <httpn:listener-connection host="localhost" port="${serverPortCustom}"/>
+    </httpn:listener-config>
+
+    <httpn:listener-config name="httpListenerConfigNoConsole">
+        <httpn:listener-connection host="localhost" port="${serverPortNoConsole}"/>
+    </httpn:listener-config>
+
+    <httpn:listener-config name="httpListenerConfigMapping">
+        <httpn:listener-connection host="localhost" port="${serverPortMapping}"/>
+    </httpn:listener-config>
+
+    <httpn:listener-config name="httpListenerConfigNoValidations">
+        <httpn:listener-connection host="localhost" port="${serverPortNoValidations}"/>
+    </httpn:listener-config>
+
     <apikit:config name="no-validations" raml="org/mule/module/apikit/config/config.yaml" disableValidations="true"/>
 
     <flow name="defaultEntry">
-        <http:inbound-endpoint port="${serverPortDefault}" host="localhost" path="default"/>
+        <httpn:listener config-ref="httpListenerConfigDefault" path="/default/*">
+            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="default"/>
-        <exception-strategy ref="Global_Mapping_Exception_Strategy"/>
+        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
 
     <flow name="customEntry">
-        <http:inbound-endpoint port="${serverPortCustom}" host="localhost" path="custom"/>
+        <httpn:listener config-ref="httpListenerConfigCustom" path="/custom/*">
+            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="custom"/>
-        <exception-strategy ref="Global_Mapping_Exception_Strategy"/>
+        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
 
     <flow name="noConsoleEntry">
-        <http:inbound-endpoint port="${serverPortNoConsole}" host="localhost" path="no-console"/>
+        <httpn:listener config-ref="httpListenerConfigNoConsole" path="/no-console/*">
+            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="no-console"/>
-        <exception-strategy ref="Global_Mapping_Exception_Strategy"/>
+        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
 
     <flow name="mappingEntry">
-        <http:inbound-endpoint port="${serverPortMapping}" host="localhost" path="mapping"/>
+        <httpn:listener config-ref="httpListenerConfigMapping" path="/mapping/*">
+            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="mapped-flows"/>
-        <exception-strategy ref="Global_Mapping_Exception_Strategy"/>
+        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
 
     <flow name="noValidations">
-        <http:inbound-endpoint port="${serverPortNoValidations}" host="localhost" path="no-validations"/>
+        <httpn:listener config-ref="httpListenerConfigNoValidations" path="/no-validations/*">
+            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="no-validations"/>
-        <exception-strategy ref="Global_Mapping_Exception_Strategy"/>
+        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
 
     <flow name="get:/resource">
@@ -66,12 +103,12 @@
         <set-payload value="no validations performed"/>
     </flow>
 
-    <apikit:mapping-exception-strategy name="Global_Mapping_Exception_Strategy">
-        <apikit:mapping statusCode="404">
-            <apikit:exception value="org.mule.module.apikit.exception.NotFoundException"/>
-            <set-property propertyName="Content-Type" value="text/plain"/>
-            <set-payload value="resource not found"/>
-        </apikit:mapping>
-    </apikit:mapping-exception-strategy>
+    <!--<apikit:mapping-exception-strategy name="Global_Mapping_Exception_Strategy">-->
+        <!--<apikit:mapping statusCode="404">-->
+            <!--<apikit:exception value="org.mule.module.apikit.exception.NotFoundException"/>-->
+            <!--<set-property propertyName="Content-Type" value="text/plain"/>-->
+            <!--<set-payload value="resource not found"/>-->
+        <!--</apikit:mapping>-->
+    <!--</apikit:mapping-exception-strategy>-->
 
 </mule>

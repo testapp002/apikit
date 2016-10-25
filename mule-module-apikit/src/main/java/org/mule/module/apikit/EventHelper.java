@@ -42,6 +42,20 @@ public class EventHelper
         return builder.build();
     }
 
+    public static String getOutboundProperty(Event event, String name)
+    {
+        if (event.getVariable(outboundHeadersName) != null)
+        {
+            Map<String, String> outboundPropertiesMap = (Map<String, String>)event.getVariable(outboundHeadersName).getValue();
+            if (outboundPropertiesMap != null)
+            {
+                return outboundPropertiesMap.get(name);
+            }
+        }
+        return null;
+    }
+
+
     public static Message addHeadersToMessage(Message message, String key, String value)
     {
         Map<String, String> headers = new HashMap<>();
@@ -67,6 +81,15 @@ public class EventHelper
         InternalMessage.Builder messageBuilder = InternalMessage.builder(event.getMessage());
         messageBuilder.payload(payload);
         messageBuilder.mediaType(MediaType.create(primaryType, secondaryType));
+        return builder.message(messageBuilder.build()).build();
+    }
+
+    public static Event setPayload(Event event, Object payload, String mimetype)
+    {
+        Event.Builder builder = Event.builder(event);
+        InternalMessage.Builder messageBuilder = InternalMessage.builder(event.getMessage());
+        messageBuilder.payload(payload);
+        messageBuilder.mediaType(MediaType.parse(mimetype));
         return builder.message(messageBuilder.build()).build();
     }
 
