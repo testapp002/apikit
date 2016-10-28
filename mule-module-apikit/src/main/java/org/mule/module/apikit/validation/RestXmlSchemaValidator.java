@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.nio.charset.Charset;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -61,8 +62,8 @@ public class RestXmlSchemaValidator extends AbstractRestSchemaValidator
         {
 
             Document data;
-            Object input = muleEvent.getMessage().getPayload();
-            //String messageEncoding = muleEvent.getEncoding();
+            Object input = muleEvent.getMessage().getPayload().getValue();
+            Charset messageEncoding = EventHelper.getEncoding(muleEvent, this.muleContext);
             String charset = getHeaderCharset(muleEvent.getMessage());
             if (input instanceof InputStream)
             {
@@ -74,7 +75,7 @@ public class RestXmlSchemaValidator extends AbstractRestSchemaValidator
                 //dataType.setEncoding(messageEncoding);
                 //muleEvent = EventHelper.setPayload(muleEvent, new ByteArrayInputStream(baos.toByteArray()), dataType);
                 data = loadDocument(new ByteArrayInputStream(baos.toByteArray()), charset);
-                data = null; // TODO REMOVE
+                //data = null; // TODO REMOVE
             }
             else if (input instanceof String)
             {

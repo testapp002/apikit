@@ -73,7 +73,7 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
     public Object transformToExpectedContentType(Event event, String responseRepresentation, List<String> responseMimeTypes,
                                                  String acceptedHeader) throws TransformerException
     {
-        Object payload = event.getMessage().getPayload();
+        //Object payload = event.getMessage().getPayload().getValue();
         //String msgMimeType = null;
         DataType dataType = event.getMessage().getPayload().getDataType();
         Charset charset = null;
@@ -100,7 +100,7 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
             return event.getMessage();
         }
 
-        if (payload == null)
+        if (event.getMessage().getPayload() == null)
         {
             if (logger.isDebugEnabled())
             {

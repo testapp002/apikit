@@ -12,15 +12,25 @@ import org.mule.extension.http.api.HttpResponseAttributes;
 import org.mule.runtime.api.message.Message;
 import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.core.api.Event;
+import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.message.InternalMessage;
+import org.mule.runtime.core.util.SystemUtils;
 import org.mule.runtime.module.http.internal.ParameterMap;
 
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class EventHelper
 {
     private static String outboundHeadersName = "_outboundHeaders_";
+
+    public static Charset getEncoding(Event event, MuleContext muleContext)
+    {
+        Optional<Charset> payloadEncoding = event.getMessage().getPayload().getDataType().getMediaType().getCharset();
+        return payloadEncoding.orElse(SystemUtils.getDefaultEncoding(muleContext));
+    }
 
     public static Event addOutboundProperty(Event event, String key, String value)
     {

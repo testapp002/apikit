@@ -489,7 +489,7 @@ public class HttpRestRequest
 
     private String getPayloadAsString(Message message) throws BadRequestException
     {
-        Object input = message.getPayload();
+        Object input = message.getPayload().getValue();
         String charset = RestXmlSchemaValidator.getHeaderCharset(message);
         if (input instanceof InputStream)
         {

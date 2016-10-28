@@ -40,6 +40,6 @@ public class PayloadNormalizerTransformer extends AbstractMessageTransformer
             throw new TransformerException(I18nMessageFactory.createStaticMessage(e.getMessage()), e);
         }
 
-        return transformer.transform(event.getMessage().getPayload());
+        return transformer.transform(event.getMessage().getPayload().getValue());
     }
 }

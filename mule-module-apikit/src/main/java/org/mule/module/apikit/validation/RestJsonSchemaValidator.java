@@ -52,7 +52,7 @@ public class RestJsonSchemaValidator extends AbstractRestSchemaValidator
         try
         {
             JsonNode data;
-            Object input = muleEvent.getMessage().getPayload();
+            Object input = muleEvent.getMessage().getPayload().getValue();
             if (input instanceof InputStream)
             {
                 logger.debug("transforming payload to perform JSON Schema validation");
