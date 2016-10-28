@@ -23,8 +23,11 @@ import java.util.Map;
 import org.apache.commons.lang.SerializationUtils;
 import org.raml.emitter.RamlEmitter;
 import org.raml.model.Action;
+import org.raml.model.ActionType;
+import org.raml.model.MimeType;
 import org.raml.model.Raml;
 import org.raml.model.Resource;
+import org.raml.model.Response;
 import org.raml.parser.loader.CompositeResourceLoader;
 import org.raml.parser.loader.DefaultResourceLoader;
 import org.raml.parser.loader.FileResourceLoader;
@@ -192,6 +195,50 @@ public class ParserWrapperV1 implements ParserWrapper
     private void copyCompiledSchemas(Raml source, Raml target)
     {
         target.setCompiledSchemas(source.getCompiledSchemas());
+        traverseResources(source.getResources(), target.getResources());
+    }
+
+    private void traverseResources(Map<String, Resource> sourceResources, Map<String, Resource> targetResources)
+    {
+        for (Map.Entry<String, Resource> resourceEntry : sourceResources.entrySet())
+        {
+            Map<ActionType, Action> sourceActions = resourceEntry.getValue().getActions();
+            Map<ActionType, Action> targetActions = targetResources.get(resourceEntry.getKey()).getActions();
+            for (Map.Entry<ActionType, Action> actionEntry : sourceActions.entrySet())
+            {
+                // copy bodies
+                if (actionEntry.getValue().getBody() != null)
+                {
+                    Map<String, MimeType> sourceBody = actionEntry.getValue().getBody();
+                    Map<String, MimeType> targetBody = targetActions.get(actionEntry.getKey()).getBody();
+                    copyBodyCompiledSchema(sourceBody, targetBody);
+                }
+
+                // copy response bodies
+                Map<String, Response> sourceResponses = actionEntry.getValue().getResponses();
+                Map<String, Response> targetResponses = targetActions.get(actionEntry.getKey()).getResponses();
+                for (Map.Entry<String, Response> responseEntry : sourceResponses.entrySet())
+                {
+                    if (responseEntry.getValue().getBody() != null)
+                    {
+                        Map<String, MimeType> sourceResponseBody = responseEntry.getValue().getBody();
+                        Map<String, MimeType> targetResponseBody = targetResponses.get(responseEntry.getKey()).getBody();
+                        copyBodyCompiledSchema(sourceResponseBody, targetResponseBody);
+                    }
+                }
+            }
+            // apply to child resources
+            traverseResources(resourceEntry.getValue().getResources(), targetResources.get(resourceEntry.getKey()).getResources());
+        }
+    }
+
+    private void copyBodyCompiledSchema(Map<String, MimeType> sourceBody, Map<String, MimeType> targetBody)
+    {
+        for (Map.Entry<String, MimeType> bodyEntry : sourceBody.entrySet())
+        {
+            Object sourceCompiledSchema = bodyEntry.getValue().getCompiledSchema();
+            targetBody.get(bodyEntry.getKey()).setCompiledSchema(sourceCompiledSchema);
+        }
     }
 
 

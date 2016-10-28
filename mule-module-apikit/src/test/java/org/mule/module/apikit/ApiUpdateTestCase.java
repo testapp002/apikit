@@ -7,6 +7,8 @@
 package org.mule.module.apikit;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -20,8 +22,11 @@ import org.mule.module.http.internal.listener.DefaultHttpListenerConfig;
 import org.mule.raml.interfaces.model.IAction;
 import org.mule.tck.junit4.AbstractMuleContextTestCase;
 
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.raml.model.ActionType;
 
 public class ApiUpdateTestCase extends AbstractMuleContextTestCase
 {
@@ -208,6 +213,24 @@ public class ApiUpdateTestCase extends AbstractMuleContextTestCase
     {
         assertInitialState(0, RESOURCE_ORDERS);
 
+    }
+
+    @Test
+    public void checkCompiledSchemasReplication() throws InitialisationException
+    {
+        assertCompiledSchemas();
+        config.getRamlUpdater().injectTrait(traitName, traitYaml).applyTrait(traitName, GET_LEAGUES).resetAndUpdate();
+        assertCompiledSchemas();
+        config.getRamlUpdater().reset();
+        assertCompiledSchemas();
+    }
+
+    private void assertCompiledSchemas()
+    {
+        Map<String, Object> globalSchemas = config.getApi().getCompiledSchemas();
+        assertThat(globalSchemas.entrySet(), hasSize(2));
+        Object localSchema = config.getApi().getResource("/leagues/{leagueId}").getAction(ActionType.PATCH.name()).getBody().get("application/xml").getCompiledSchema();
+        assertNotNull(localSchema);
     }
 
 }
