@@ -16,6 +16,7 @@ import org.mule.test.infrastructure.deployment.AbstractFakeMuleServerTestCase;
 
 import com.jayway.restassured.RestAssured;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -40,6 +41,7 @@ public class ProxyTestCase extends AbstractFakeMuleServerTestCase
         RestAssured.port = proxyPort.getNumber();
     }
 
+    @Ignore
     @Test
     public void proxy() throws Exception
     {

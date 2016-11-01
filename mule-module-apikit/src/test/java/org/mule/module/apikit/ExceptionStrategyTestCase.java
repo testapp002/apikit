@@ -16,6 +16,7 @@ import org.mule.tck.junit4.rule.DynamicPort;
 
 import com.jayway.restassured.RestAssured;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -46,6 +47,7 @@ public class ExceptionStrategyTestCase extends MuleArtifactFunctionalTestCase
         return "org/mule/module/apikit/exception/exception-strategy-config.xml";
     }
 
+    @Ignore
     @Test
     public void userDefinedStatusOnException() throws Exception
     {
@@ -56,6 +58,7 @@ public class ExceptionStrategyTestCase extends MuleArtifactFunctionalTestCase
                 .when().get("/api/resources");
     }
 
+    @Ignore
     @Test
     public void muleMappedStatusOnException() throws Exception
     {

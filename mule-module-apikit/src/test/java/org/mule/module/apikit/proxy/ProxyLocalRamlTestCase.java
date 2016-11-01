@@ -11,11 +11,12 @@ package org.mule.module.apikit.proxy;
 import org.mule.runtime.core.api.lifecycle.InitialisationException;
 import org.mule.tck.junit4.AbstractMuleContextTestCase;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ProxyLocalRamlTestCase extends AbstractMuleContextTestCase
 {
-
+    @Ignore
     @Test
     public void ramlInClasspath() throws InitialisationException
     {

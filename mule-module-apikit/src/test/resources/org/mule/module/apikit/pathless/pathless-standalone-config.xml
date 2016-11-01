@@ -1,35 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesoft.org/schema/mule/core"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:http="http://www.mulesoft.org/schema/mule/http"
       xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit"
-      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-        http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd">
-
-
-    <apikit:mapping-exception-strategy name="Global_Mapping_Exception_Strategy">
-        <apikit:mapping statusCode="404">
-            <apikit:exception value="org.mule.module.apikit.exception.NotFoundException"/>
-            <set-payload value="resource not found"/>
-        </apikit:mapping>
-        <apikit:mapping statusCode="405">
-            <apikit:exception value="org.mule.module.apikit.exception.MethodNotAllowedException"/>
-            <set-payload value="method not allowed"/>
-        </apikit:mapping>
-        <apikit:mapping statusCode="415">
-            <apikit:exception value="org.mule.module.apikit.exception.UnsupportedMediaTypeException"/>
-            <set-payload value="unsupported media type"/>
-        </apikit:mapping>
-        <apikit:mapping statusCode="406">
-            <apikit:exception value="org.mule.module.apikit.exception.NotAcceptableException"/>
-            <set-payload value="not acceptable"/>
-        </apikit:mapping>
-        <apikit:mapping statusCode="400">
-            <apikit:exception value="org.mule.module.apikit.exception.BadRequestException"/>
-            <set-payload value="bad request"/>
-        </apikit:mapping>
-    </apikit:mapping-exception-strategy>
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:httpn="http://www.mulesoft.org/schema/mule/httpn"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+      http://www.mulesoft.org/schema/mule/httpn http://www.mulesoft.org/schema/mule/httpn/current/mule-httpn.xsd
+      http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
+      http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 
 
     <apikit:config name="noRouter" raml="org/mule/module/apikit/pathless/pathless.yaml" consoleEnabled="false"/>
@@ -42,58 +20,46 @@
 
     <apikit:config name="addressSlashPath" raml="org/mule/module/apikit/pathless/pathless.yaml" consoleEnabled="false"/>
 
+    <httpn:listener-config name="httpListenerConfigPathless">
+        <httpn:listener-connection host="localhost" port="${serverPortPathless}"/>
+    </httpn:listener-config>
+
+    <httpn:listener-config name="httpListenerConfigNoRouter">
+        <httpn:listener-connection host="localhost" port="${serverPortNoRouter}"/>
+    </httpn:listener-config>
+
+    <httpn:listener-config name="httpListenerConfigEmptyPath">
+        <httpn:listener-connection host="localhost" port="${serverPortEmptyPath}"/>
+    </httpn:listener-config>
+
 
     <flow name="consoleNoRouter">
-        <http:inbound-endpoint port="${serverPortNoRouter}" host="localhost"/>
+        <httpn:listener config-ref="httpListenerConfigPathless" path="/*">
+            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <!--<http:inbound-endpoint port="${serverPortNoRouter}" host="localhost"/>-->
         <apikit:console config-ref="noRouter"/>
-        <exception-strategy ref="Global_Mapping_Exception_Strategy"/>
+        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
-
-    <flow name="consolePathless">
-        <http:inbound-endpoint port="${serverPortPathless}" host="localhost"/>
-        <apikit:console config-ref="pathless"/>
-        <exception-strategy ref="Global_Mapping_Exception_Strategy"/>
-    </flow>
-    <flow name="routerPathless">
-        <http:inbound-endpoint address="http://localhost:${serverPortPathless}/api"/>
-        <apikit:router config-ref="pathless"/>
-        <exception-strategy ref="Global_Mapping_Exception_Strategy"/>
-    </flow>
-
 
     <flow name="consoleEmptyPath">
-        <http:inbound-endpoint port="${serverPortEmptyPath}" host="localhost" path=""/>
+        <httpn:listener config-ref="httpListenerConfigEmptyPath" path="/*">
+            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <!--<http:inbound-endpoint port="${serverPortEmptyPath}" host="localhost" path=""/>-->
         <apikit:console config-ref="emptyPath"/>
-        <exception-strategy ref="Global_Mapping_Exception_Strategy"/>
+        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
     <flow name="routerEmptyPath">
-        <http:inbound-endpoint address="http://localhost:${serverPortEmptyPath}/api"/>
+        <httpn:listener config-ref="httpListenerConfigEmptyPath" path="/api/*">
+            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <!--<http:inbound-endpoint address="http://localhost:${serverPortEmptyPath}/api"/>-->
         <apikit:router config-ref="emptyPath"/>
-        <exception-strategy ref="Global_Mapping_Exception_Strategy"/>
-    </flow>
-
-
-    <flow name="consoleSlashPath">
-        <http:inbound-endpoint port="${serverPortSlashPath}" host="localhost" path="/"/>
-        <apikit:console config-ref="slashPath"/>
-        <exception-strategy ref="Global_Mapping_Exception_Strategy"/>
-    </flow>
-    <flow name="routerSlashPath">
-        <http:inbound-endpoint address="http://localhost:${serverPortSlashPath}/api"/>
-        <apikit:router config-ref="slashPath"/>
-        <exception-strategy ref="Global_Mapping_Exception_Strategy"/>
-    </flow>
-
-
-    <flow name="consoleAddressSlashPath">
-        <http:inbound-endpoint address="http://localhost:${serverPortAddressSlashPath}/console/"/>
-        <apikit:console config-ref="addressSlashPath"/>
-        <exception-strategy ref="Global_Mapping_Exception_Strategy"/>
-    </flow>
-    <flow name="routerAddressSlashPath">
-        <http:inbound-endpoint address="http://localhost:${serverPortAddressSlashPath}/api"/>
-        <apikit:router config-ref="addressSlashPath"/>
-        <exception-strategy ref="Global_Mapping_Exception_Strategy"/>
+        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
 
     <flow name="get:/orders">

@@ -12,6 +12,8 @@ import static org.hamcrest.CoreMatchers.containsString;
 
 import org.mule.functional.junit4.FunctionalTestCase;
 
+import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
+import org.mule.functional.junit4.runners.ArtifactClassLoaderRunnerConfig;
 import org.mule.tck.junit4.rule.DynamicPort;
 
 import com.jayway.restassured.RestAssured;
@@ -19,7 +21,9 @@ import com.jayway.restassured.RestAssured;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class PathlessEndpointStandaloneTestCase extends FunctionalTestCase
+@ArtifactClassLoaderRunnerConfig(plugins = {"org.mule.modules:mule-module-sockets", "org.mule.modules:mule-module-http-ext"},
+        providedInclusions = "org.mule.modules:mule-module-sockets")
+public class PathlessEndpointStandaloneTestCase extends MuleArtifactFunctionalTestCase
 {
 
     @Rule
@@ -87,50 +91,6 @@ public class PathlessEndpointStandaloneTestCase extends FunctionalTestCase
         int port = serverPortEmptyPath.getNumber();
         RestAssured.port = port;
         baseUri("", "http://localhost:" + port);
-    }
-
-    @Test
-    public void consoleSlashPath() throws Exception
-    {
-        RestAssured.port = serverPortSlashPath.getNumber();
-        console("");
-    }
-
-    @Test
-    public void ramlSlashPath() throws Exception
-    {
-        RestAssured.port = serverPortSlashPath.getNumber();
-        raml("");
-    }
-
-    @Test
-    public void baseuriSlashPath() throws Exception
-    {
-        int port = serverPortSlashPath.getNumber();
-        RestAssured.port = port;
-        baseUri("", "http://localhost:" + port);
-    }
-
-    @Test
-    public void consoleAddressSlashPath() throws Exception
-    {
-        RestAssured.port = serverPortAddressSlashPath.getNumber();
-        console("/console");
-    }
-
-    @Test
-    public void ramlAddressSlashPath() throws Exception
-    {
-        RestAssured.port = serverPortAddressSlashPath.getNumber();
-        raml("/console/");
-    }
-
-    @Test
-    public void baseuriAddressSlashPath() throws Exception
-    {
-        int port = serverPortAddressSlashPath.getNumber();
-        RestAssured.port = port;
-        baseUri("/api", "http://localhost:" + port);
     }
 
     private void console(String path)

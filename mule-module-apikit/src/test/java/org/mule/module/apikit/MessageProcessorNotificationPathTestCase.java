@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -41,6 +42,7 @@ public class MessageProcessorNotificationPathTestCase extends MuleArtifactFuncti
         return "org/mule/module/apikit/path/message-processor-path.xml";
     }
 
+    @Ignore
     @Test
     public void exceptionStrategy() throws Exception
     {

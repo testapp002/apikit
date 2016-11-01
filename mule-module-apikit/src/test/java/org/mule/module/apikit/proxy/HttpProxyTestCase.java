@@ -15,6 +15,7 @@ import org.mule.tck.junit4.rule.DynamicPort;
 
 import com.jayway.restassured.RestAssured;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -45,6 +46,7 @@ public class HttpProxyTestCase extends FunctionalTestCase
         return "org/mule/module/apikit/proxy/http-proxy-config.xml";
     }
 
+    @Ignore
     @Test
     public void getRaml() throws Exception
     {
@@ -55,6 +57,7 @@ public class HttpProxyTestCase extends FunctionalTestCase
                 .when().get("/api");
     }
 
+    @Ignore
     @Test
     public void getConsole() throws Exception
     {
@@ -65,6 +68,7 @@ public class HttpProxyTestCase extends FunctionalTestCase
                 .when().get("/console");
     }
 
+    @Ignore
     @Test
     public void getConsoleSlash() throws Exception
     {
