@@ -35,6 +35,7 @@ import java.beans.EventHandler;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.relaxng.datatype.DatatypeBuilder;
@@ -55,13 +56,38 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
             // request not originated from an apikit router
             return event.getMessage();
         }
-        String responseRepresentation = event.getVariable(BEST_MATCH_REPRESENTATION).getValue().toString();
-        List<String> responseMimeTypes = (List<String>) event.getVariable(CONTRACT_MIME_TYPES).getValue();
-        String acceptedHeader = event.getVariable(ACCEPT_HEADER).getValue().toString();
+        String responseRepresentation;
+        try
+        {
+            responseRepresentation = event.getVariable(BEST_MATCH_REPRESENTATION).getValue().toString();
+        }
+        catch (Exception e)
+        {
+            responseRepresentation = null;
+        }
+        List<String> responseMimeTypes;
+        try
+        {
+            responseMimeTypes = (List<String>) event.getVariable(CONTRACT_MIME_TYPES).getValue();
+        }
+        catch (Exception e)
+        {
+            responseMimeTypes = null;
+        }
+        String acceptedHeader;
+        try
+        {
+            acceptedHeader = event.getVariable(ACCEPT_HEADER).getValue().toString();
+        }
+        catch (Exception e)
+        {
+            acceptedHeader = null;
+        }
         if (responseRepresentation == null)
         {
             // clear response payload unless response status is manually set
-            if (((HttpResponseAttributes)event.getMessage().getAttributes()).getHeaders().get("http.status") == null)
+            //if (((HttpResponseAttributes)event.getMessage().getAttributes()).getHeaders().get("http.status") == null)
+            if (EventHelper.getOutboundProperty(event,"http.status") == null)
             {
                 event = EventHelper.setNullPayload(event);
             }

@@ -35,10 +35,12 @@
 
 
     <flow name="post:/leagues:application/json">
+        <!-- TODO we should add this variable to the outbound headers map -->
         <set-property propertyName="incoming-content-type" value="application/json"/>
     </flow>
 
     <flow name="post:/leagues:application/xml">
+        <!-- TODO we should add this variable to the outbound headers map -->
         <set-property propertyName="incoming-content-type" value="application/xml"/>
     </flow>
 
@@ -47,6 +49,7 @@
     </flow>
 
     <flow name="put:/leagues/{leagueId}">
+        <!-- TODO we should add this variable to the outbound headers map -->
         <set-property propertyName="incoming-content-type" value="#[message.inboundProperties['content-type']]"/>
     </flow>
 
