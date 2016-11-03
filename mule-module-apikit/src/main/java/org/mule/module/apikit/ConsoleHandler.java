@@ -180,7 +180,7 @@ public class ConsoleHandler implements Processor
             {
                 // client redirect
                 Map<String, String> headers = new HashMap<>();
-                headers.put(HttpConnector.HTTP_STATUS_PROPERTY,
+                headers.put(HttpVariableNames.HTTP_STATUS,
                             String.valueOf(SC_MOVED_PERMANENTLY));
                 String scheme = UrlUtils.getScheme(event.getMessage());
                 String host = event.getMessage().getInboundProperty("Host");

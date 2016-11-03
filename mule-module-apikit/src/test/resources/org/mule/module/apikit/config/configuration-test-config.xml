@@ -44,7 +44,8 @@
 
     <flow name="defaultEntry">
         <httpn:listener config-ref="httpListenerConfigDefault" path="/default/*">
-            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="default"/>
@@ -53,7 +54,8 @@
 
     <flow name="customEntry">
         <httpn:listener config-ref="httpListenerConfigCustom" path="/custom/*">
-            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="custom"/>
@@ -62,7 +64,8 @@
 
     <flow name="noConsoleEntry">
         <httpn:listener config-ref="httpListenerConfigNoConsole" path="/no-console/*">
-            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="no-console"/>
@@ -71,7 +74,8 @@
 
     <flow name="mappingEntry">
         <httpn:listener config-ref="httpListenerConfigMapping" path="/mapping/*">
-            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="mapped-flows"/>
@@ -80,7 +84,8 @@
 
     <flow name="noValidations">
         <httpn:listener config-ref="httpListenerConfigNoValidations" path="/no-validations/*">
-            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="no-validations"/>

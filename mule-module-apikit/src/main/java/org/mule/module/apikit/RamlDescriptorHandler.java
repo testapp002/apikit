@@ -67,7 +67,7 @@ public class RamlDescriptorHandler
 
     private Event process(Event event, String raml) throws MuleException
     {
-        Map<String,String> headers = (Map<String, String>) event.getVariable("_outboundHeaders_");
+        Map<String,String> headers = (Map<String, String>) event.getVariable("_outboundHeaders_").getValue();
         headers.put(HttpConstants.HEADER_CONTENT_TYPE, APPLICATION_RAML);
         headers.put(HttpConstants.HEADER_EXPIRES, "-1");//avoid IE ajax response caching
         headers.put(HttpConstants.HEADER_CONTENT_LENGTH, Integer.toString(raml.length()));

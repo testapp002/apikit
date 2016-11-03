@@ -35,7 +35,8 @@
 
     <flow name="consoleNoRouter">
         <httpn:listener config-ref="httpListenerConfigPathless" path="/*">
-            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <!--<http:inbound-endpoint port="${serverPortNoRouter}" host="localhost"/>-->
@@ -45,7 +46,8 @@
 
     <flow name="consoleEmptyPath">
         <httpn:listener config-ref="httpListenerConfigEmptyPath" path="/*">
-            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <!--<http:inbound-endpoint port="${serverPortEmptyPath}" host="localhost" path=""/>-->
@@ -54,7 +56,8 @@
     </flow>
     <flow name="routerEmptyPath">
         <httpn:listener config-ref="httpListenerConfigEmptyPath" path="/api/*">
-            <httpn:response-builder headersRef="#[_outboundHeaders_]"/>
+            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <!--<http:inbound-endpoint address="http://localhost:${serverPortEmptyPath}/api"/>-->

@@ -104,9 +104,13 @@ public class Router extends AbstractRouter
         {
             httpRequestAttributes = ((HttpRequestAttributes) event.getMessage().getAttributes());
         }
-        if (httpRequestAttributes != null && httpRequestAttributes.getHeaders().get("http.status") == null && EventHelper.getOutboundProperty(event, "http.status") == null)
+        if (httpRequestAttributes != null && httpRequestAttributes.getHeaders().get(HttpVariableNames.HTTP_STATUS) == null && EventHelper.getVariable(event, HttpVariableNames.HTTP_STATUS) == null)
         {
-            event = EventHelper.addOutboundProperty(event, "http.status", Integer.toString(successStatus));
+            if (successStatus == null)
+            {
+                successStatus = 200;
+            }
+            event = EventHelper.addVariable(event, HttpVariableNames.HTTP_STATUS, Integer.toString(successStatus));
             //Event.Builder builder = Event.builder(event);
             //Map<String,String> headers = (Map<String, String>) event.getVariable("_outboundHeaders_");
             //headers.put("http.status", Integer.toString(successStatus));

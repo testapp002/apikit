@@ -10,6 +10,7 @@ import org.mule.common.metadata.datatype.DataTypeFactory;
 import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.extension.http.api.HttpResponseAttributes;
 import org.mule.module.apikit.EventHelper;
+import org.mule.module.apikit.HttpVariableNames;
 import org.mule.runtime.api.message.Message;
 //import org.mule.runtime.core.api.MuleMessage;
 import org.mule.runtime.api.metadata.CollectionDataType;
@@ -87,7 +88,7 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
         {
             // clear response payload unless response status is manually set
             //if (((HttpResponseAttributes)event.getMessage().getAttributes()).getHeaders().get("http.status") == null)
-            if (EventHelper.getOutboundProperty(event,"http.status") == null)
+            if (EventHelper.getVariable(event, HttpVariableNames.HTTP_STATUS) == null)
             {
                 event = EventHelper.setNullPayload(event);
             }

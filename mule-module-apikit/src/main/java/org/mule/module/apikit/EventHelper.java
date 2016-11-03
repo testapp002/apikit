@@ -52,6 +52,28 @@ public class EventHelper
         return builder.build();
     }
 
+    public static Event addVariable(Event event, String key, String value)
+    {
+        Event.Builder builder = Event.builder(event);
+        Map<String, String> outboundHeaders = new HashMap<>();
+        builder.addVariable(key, value);
+        return builder.build();
+    }
+
+    public static Object getVariable(Event event, String key)
+    {
+        Object value;
+        try
+        {
+            value = event.getVariable(key);
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+        return value;
+    }
+
     public static String getOutboundProperty(Event event, String name)
     {
         if (event.getVariable(outboundHeadersName) != null)

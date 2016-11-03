@@ -25,7 +25,7 @@ public class UrlUtils
 
     public static String getBaseSchemeHostPort(Event event)
     {
-        String host = event.getMessage().getInboundProperty("host");
+        String host = ((HttpRequestAttributes)event.getMessage().getAttributes()).getHeaders().get("host");
         String chHost = System.getProperty("fullDomain");
         if (chHost != null)
         {
@@ -115,7 +115,7 @@ public class UrlUtils
 
         int character = getEndOfBasePathIndex(baseAndApiPath, requestPath);
         String relativePath = requestPath.substring(character);
-        for(; character > 0 && Character.compare(requestPath.charAt(character - 1),'/') == 0; character--)
+        for(; character > 1 && Character.compare(requestPath.charAt(character - 1),'/') == 0; character--)
         {
             relativePath = "/" + relativePath;
         }
