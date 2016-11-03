@@ -1,15 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns="http://www.mulesoft.org/schema/mule/core"
-      xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit"
-      xmlns:http="http://www.mulesoft.org/schema/mule/http"
-      xmlns:spring="http://www.springframework.org/schema/beans"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:context="http://www.springframework.org/schema/context"
-      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-        http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd ">
 
 #set ($muleVersion = $muleVersion.toUpperCase())
 #set ($muleVersion = $muleVersion.replace(".",""))
@@ -18,6 +7,7 @@
 #set ($muleVersion = $muleVersion.substring(0, $max))
 #end
 #set ($listenerVersion = "360")
+#set ($mule4Version = "400")
 #set ($useSharedHttpListener = !($sharedHttpListener.isEmpty() || $sharedHttpListener.equals("empty")))
 #set ($Integer = 0)
 #set ($zeros = "0")
@@ -32,14 +22,51 @@
 #set ($zeros = $zeros.repeat($repeated))
 #set ($muleVersion = $muleVersion.concat($zeros))
 #end
-#if( $Integer.parseInt($muleVersion)>=$Integer.parseInt($listenerVersion) && !$useSharedHttpListener )
+#if ($Integer.parseInt($muleVersion)>=$Integer.parseInt($mule4Version)
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:httpn="http://www.mulesoft.org/schema/mule/httpn"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+      http://www.mulesoft.org/schema/mule/httpn http://www.mulesoft.org/schema/mule/httpn/current/mule-httpn.xsd
+      http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
+      http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+#else
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:context="http://www.springframework.org/schema/context"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd ">
+#end
+
+#if ($Integer.parseInt($muleVersion)>=$Integer.parseInt($mule4Version)
+    <httpn:listener-config name="httpListenerConfig">
+        <httpn:listener-connection host="0.0.0.0" port="${http.port}"/>
+    </httpn:listener-config>
+#else
+#if($Integer.parseInt($muleVersion)>=$Integer.parseInt($listenerVersion) && !$useSharedHttpListener )
     <http:listener-config name="httpListenerConfig" host="0.0.0.0" port="${http.port}"/>
+#end
 #end
     <apikit:config name="apiConfig" raml="api.raml" consoleEnabled="false" />
 
     <context:property-placeholder location="api.properties" />
 
     <flow name="api-main">
+#if ($Integer.parseInt($muleVersion)>=$Integer.parseInt($mule4Version)
+        <httpn:listener config-ref="httpListenerConfig" path="/api/*">
+            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:error-response-builder statusCode="500"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+#else
 #if( $Integer.parseInt($muleVersion)>=$Integer.parseInt($listenerVersion ) )
 #if( $useSharedHttpListener )
         <http:listener config-ref="$sharedHttpListener" path="/api/*"/>
@@ -49,11 +76,21 @@
 #else
         <http:inbound-endpoint address="http://0.0.0.0:${http.port}/api"/>
 #end
+#end
         <apikit:router config-ref="apiConfig" />
+#if ($Integer.parseInt($muleVersion)<$Integer.parseInt($mule4Version)
         <exception-strategy ref="apiKitGlobalExceptionMapping" />
+#end
     </flow>
 
     <flow name="api-console">
+#if ($Integer.parseInt($muleVersion)>=$Integer.parseInt($mule4Version)
+        <httpn:listener config-ref="httpListenerConfig" path="/console/*">
+            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:error-response-builder statusCode="500"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+#else
 #if( $Integer.parseInt($muleVersion)>=$Integer.parseInt($listenerVersion ) )
 #if( $useSharedHttpListener )
         <http:listener config-ref="$sharedHttpListener" path="/console/*"/>
@@ -63,9 +100,11 @@
 #else
         <http:inbound-endpoint address="http://0.0.0.0:${http.port}/console"/>
 #end
+#end
         <apikit:console config-ref="apiConfig" />
     </flow>
 
+#if ($Integer.parseInt($muleVersion)<$Integer.parseInt($mule4Version)
     <apikit:mapping-exception-strategy name="apiKitGlobalExceptionMapping">
         <apikit:mapping statusCode="404">
             <apikit:exception value="org.mule.module.apikit.exception.NotFoundException" />
@@ -93,4 +132,5 @@
             <set-payload value="{ &quot;message&quot;: &quot;Bad request&quot; }" />
         </apikit:mapping>
     </apikit:mapping-exception-strategy>
+#end
 </mule>
