@@ -14,6 +14,7 @@ import org.mule.tools.apikit.output.scopes.APIKitConfigScope;
 import org.mule.tools.apikit.output.scopes.APIKitFlowScope;
 import org.mule.tools.apikit.output.scopes.ExceptionStrategyScope;
 import org.mule.tools.apikit.output.scopes.FlowScope;
+import org.mule.tools.apikit.output.scopes.HttpListenerConfigMule4Scope;
 import org.mule.tools.apikit.output.scopes.HttpListenerConfigScope;
 import org.mule.tools.apikit.output.scopes.MuleScope;
 import org.mule.tools.apikit.output.scopes.ConsoleFlowScope;
@@ -54,6 +55,10 @@ public class MuleConfigGenerator {
     public static final NamespaceWithLocation HTTP_NAMESPACE = new NamespaceWithLocation(
             Namespace.getNamespace("http", "http://www.mulesoft.org/schema/mule/http"),
             "http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd"
+    );
+    public static final NamespaceWithLocation HTTPN_NAMESPACE = new NamespaceWithLocation(
+            Namespace.getNamespace("httpn", "http://www.mulesoft.org/schema/mule/httpn"),
+            "http://www.mulesoft.org/schema/mule/httpn/current/mule-httpn.xsd"
     );
     public static final NamespaceWithLocation SPRING_NAMESPACE = new NamespaceWithLocation(
             Namespace.getNamespace("spring", "http://www.springframework.org/schema/beans"),
@@ -171,7 +176,7 @@ public class MuleConfigGenerator {
         if (!xmlFile.exists() || xmlFile.length() == 0) {
             xmlFile.getParentFile().mkdirs();
             doc = new Document();
-            doc.setRootElement(new MuleScope().generate());
+            doc.setRootElement(new MuleScope(api.getMuleVersion()).generate());
         } else {
             InputStream xmlInputStream = new FileInputStream(xmlFile);
             doc = saxBuilder.build(xmlInputStream);
@@ -188,7 +193,14 @@ public class MuleConfigGenerator {
         {
             if (!domainHttpListenerConfigs.containsKey(api.getHttpListenerConfig().getName()))
             {
-                new HttpListenerConfigScope(api, mule).generate();
+                if (api.useListenerMule3())
+                {
+                    new HttpListenerConfigScope(api, mule).generate();
+                }
+                else if (!api.useInboundEndpoint())
+                {
+                    new HttpListenerConfigMule4Scope(api, mule).generate();
+                }
             }
             listenerConfigRef = api.getHttpListenerConfig().getName();
             api.setPath(APIKitTools.addAsteriskToPath(api.getPath()));

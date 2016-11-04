@@ -151,4 +151,24 @@ public class APIKitTools {
         }
         return false;
     }
+
+    public static boolean usesListenersMuleV3(String candidateVersion)
+    {
+        if (candidateVersion == null)
+        {
+            return false;
+        }
+        String[] versionParts = candidateVersion.split("\\.");
+        if (versionParts.length < 2)
+        {
+            return false;
+        }
+        int major = Integer.parseInt(versionParts[0]);
+        int minor = Integer.parseInt(versionParts[1]);
+        if (major == 3 && minor >= 6)
+        {
+            return true;
+        }
+        return false;
+    }
 }

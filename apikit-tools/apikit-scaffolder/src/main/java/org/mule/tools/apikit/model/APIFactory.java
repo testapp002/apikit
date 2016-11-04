@@ -29,17 +29,17 @@ public class APIFactory
     {
     }
 
-    public API createAPIBinding(File ramlFile, File xmlFile, String baseUri, String path, APIKitConfig config)
+    public API createAPIBindingInboundEndpoint(File ramlFile, File xmlFile, String baseUri, String path, APIKitConfig config)
     {
-        return createAPIBinding(ramlFile, xmlFile, baseUri, path, config, null, true);
+        return createAPIBinding(ramlFile, xmlFile, baseUri, path, config, null, "3.5.0");
     }
 
-    public API createAPIBinding(File ramlFile, File xmlFile, String path, APIKitConfig config, HttpListenerConfig httpListenerConfig)
+    public API createAPIBindingListenerMule3(File ramlFile, File xmlFile, String path, APIKitConfig config, HttpListenerConfig httpListenerConfig)
     {
-        return createAPIBinding(ramlFile, xmlFile, null, path, config, httpListenerConfig, false);
+        return createAPIBinding(ramlFile, xmlFile, null, path, config, httpListenerConfig, "3.7.0");
     }
 
-    public API createAPIBinding(File ramlFile, File xmlFile, String baseUri, String path, APIKitConfig config, HttpListenerConfig httpListenerConfig, Boolean useInboundEndpoint)
+    public API createAPIBinding(File ramlFile, File xmlFile, String baseUri, String path, APIKitConfig config, HttpListenerConfig httpListenerConfig, String muleVersion)
     {
         Validate.notNull(ramlFile);
         if(apis.containsKey(ramlFile))
@@ -51,9 +51,8 @@ public class APIFactory
             }
             return api;
         }
-        API api = new API(ramlFile, xmlFile, baseUri, path, config);
-        api.setUseInboundEndpoint(useInboundEndpoint);
-        if (!useInboundEndpoint)
+        API api = new API(ramlFile, xmlFile, baseUri, path, config, muleVersion);
+        if (!org.mule.tools.apikit.misc.APIKitTools.defaultIsInboundEndpoint(muleVersion))
         {
             if (httpListenerConfig == null)
             {

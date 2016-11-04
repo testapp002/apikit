@@ -6,6 +6,8 @@
  */
 package org.mule.tools.apikit.model;
 
+import org.mule.tools.apikit.misc.APIKitTools;
+
 import java.io.File;
 
 import org.apache.commons.io.FilenameUtils;
@@ -26,7 +28,7 @@ public class API {
     private File ramlFile;
     private String id;
     private Boolean useInboundEndpoint;
-
+    private String muleVersion;
 
     public API(File ramlFile, File xmlFile, String baseUri, String path) {
         this.path = path;
@@ -36,9 +38,10 @@ public class API {
         id = FilenameUtils.removeExtension(ramlFile.getName()).trim();
     }
 
-    public API(File ramlFile, File xmlFile, String baseUri, String path, APIKitConfig config) {
+    public API(File ramlFile, File xmlFile, String baseUri, String path, APIKitConfig config, String muleVersion) {
         this(ramlFile, xmlFile, baseUri, path);
         this.config = config;
+        this.muleVersion = muleVersion;
     }
 
     public File getXmlFile() {
@@ -101,11 +104,20 @@ public class API {
 
     public Boolean useInboundEndpoint()
     {
-        return useInboundEndpoint;
+        return APIKitTools.defaultIsInboundEndpoint(muleVersion);
     }
-    public boolean setUseInboundEndpoint(Boolean useInboundEndpoint)
+
+    public Boolean useListenerMule3()
     {
-        return this.useInboundEndpoint = useInboundEndpoint;
+        return APIKitTools.usesListenersMuleV3(muleVersion);
+    }
+    //public boolean setUseInboundEndpoint(Boolean useInboundEndpoint)
+    //{
+    //    return this.useInboundEndpoint = useInboundEndpoint;
+    //}
+    public void setMuleVersion(String muleVersion)
+    {
+        this.muleVersion = muleVersion;
     }
     public String getBaseUri()
     {
@@ -136,6 +148,11 @@ public class API {
 
     public String getId() {
         return id;
+    }
+
+    public String getMuleVersion()
+    {
+        return muleVersion;
     }
 
 }

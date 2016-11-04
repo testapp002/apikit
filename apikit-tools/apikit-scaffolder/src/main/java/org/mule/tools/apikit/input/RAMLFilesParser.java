@@ -143,7 +143,7 @@ public class RAMLFilesParser
             for (IAction action : resource.getActions().values())
             {
 
-                API api = apiFactory.createAPIBinding(filename,null, baseUri, APIKitTools.getPathFromUri(baseUri,false), null, null, APIKitTools.defaultIsInboundEndpoint(muleVersion));
+                API api = apiFactory.createAPIBinding(filename,null, baseUri, APIKitTools.getPathFromUri(baseUri,false), null, null, muleVersion);
 
                 Map<String, IMimeType> mimeTypes = action.getBody();
                 boolean addGenericAction = false;

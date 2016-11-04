@@ -76,7 +76,7 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
                     {
                         HttpListenerConfig httpListenerConfig = getHTTPListenerConfig(inbound);
                         String path = getPathFromInbound(inbound);
-                        includedApis.put(configId, apiFactory.createAPIBinding(ramlPath, file,path, config, httpListenerConfig));
+                        includedApis.put(configId, apiFactory.createAPIBinding(ramlPath, file,null, path, config, httpListenerConfig, "3.7.0"));
                     }
                     else if ("inbound-endpoint".equals(inbound.getName()))
                     {
@@ -96,7 +96,7 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
                         } else  if (!path.startsWith("/")) {
                             path = "/" + path;
                         }
-                        includedApis.put(configId, apiFactory.createAPIBinding(ramlPath, file, baseUri, path, config));
+                        includedApis.put(configId, apiFactory.createAPIBinding(ramlPath, file, baseUri, path, config, null, "3.5.0"));
                     }
                     else
                     {

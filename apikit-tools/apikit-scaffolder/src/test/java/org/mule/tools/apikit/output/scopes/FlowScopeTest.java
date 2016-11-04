@@ -25,7 +25,7 @@ public class FlowScopeTest {
     @Test
     public void testGenerate() throws Exception {
         Document document = new Document();
-        Element mule =new MuleScope().generate();
+        Element mule =new MuleScope("3.7.3").generate();
         document.setRootElement(mule);
         APIKitConfig config = new APIKitConfig.Builder("path/to/file.raml").build();
         new APIKitConfigScope(config, mule, "3.7.3").generate();
@@ -68,7 +68,7 @@ public class FlowScopeTest {
     @Test
     public void testGenerateWithExtensions() throws Exception {
         Document document = new Document();
-        Element mule =new MuleScope().generate();
+        Element mule =new MuleScope("3.7.3").generate();
         document.setRootElement(mule);
         APIKitConfig config = new APIKitConfig.Builder("path/to/file.raml").setExtensionEnabled(true).build();
         new APIKitConfigScope(config, mule, "3.7.3").generate();
