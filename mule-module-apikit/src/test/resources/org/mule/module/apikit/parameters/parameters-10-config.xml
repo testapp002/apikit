@@ -27,7 +27,7 @@
     </flow>
 
     <flow name="get:/repeat">
-        <set-payload value="status: #[message.inboundProperties['http.query.params'].status]"/>
+        <set-payload value="status: #[message.getAttributes().getQueryParams()['status']]"/>
     </flow>
 
 </mule>

@@ -2,18 +2,27 @@
 <mule xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:httpn="http://www.mulesoft.org/schema/mule/httpn"
       xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit"
       xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
         http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/httpn http://www.mulesoft.org/schema/mule/httpn/current/mule-httpn.xsd
         http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd">
 
+    <httpn:listener-config name="httpListenerConfigDefault">
+        <httpn:listener-connection host="localhost" port="${serverPort}"/>
+    </httpn:listener-config>
 
     <apikit:config name="config" raml="org/mule/module/apikit/schema/xsd-includer.raml"/>
 
     <flow name="doorway-cam">
-        <http:inbound-endpoint port="${serverPort}" host="localhost" path="api"/>
+        <httpn:listener config-ref="httpListenerConfigDefault" path="/api/*">
+            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:error-response-builder statusCode="500"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="config"/>
-        <exception-strategy ref="Global_Mapping_Exception_Strategy"/>
+        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
 
     <flow name="put:/name">
@@ -24,11 +33,11 @@
         <set-payload value="OK"/>
     </flow>
 
-    <apikit:mapping-exception-strategy name="Global_Mapping_Exception_Strategy">
-        <apikit:mapping statusCode="400">
-            <apikit:exception value="org.mule.module.apikit.exception.BadRequestException"/>
-            <set-payload value="bad request"/>
-        </apikit:mapping>
-    </apikit:mapping-exception-strategy>
+    <!--<apikit:mapping-exception-strategy name="Global_Mapping_Exception_Strategy">-->
+        <!--<apikit:mapping statusCode="400">-->
+            <!--<apikit:exception value="org.mule.module.apikit.exception.BadRequestException"/>-->
+            <!--<set-payload value="bad request"/>-->
+        <!--</apikit:mapping>-->
+    <!--</apikit:mapping-exception-strategy>-->
 
 </mule>

@@ -19,8 +19,11 @@ import org.mule.runtime.module.http.internal.ParameterMap;
 
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Optional;
+
+import org.apache.commons.collections.KeyValue;
 
 public class EventHelper
 {
@@ -148,8 +151,17 @@ public class EventHelper
         InternalMessage.Builder messageBuilder = InternalMessage.builder(event.getMessage());
 
         HttpRequestAttributes oldAttributes = ((HttpRequestAttributes) event.getMessage().getAttributes());
-        ParameterMap inboundQueryParams = new ParameterMap(oldAttributes.getQueryParams());
-        inboundQueryParams.putAll(queryParams);
+        //Map inboundQueryParams = new HashMap(oldAttributes.getQueryParams());
+        //inboundQueryParams.putAll(queryParams);
+        Map<String, LinkedList<String>> mapQueryParams = new HashMap<>();
+        queryParams.putAll(oldAttributes.getQueryParams());
+        for (Map.Entry<String, String> entry : queryParams.entrySet())
+        {
+            LinkedList<String> list = new LinkedList<>();
+            list.add(entry.getValue());
+            mapQueryParams.put(entry.getKey(), list);
+        }
+        ParameterMap inboundQueryParams = new ParameterMap(mapQueryParams);
         HttpRequestAttributes newAttributes = new HttpRequestAttributes(oldAttributes.getHeaders(), oldAttributes.getListenerPath(), oldAttributes.getRelativePath(), oldAttributes.getVersion(), oldAttributes.getScheme(), oldAttributes.getMethod(), oldAttributes.getRequestPath(), oldAttributes.getRequestUri(), oldAttributes.getQueryString(), inboundQueryParams, oldAttributes.getUriParams(), oldAttributes.getRemoteAddress(), oldAttributes.getClientCertificate());
 
         messageBuilder.attributes(newAttributes);
@@ -163,8 +175,18 @@ public class EventHelper
         InternalMessage.Builder messageBuilder = InternalMessage.builder(event.getMessage());
 
         HttpRequestAttributes oldAttributes = ((HttpRequestAttributes) event.getMessage().getAttributes());
-        ParameterMap newHeaders = new ParameterMap(oldAttributes.getHeaders());
-        newHeaders.putAll(headers);
+        Map <String, String> headersMap = new HashMap<>();
+        oldAttributes.getHeaders();
+        for (Map.Entry<String, String> kv : oldAttributes.getHeaders().entrySet())
+        {
+            headersMap.put(kv.getKey(), kv.getValue());
+        }
+        headersMap.putAll(headers);
+        //for(Map.Entry<String, String> kv : headers.entrySet())
+        //{
+        //    .put(kv.getKey(), kv.getValue());
+        //}
+        ParameterMap newHeaders = new ParameterMap(headersMap);
         HttpRequestAttributes newAttributes = new HttpRequestAttributes(newHeaders, oldAttributes.getListenerPath(), oldAttributes.getRelativePath(), oldAttributes.getVersion(), oldAttributes.getScheme(), oldAttributes.getMethod(), oldAttributes.getRequestPath(), oldAttributes.getRequestUri(), oldAttributes.getQueryString(), oldAttributes.getQueryParams(), oldAttributes.getUriParams(), oldAttributes.getRemoteAddress(), oldAttributes.getClientCertificate());
 
         messageBuilder.attributes(newAttributes);

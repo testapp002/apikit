@@ -2,10 +2,12 @@
 <mule xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:httpn="http://www.mulesoft.org/schema/mule/httpn"
       xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit"
       xmlns:spring="http://www.springframework.org/schema/beans"
       xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
         http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/httpn http://www.mulesoft.org/schema/mule/httpn/current/mule-httpn.xsd
         http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
@@ -33,16 +35,28 @@
         <!--</apikit:mapping>-->
     <!--</apikit:mapping-exception-strategy>-->
 
+    <httpn:listener-config name="httpListenerConfigDefault">
+        <httpn:listener-connection host="localhost" port="${serverPort}"/>
+    </httpn:listener-config>
+
     <apikit:config name="salesApi" raml="org/mule/module/apikit/sales/sales-enablement-api.yaml" consoleEnabled="true" consolePath="console"/>
 
     <flow name="doorway">
-        <http:inbound-endpoint port="${serverPort}" host="localhost" path="api"/>
+        <httpn:listener config-ref="httpListenerConfigDefault" path="/api/*">
+            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:error-response-builder statusCode="500"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router/>
         <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
 
     <flow name="non-apikit">
-        <http:inbound-endpoint port="${serverPort}" host="localhost" path="non-apikit"/>
+        <httpn:listener config-ref="httpListenerConfigDefault" path="/non-apikit/*">
+            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:error-response-builder statusCode="500"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <flow-ref name="get:/presentations"/>
     </flow>
 

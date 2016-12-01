@@ -62,7 +62,7 @@
 
     <flow name="get:/teams:leaguesApi">
         <expression-component>
-            payload = app.registry['league-api'].getTeams(message.inboundProperties['city']);
+            payload = app.registry['league-api'].getTeams(message.getAttribues().getHeaders()['city']);
         </expression-component>
     </flow>
 

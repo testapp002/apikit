@@ -16,6 +16,7 @@ import org.mule.runtime.api.message.Message;
 import org.mule.runtime.api.metadata.CollectionDataType;
 import org.mule.runtime.api.metadata.DataType;
 import org.mule.runtime.core.api.Event;
+import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.core.api.transformer.Transformer;
 import org.mule.runtime.core.api.transformer.TransformerException;
 import org.mule.module.apikit.RestContentTypeParser;
@@ -115,7 +116,8 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
         //event.getMessage().getPayload().getDataType().getMediaType().getCharset()
             //SystemUtils.getDefaultEncoding(this.muleContext);
         }
-        String msgContentType = ((HttpRequestAttributes)event.getMessage().getAttributes()).getHeaders().get("Content-Type");
+
+        String msgContentType = event.getMessage().getOutboundProperty("Content-Type");
 
         // user is in charge of setting content-type when using */*
         if ("*/*".equals(responseRepresentation))
@@ -140,7 +142,14 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
         String msgAcceptedContentType = acceptedContentType(dataType.getMediaType().toString(), msgContentType, conjunctionTypes);
         if (msgAcceptedContentType != null)
         {
-            event = EventHelper.addHeader(event, "Content-Type", msgAcceptedContentType);
+//            Event.Builder builder = Event.builder(event);
+//            InternalMessage.Builder messageBuilder = InternalMessage.builder(event.getMessage());
+//            messageBuilder.addOutboundProperty("Content-Type", null, msgAcceptedContentType);
+////            messageBuilder.mediaType(org.mule.runtime.api.metadata.MediaType.create(primaryType, secondaryType));
+//            builder.message(messageBuilder.build()).build();
+
+            //TODO WE SHOULD MODIFY THE PROPERTY MESSAGE.OUTBOUNDPROPERTY
+            //event = EventHelper.addOutboundProperty(event, "Content-Type", msgAcceptedContentType);
             if (logger.isDebugEnabled())
             {
                 logger.debug("Response transformation not required. Message payload type is " + msgAcceptedContentType);
@@ -174,7 +183,7 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
             }
             Object newPayload = transformer.transform(event.getMessage().getPayload().getValue());
             event = EventHelper.setPayload(event, newPayload, responseRepresentation);
-            //event = EventHelper.addOutboundProperty(event, "Content-Type", responseRepresentation);
+            event = EventHelper.addOutboundProperty(event, "Content-Type", responseRepresentation);
 
             return event.getMessage();
         }

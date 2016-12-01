@@ -115,9 +115,12 @@ public class UrlUtils
 
         int character = getEndOfBasePathIndex(baseAndApiPath, requestPath);
         String relativePath = requestPath.substring(character);
-        for(; character > 1 && Character.compare(requestPath.charAt(character - 1),'/') == 0; character--)
+        if (!"".equals(relativePath))
         {
-            relativePath = "/" + relativePath;
+            for (; character > 1 && Character.compare(requestPath.charAt(character - 1), '/') == 0; character--)
+            {
+                relativePath = "/" + relativePath;
+            }
         }
         return relativePath;
     }

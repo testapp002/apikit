@@ -12,7 +12,7 @@ public class LeaguesHttpListenerNonBlockingTestCase extends LeaguesHttpListenerT
     @Override
     protected String getConfigResources()
     {
-        return "org/mule/module/apikit/leagues/leagues-base-flow-config.xml, org/mule/module/apikit/leagues/leagues-http-listener-nb-flow-config.xml";
+        return "org/mule/module/apikit/leagues/leagues-http-listener-nb-flow-config.xml";
     }
 
 }

@@ -9,6 +9,7 @@ package org.mule.module.apikit;
 
 //import org.mule.runtime.core.DefaultMuleEvent;
 import org.mule.compatibility.transport.http.HttpConnector;
+import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.core.api.Event;
 //import org.mule.runtime.core.api.MuleEvent;
@@ -179,20 +180,16 @@ public class ConsoleHandler implements Processor
             if (path.equals(embeddedConsolePath) && !(contextPath.endsWith("/") && standalone))
             {
                 // client redirect
-                Map<String, String> headers = new HashMap<>();
-                headers.put(HttpVariableNames.HTTP_STATUS,
-                            String.valueOf(SC_MOVED_PERMANENTLY));
+                event = EventHelper.addVariable(event, HttpVariableNames.HTTP_STATUS, String.valueOf(SC_MOVED_PERMANENTLY));
                 String scheme = UrlUtils.getScheme(event.getMessage());
-                String host = event.getMessage().getInboundProperty("Host");
-                String requestPath = event.getMessage().getInboundProperty("http.request.path");
+                String host = ((HttpRequestAttributes)event.getMessage().getAttributes()).getHeaders().get("host");
+                String requestPath = ((HttpRequestAttributes)event.getMessage().getAttributes()).getRequestPath();
                 String redirectLocation = scheme + "://" + host + requestPath + "/";
                 if (StringUtils.isNotEmpty(queryString))
                 {
                     redirectLocation += "?" + queryString;
                 }
-
-                headers.put(HEADER_LOCATION, redirectLocation);
-                event = EventHelper.addOutboundProperties(event, headers);
+                event = EventHelper.addOutboundProperty(event, HEADER_LOCATION, redirectLocation);
                 return event;
             }
             if (path.equals(embeddedConsolePath) || path.equals(embeddedConsolePath + "/") || path.equals(embeddedConsolePath + "/index.html"))
@@ -251,12 +248,13 @@ public class ConsoleHandler implements Processor
             {
                 mimetype = DEFAULT_MIME_TYPE;
             }
-            Event.Builder builder = Event.builder(event);
-            InternalMessage.Builder messageBuilder = InternalMessage.builder().payload(buffer);
-            builder.message(messageBuilder.build());
-            resultEvent = builder.build();
+            //Event.Builder builder = Event.builder(event);
+            //InternalMessage.Builder messageBuilder = InternalMessage.builder().payload(buffer);
+            //builder.message(messageBuilder.build());
+            //resultEvent = builder.build();
+            event = EventHelper.addVariable(event, HttpVariableNames.HTTP_STATUS,String.valueOf(SC_OK));
+
             Map<String, String> headers = new HashMap<>();
-            headers.put(HttpConnector.HTTP_STATUS_PROPERTY, String.valueOf(SC_OK));
             headers.put(HttpHeaders.CONTENT_TYPE, mimetype);
             headers.put(HEADER_CONTENT_LENGTH, Integer.toString(buffer.length));
             headers.put("Access-Control-Allow-Origin", "*");
@@ -269,6 +267,7 @@ public class ConsoleHandler implements Processor
             {
                 headers.put(HEADER_EXPIRES, "-1"); //avoid IE ajax response caching
             }
+            resultEvent = EventHelper.setPayload(event, buffer);
             resultEvent = EventHelper.addOutboundProperties(resultEvent,headers);
         }
         catch (IOException e)

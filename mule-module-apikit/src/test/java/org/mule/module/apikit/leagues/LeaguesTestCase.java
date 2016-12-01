@@ -19,6 +19,8 @@ import static org.mule.module.apikit.Configuration.APPLICATION_RAML;
 import static org.mule.module.apikit.util.RegexMatcher.matchesPattern;
 
 import org.mule.functional.junit4.FunctionalTestCase;
+import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
+import org.mule.functional.junit4.runners.ArtifactClassLoaderRunnerConfig;
 import org.mule.runtime.core.util.IOUtils;
 import org.mule.tck.junit4.rule.DynamicPort;
 
@@ -31,7 +33,9 @@ import java.util.regex.Pattern;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class LeaguesTestCase extends FunctionalTestCase
+@ArtifactClassLoaderRunnerConfig(plugins = {"org.mule.modules:mule-module-sockets", "org.mule.modules:mule-module-http-ext"},
+        providedInclusions = "org.mule.modules:mule-module-sockets")
+public class LeaguesTestCase extends MuleArtifactFunctionalTestCase
 {
 
     @Rule
@@ -53,7 +57,7 @@ public class LeaguesTestCase extends FunctionalTestCase
     @Override
     protected String getConfigResources()
     {
-        return "org/mule/module/apikit/leagues/leagues-base-flow-config.xml, org/mule/module/apikit/leagues/leagues-http-flow-config.xml";
+        return "org/mule/module/apikit/leagues/leagues-http-flow-config.xml";
     }
 
     @Test

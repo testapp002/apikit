@@ -24,7 +24,7 @@ public class LeaguesHttpListenerTestCase extends LeaguesTestCase
     @Override
     protected String getConfigResources()
     {
-        return "org/mule/module/apikit/leagues/leagues-base-flow-config.xml, org/mule/module/apikit/leagues/leagues-http-listener-flow-config.xml";
+        return "org/mule/module/apikit/leagues/leagues-http-listener-flow-config.xml";
     }
 
     @Test @Ignore //MULE-8142

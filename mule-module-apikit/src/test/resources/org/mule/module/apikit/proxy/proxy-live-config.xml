@@ -12,7 +12,7 @@
     <flow name="main">
         <http:inbound-endpoint address="http://localhost:8081/api"/>
         <apikit:proxy config-ref="proxy-config"/>
-        <http:outbound-endpoint host="ec2-54-197-182-102.compute-1.amazonaws.com" port="8080" path="repository/#[message.inboundProperties['http.relative.path']]"/>
+        <http:outbound-endpoint host="ec2-54-197-182-102.compute-1.amazonaws.com" port="8080" path="repository/#[message.getAttributes().getRelativePath()]]"/>
         <exception-strategy ref="Global_Mapping_Exception_Strategy"/>
     </flow>
 

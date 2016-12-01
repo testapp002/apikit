@@ -14,7 +14,7 @@
     <flow name="http-proxy">
         <http:inbound-endpoint port="${proxyPort}" host="0.0.0.0"/>
         <copy-properties propertyName="*" />
-        <http:outbound-endpoint host="localhost" port="${serverPort}" path="#[message.inboundProperties['http.relative.path']]"/>
+        <http:outbound-endpoint host="localhost" port="${serverPort}" path="#[message.getAttributes().getRelativePath()]"/>
         <copy-properties propertyName="http.status" />
         <copy-properties propertyName="Location" />
         <exception-strategy ref="Global_Mapping_Exception_Strategy"/>

@@ -12,14 +12,17 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 
 import org.mule.functional.junit4.FunctionalTestCase;
+import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
+import org.mule.functional.junit4.runners.ArtifactClassLoaderRunnerConfig;
 import org.mule.tck.junit4.rule.DynamicPort;
 
 import com.jayway.restassured.RestAssured;
 
 import org.junit.Rule;
 import org.junit.Test;
-
-public class ParametersTestCase extends FunctionalTestCase
+@ArtifactClassLoaderRunnerConfig(plugins = {"org.mule.modules:mule-module-sockets", "org.mule.modules:mule-module-http-ext"},
+        providedInclusions = "org.mule.modules:mule-module-sockets")
+public class ParametersTestCase extends MuleArtifactFunctionalTestCase
 {
 
     @Rule

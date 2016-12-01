@@ -23,7 +23,7 @@ public class LeaguesRaml1TestCase extends LeaguesTestCase
     @Override
     protected String getConfigResources()
     {
-        return "org/mule/module/apikit/leagues/leagues-base-flow-config.xml, org/mule/module/apikit/leagues/leagues-raml1-flow-config.xml";
+        return "org/mule/module/apikit/leagues/leagues-raml1-flow-config.xml";
     }
 
     @Test

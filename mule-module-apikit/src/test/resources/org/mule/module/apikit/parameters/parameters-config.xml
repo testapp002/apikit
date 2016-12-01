@@ -63,7 +63,7 @@
     </flow>
 
     <flow name="get:/repeat">
-        <logger level="INFO" message="status: #[message.inboundProperties.status]"/>
+        <logger level="INFO" message="status: #[message.getAttributes().getQueryParams()['status']]"/>
     </flow>
 
 </mule>

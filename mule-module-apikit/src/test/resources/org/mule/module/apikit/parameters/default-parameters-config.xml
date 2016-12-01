@@ -54,11 +54,11 @@
     </flow>
 
     <flow name="get:/headers">
-        <set-property propertyName="one" value="#[message.inboundProperties.one]"/>
+        <set-property propertyName="one" value="#[message.getAttributes().getHeaders()[one]]"/>
     </flow>
 
     <flow name="get:/queryParams">
-        <set-property propertyName="default" value="#[message.inboundProperties['http.query.params']['first']]"/>
+        <set-property propertyName="default" value="#[message.getAttributes().getQueryParams()['first']]"/>
     </flow>
 
     <flow name="post:/url-encoded">

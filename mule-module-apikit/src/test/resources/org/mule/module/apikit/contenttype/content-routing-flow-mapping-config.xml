@@ -56,7 +56,7 @@
     </flow>
 
     <flow name="put-leagueId">
-        <set-property propertyName="incoming-content-type" value="#[message.inboundProperties['content-type']]"/>
+        <set-property propertyName="incoming-content-type" value="#[message.getAttributes().getHeaders()['content-type']]"/>
     </flow>
 
     <!--<apikit:mapping-exception-strategy name="Global_Mapping_Exception_Strategy">-->

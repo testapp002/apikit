@@ -29,7 +29,7 @@
 
     <flow name="get:/leagues/{leagueId}">
         <!-- using inboung property http.uri.params -->
-        <set-payload value="{ &quot;id&quot;: &quot;#[message.inboundProperties['http.uri.params']['leagueId']]&quot;, &quot;name&quot;: &quot;Liga BBVA&quot; }"/>
+        <set-payload value="{ &quot;id&quot;: &quot;#[message.getAttributes().getUriParams().get('leagueId')]&quot;, &quot;name&quot;: &quot;Liga BBVA&quot; }"/>
 
         <!-- using flow variable -->
         <!--<set-payload value="{ &quot;id&quot;: &quot;#[leagueId]&quot;, &quot;name&quot;: &quot;Liga BBVA&quot; }"/>-->

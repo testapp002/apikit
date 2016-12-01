@@ -15,7 +15,7 @@
         <jetty:inbound-endpoint address="http://localhost:${proxyPort}/proxy" exchange-pattern="request-response"/>
         <apikit:proxy config-ref="proxy-config"/>
         <!--<http:outbound-endpoint host="localhost" port="${serverPort}" path="api/#[message.inboundProperties['http.relative.path']]?#[message.inboundProperties['http.query.string']]"/>-->
-        <http:outbound-endpoint host="localhost" port="${serverPort}" path="api/#[message.inboundProperties['http.request'].substring(message.inboundProperties['http.context.path'].length()+((message.inboundProperties['http.context.path'].length()>1)?1:0))]"/>
+        <http:outbound-endpoint host="localhost" port="${serverPort}" path="api/#[message.getAttributes().getRequest().substring(message.getAttributes().getContextPath().length()+((message.getAttributes().getContextPath().length()>1)?1:0))]"/>
         <exception-strategy ref="Global_Mapping_Exception_Strategy"/>
     </flow>
 

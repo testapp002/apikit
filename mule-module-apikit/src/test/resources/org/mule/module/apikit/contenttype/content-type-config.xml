@@ -50,17 +50,17 @@
 
     <flow name="get:/resources">
         <logger level="INFO" message="siamo qui"/>
-        <!--<set-payload value="null"/>-->
+        <set-payload value=""/>
     </flow>
 
     <flow name="get:/multitype">
-        <logger level="INFO" message="content type hint: #[message.inboundProperties.ctype]"/>
+        <logger level="INFO" message="content type hint: #[message.getAttributes().getHeaders()['ctype']]"/>
         <choice>
-            <when expression="#[message.inboundProperties.ctype == 'json']">
+            <when expression="#[message.getAttributes().getHeaders()['ctype'] == 'json']">
                 <logger level="INFO" message="returning json"/>
                 <set-property propertyName="Content-Type" value="application/json"/>
             </when>
-            <when expression="#[message.inboundProperties.ctype == 'xml']">
+            <when expression="#[message.getAttributes().getHeaders()['ctype'] == 'xml']">
                 <logger level="INFO" message="returning xml"/>
                 <set-property propertyName="Content-Type" value="application/xml"/>
             </when>

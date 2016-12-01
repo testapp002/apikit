@@ -75,6 +75,7 @@ public class RamlDescriptorHandler
 
         event = EventHelper.addOutboundProperties(event,headers);
         event = EventHelper.setPayload(event, raml, "application", "raml+yaml");
+        event = EventHelper.addVariable(event, HttpVariableNames.HTTP_STATUS, "200");
         return event;
     }
 }

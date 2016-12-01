@@ -52,7 +52,7 @@
 
     <flow name="put:/leagues/{leagueId}">
         <!-- TODO we should add this variable to the outbound headers map -->
-        <set-property propertyName="incoming-content-type" value="#[message.inboundProperties['content-type']]"/>
+        <set-property propertyName="incoming-content-type" value="#[message.getAttributes().getHeaders()['content-type']]"/>
     </flow>
 
 

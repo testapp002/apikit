@@ -231,8 +231,9 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
 
     public String getEndpointAddress(FlowConstruct flowConstruct)
     {
-        return "test";
-        //return "http://localhost:8081/default";
+        //return "test";
+        return "http://localhost:8081/api";
+        //TODO NOT POSSIBLE UNTIL EXTENSIONMESSAGESOURCE LETS GET HOST PORT ADDRESS AND SCEHEME
         //MessageSourceAdapter adapter = new MessageSourceAdapter(((Flow) flowConstruct).getMessageSource());
         //String address = adapter.getAddress();
         //String path = adapter.getPath();

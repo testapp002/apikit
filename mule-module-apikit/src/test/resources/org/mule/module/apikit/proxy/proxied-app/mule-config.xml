@@ -57,7 +57,7 @@
 
     <flow name="get:/leagues/{leagueId}/teams">
         <set-payload value="[{ &quot;name&quot;: &quot;Atleti&quot; }, { &quot;name&quot;: &quot;Elche&quot; }]" />
-        <set-property propertyName="preferred-team" value="#[message.inboundProperties.preferred]"/>
+        <set-property propertyName="preferred-team" value="#[message.getAttributes().getHeaders()['preferred']]"/>
     </flow>
 
     <!--

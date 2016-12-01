@@ -2,30 +2,54 @@
 <mule xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:httpn="http://www.mulesoft.org/schema/mule/httpn"
       xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit"
       xmlns:cors="http://www.mulesoft.org/schema/mule/cors"
       xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
         http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/httpn http://www.mulesoft.org/schema/mule/httpn/current/mule-httpn.xsd
         http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
         http://www.mulesoft.org/schema/mule/cors http://www.mulesoft.org/schema/mule/cors/current/mule-cors.xsd">
 
     <apikit:config name="localhost" raml="org/mule/module/apikit/assets/api/console.raml" consoleEnabled="false"/>
 
-    <cors:config name="defaultConfig"/>
+    <!--<cors:config name="defaultConfig"/>-->
+
+    <httpn:listener-config name="httpListenerConfigDefault">
+        <httpn:listener-connection host="localhost" port="${serverPort}"/>
+    </httpn:listener-config>
+
+    <httpn:listener-config name="httpListenerConfigDefault2">
+        <httpn:listener-connection host="localhost" port="${serverPort2}"/>
+    </httpn:listener-config>
 
     <flow name="router">
-        <http:inbound-endpoint port="${serverPort}" host="localhost" path="myapi"/>
-        <cors:validate publicResource="true" config-ref="defaultConfig" />
+        <httpn:listener config-ref="httpListenerConfigDefault" path="/myapi/*">
+            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:error-response-builder statusCode="500"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <!--<http:inbound-endpoint port="${serverPort}" host="localhost" path="myapi"/>-->
+        <!--<cors:validate publicResource="true" config-ref="defaultConfig" />-->
         <apikit:router config-ref="localhost"/>
     </flow>
 
     <flow name="console">
-        <http:inbound-endpoint port="${serverPort}" host="localhost" path="konsole"/>
+        <httpn:listener config-ref="httpListenerConfigDefault" path="/konsole/*">
+            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:error-response-builder statusCode="500"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <!--<http:inbound-endpoint port="${serverPort}" host="localhost" path="konsole"/>-->
         <apikit:console config-ref="localhost"/>
     </flow>
 
     <flow name="consoleNoPath">
-        <http:inbound-endpoint port="${serverPort2}" host="localhost"/>
+        <httpn:listener config-ref="httpListenerConfigDefault2" path="/*">
+            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:error-response-builder statusCode="500"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:console config-ref="localhost"/>
     </flow>
 
