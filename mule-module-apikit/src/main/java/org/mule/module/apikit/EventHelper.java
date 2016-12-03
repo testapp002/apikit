@@ -128,6 +128,16 @@ public class EventHelper
         return builder.message(messageBuilder.build()).build();
     }
 
+    public static Event setPayload(Event event, Object payload, MediaType mediatype)
+    {
+        Event.Builder builder = Event.builder(event);
+        InternalMessage.Builder messageBuilder = InternalMessage.builder(event.getMessage());
+        messageBuilder.payload(payload);
+        messageBuilder.mediaType(mediatype);
+        return builder.message(messageBuilder.build()).build();
+    }
+
+
     public static Event setPayload(Event event, Object payload)
     {
         Event.Builder builder = Event.builder(event);

@@ -9,6 +9,7 @@ package org.mule.module.apikit;
 import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.runtime.api.message.Message;
 import org.mule.runtime.core.api.Event;
+import org.mule.runtime.core.api.MuleContext;
 //import org.mule.transport.http.HttpConstants;
 
 import org.raml.parser.utils.StreamUtils;
@@ -27,30 +28,31 @@ public class CharsetUtils
      *  - detects the payload encoding using BOM, or tries to auto-detect it
      *  - return the mule message encoding
      *
-     * @param message mule message
+     * @param event mule event
+     * @param muleContext mule context
      * @param bytes payload byte array
      * @param logger where to log
      * @return payload encoding
      */
-    //public static String getEncoding(Message message, byte[] bytes, Logger logger)
-    //{
-    //    String encoding = getHeaderCharset(message, logger);
-    //    if (encoding == null)
-    //    {
-    //        encoding = StreamUtils.detectEncoding(bytes);
-    //        logger.debug("Detected payload encoding: " + logEncoding(encoding));
-    //        if (encoding == null)
-    //        {
-    //            encoding = message.getEncoding();
-    //            logger.debug("Defaulting to mule message encoding: " + logEncoding(encoding));
-    //        }
-    //    }
-    //    if (encoding.matches("(?i)UTF-16.+"))
-    //    {
-    //        encoding = "UTF-16";
-    //    }
-    //    return encoding;
-    //}
+    public static String getEncoding(Event event, MuleContext muleContext, byte[] bytes, Logger logger)
+    {
+        String encoding = getHeaderCharset(event.getMessage(), logger);
+        if (encoding == null)
+        {
+            encoding = StreamUtils.detectEncoding(bytes);
+            logger.debug("Detected payload encoding: " + logEncoding(encoding));
+            if (encoding == null)
+            {
+                encoding = EventHelper.getEncoding(event, muleContext).toString();
+                logger.debug("Defaulting to mule message encoding: " + logEncoding(encoding));
+            }
+        }
+        if (encoding.matches("(?i)UTF-16.+"))
+        {
+            encoding = "UTF-16";
+        }
+        return encoding;
+    }
 
     /**
      * Tries to figure out the encoding of an xml request in the following order
@@ -59,27 +61,28 @@ public class CharsetUtils
      *  - return the mule message encoding
      *
      * @param muleEvent mule event
+     * @param muleContext mule context
      * @param payload xml payload as byte array
      * @param document xml parsed document
      * @param logger where to log
      * @return xml payload encoding
      */
-    //public static String getXmlEncoding(Event muleEvent, byte[] payload, Document document, Logger logger)
-    //{
-    //    String encoding = document.getXmlEncoding();
-    //    logger.debug("Xml declaration encoding: " + logEncoding(encoding));
-    //    if (encoding == null)
-    //    {
-    //        encoding = StreamUtils.detectEncoding(payload);
-    //        logger.debug("Detected payload encoding: " + logEncoding(encoding));
-    //    }
-    //    if (encoding == null)
-    //    {
-    //        encoding = EventHelper.getEncoding(muleEvent);
-    //        logger.debug("Defaulting to mule message encoding: " + logEncoding(encoding));
-    //    }
-    //    return encoding;
-    //}
+    public static String getXmlEncoding(Event muleEvent, MuleContext muleContext, byte[] payload, Document document, Logger logger)
+    {
+        String encoding = document.getXmlEncoding();
+        logger.debug("Xml declaration encoding: " + logEncoding(encoding));
+        if (encoding == null)
+        {
+            encoding = StreamUtils.detectEncoding(payload);
+            logger.debug("Detected payload encoding: " + logEncoding(encoding));
+        }
+        if (encoding == null)
+        {
+            encoding = EventHelper.getEncoding(muleEvent, muleContext).toString();
+            logger.debug("Defaulting to mule message encoding: " + logEncoding(encoding));
+        }
+        return encoding;
+    }
 
 
     /**

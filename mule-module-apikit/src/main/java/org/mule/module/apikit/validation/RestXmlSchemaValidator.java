@@ -7,8 +7,10 @@
 package org.mule.module.apikit.validation;
 
 import org.mule.common.metadata.datatype.DataTypeFactory;
+import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.module.apikit.EventHelper;
 import org.mule.runtime.api.message.Message;
+import org.mule.runtime.api.metadata.DataType;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
 //import org.mule.runtime.core.api.MuleEvent;
@@ -56,26 +58,51 @@ public class RestXmlSchemaValidator extends AbstractRestSchemaValidator
 
     //TODO FIX THIS METHOD
     @Override
-    public void validate(String configId, String schemaPath, Event muleEvent, IRaml api) throws BadRequestException
+    public Event validate(String configId, String schemaPath, Event muleEvent, IRaml api) throws BadRequestException
     {
+        Event newMuleEvent = muleEvent;
         try
         {
 
             Document data;
             Object input = muleEvent.getMessage().getPayload().getValue();
             Charset messageEncoding = EventHelper.getEncoding(muleEvent, this.muleContext);
-            String charset = getHeaderCharset(muleEvent.getMessage());
+            //String charset = getHeaderCharset(muleEvent.getMessage());
             if (input instanceof InputStream)
             {
                 logger.debug("transforming payload to perform XSD validation");
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                IOUtils.copyLarge((InputStream) input, baos);
+                try
+                {
+                    IOUtils.copyLarge((InputStream) input, baos);
+                }
+                finally
+                {
+                    IOUtils.closeQuietly((InputStream) input);
+                }
+
+                //Charset charset = EventHelper.getEncoding(muleEvent, muleContext);
+                DataType dataType = muleEvent.getMessage().getPayload().getDataType();
+
+                org.mule.runtime.api.metadata.DataTypeBuilder sourceDataTypeBuilder = DataType.builder();
+                sourceDataTypeBuilder.type(muleEvent.getMessage().getPayload().getClass());
+                sourceDataTypeBuilder.mediaType(dataType.getMediaType());
+                sourceDataTypeBuilder.charset(messageEncoding);
+                DataType sourceDataType = sourceDataTypeBuilder.build();//DataTypeFactory.create(event.getMessage().getPayload().getClass(), msgMimeType);
+                newMuleEvent = EventHelper.setPayload(muleEvent, new ByteArrayInputStream(baos.toByteArray()), sourceDataType.getMediaType());
+
+
+
+
+
+
+                //ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                //IOUtils.copyLarge((InputStream) input, baos);
 
                 //DataType<ByteArrayInputStream> dataType = DataTypeFactory.create(ByteArrayInputStream.class, muleEvent.getMessage().getDataType().getMimeType());
                 //dataType.setEncoding(messageEncoding);
                 //muleEvent = EventHelper.setPayload(muleEvent, new ByteArrayInputStream(baos.toByteArray()), dataType);
-                data = loadDocument(new ByteArrayInputStream(baos.toByteArray()), charset);
-                //data = null; // TODO REMOVE
+                data = loadDocument(new ByteArrayInputStream(baos.toByteArray()), messageEncoding.toString());
             }
             else if (input instanceof String)
             {
@@ -83,7 +110,7 @@ public class RestXmlSchemaValidator extends AbstractRestSchemaValidator
             }
             else if (input instanceof byte[])
             {
-                data = loadDocument(new ByteArrayInputStream((byte[]) input), charset);
+                data = loadDocument(new ByteArrayInputStream((byte[]) input), messageEncoding.toString());
             }
             else
             {
@@ -99,23 +126,24 @@ public class RestXmlSchemaValidator extends AbstractRestSchemaValidator
             logger.info("Schema validation failed: " + e.getMessage());
             throw new BadRequestException(e);
         }
+        return newMuleEvent;
     }
 
-    //TODO FIX THIS METHOD
-    /**
-     *
-     * @return the charset specified by the content-type header or null if not specified
-     * @param message
-     */
-    public static String getHeaderCharset(Message message)
-    {
-        //String contentType = message.getInboundProperty(HttpConstants.HEADER_CONTENT_TYPE, "application/xml");
-        //if (contentType.contains("charset="))
-        //{
-        //    return message.getEncoding();
-        //}
-        return null;
-    }
+    ////TODO FIX THIS METHOD
+    ///**
+    // *
+    // * @return the charset specified by the content-type header or null if not specified
+    // * @param message
+    // */
+    //public static String getHeaderCharset(Message message)
+    //{
+    //    String contentType = ((HttpRequestAttributes)message.getAttributes()).getHeaders().get(HttpConstants.HEADER_CONTENT_TYPE), "application/xml");
+    //    if (contentType.contains("charset="))
+    //    {
+    //        return message.getEncoding();
+    //    }
+    //    return null;
+    //}
 
     private static Document loadDocument(InputStream stream, String charset) throws IOException
     {

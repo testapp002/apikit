@@ -6,6 +6,8 @@
  */
 package org.mule.module.apikit;
 
+import static org.mule.module.apikit.CharsetUtils.getEncoding;
+import static org.mule.module.apikit.CharsetUtils.trimBom;
 import static org.mule.module.apikit.transform.ApikitResponseTransformer.ACCEPT_HEADER;
 import static org.mule.module.apikit.transform.ApikitResponseTransformer.APIKIT_ROUTER_REQUEST;
 import static org.mule.module.apikit.transform.ApikitResponseTransformer.BEST_MATCH_REPRESENTATION;
@@ -18,8 +20,10 @@ import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.runtime.api.message.Message;
 import org.mule.runtime.api.message.MuleEvent;
 import org.mule.runtime.api.message.MultiPartPayload;
+import org.mule.runtime.api.metadata.DataType;
 import org.mule.runtime.core.PropertyScope;
 import org.mule.runtime.core.api.Event;
+import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.MuleException;
 //import org.mule.runtime.core.api.MuleMessage;
 //import org.mule.api.transformer.DataType;
@@ -79,11 +83,13 @@ public class HttpRestRequest
     protected AbstractConfiguration config;
     protected IAction action;
     protected HttpProtocolAdapter adapter;
+    protected MuleContext muleContext;
 
-    public HttpRestRequest(MuleEvent event, AbstractConfiguration config)
+    public HttpRestRequest(MuleEvent event, MuleContext muleContext, AbstractConfiguration config)
     {
         requestEvent = event;
         this.config = config;
+        this.muleContext = muleContext;
         adapter = new HttpProtocolAdapter((Event) event);
     }
 
@@ -356,7 +362,7 @@ public class HttpRestRequest
         {
             if (config.isParserV2())
             {
-                validateSchemaV2(actionMimeType);
+                validateSchemaV2(actionMimeType, isJson);
             }
             else
             {
@@ -464,9 +470,9 @@ public class HttpRestRequest
         }
     }
 
-    private void validateSchemaV2(IMimeType mimeType) throws BadRequestException
+    private void validateSchemaV2(IMimeType mimeType, boolean trimBom) throws BadRequestException
     {
-        String payload = getPayloadAsString(requestEvent.getMessage());
+        String payload = getPayloadAsString(trimBom);
         List<ValidationResult> validationResults;
         if (mimeType instanceof org.mule.raml.implv2.v10.model.MimeTypeImpl)
         {
@@ -487,10 +493,9 @@ public class HttpRestRequest
         }
     }
 
-    private String getPayloadAsString(Message message) throws BadRequestException
+    private String getPayloadAsString( boolean trimBom) throws BadRequestException
     {
-        Object input = message.getPayload().getValue();
-        String charset = RestXmlSchemaValidator.getHeaderCharset(message);
+        Object input = requestEvent.getMessage().getPayload().getValue();
         if (input instanceof InputStream)
         {
             logger.debug("transforming payload to perform Schema validation");
@@ -498,11 +503,26 @@ public class HttpRestRequest
             {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 IOUtils.copyLarge((InputStream) input, baos);
+                byte[] bytes = baos.toByteArray();
+
+                String charset = getEncoding((Event)requestEvent, muleContext, bytes, logger);
+
+
+
+                DataType dataType = requestEvent.getMessage().getPayload().getDataType();
+
+                //org.mule.runtime.api.metadata.DataTypeBuilder sourceDataTypeBuilder = DataType.builder();
+                //sourceDataTypeBuilder.type(requestEvent.getMessage().getPayload().getClass());
+                //sourceDataTypeBuilder.mediaType(dataType.getMediaType());
+                //sourceDataTypeBuilder.charset(charset);
+                //DataType sourceDataType = sourceDataTypeBuilder.build();//DataTypeFactory.create(event.getMessage().getPayload().getClass(), msgMimeType);
+                requestEvent = EventHelper.setPayload((Event)requestEvent, new ByteArrayInputStream(baos.toByteArray()), requestEvent.getMessage().getPayload().getDataType().getMediaType());
+
+
                 //DataType<ByteArrayInputStream> dataType = DataTypeFactory.create(ByteArrayInputStream.class, message.getPayload().getDataType().getMimeType());
                 //dataType.setEncoding(message.getEncoding());
-                byte[] bytes = baos.toByteArray();
                 //message.setPayload(new ByteArrayInputStream(bytes), dataType);
-                input = byteArrayToString(bytes, charset);
+                input = byteArrayToString(bytes, charset, trimBom);
             }
             catch (IOException e)
             {
@@ -513,7 +533,9 @@ public class HttpRestRequest
         {
             try
             {
-                input = byteArrayToString((byte[]) input, charset);
+                String encoding = getEncoding((Event)requestEvent, muleContext, (byte[]) input, logger);
+
+                input = byteArrayToString((byte[]) input, encoding, trimBom);
             }
             catch (IOException e)
             {
@@ -531,20 +553,25 @@ public class HttpRestRequest
         return (String) input;
     }
 
-    private String byteArrayToString(byte[] bytes, String charset) throws IOException
+    private String byteArrayToString(byte[] bytes, String charset, boolean trimBom) throws IOException
     {
-        if (charset == null)
+        String result;
+        if (trimBom)
         {
-            return StreamUtils.toString(new ByteArrayInputStream(bytes));
+            result = IOUtils.toString(new ByteArrayInputStream(trimBom(bytes)), charset);
         }
-        return IOUtils.toString(new ByteArrayInputStream(StreamUtils.trimBom(bytes)), charset);
+        else
+        {
+            result = IOUtils.toString(bytes, charset);
+        }
+        return result;
     }
 
     private void validateSchema(String mimeTypeName) throws MuleRestException
     {
         SchemaType schemaType = mimeTypeName.contains("json") ? SchemaType.JSONSchema : SchemaType.XMLSchema;
         RestSchemaValidator validator = RestSchemaValidatorFactory.getInstance().createValidator(schemaType, config.getMuleContext());
-        validator.validate(config.getName(), SchemaCacheUtils.getSchemaCacheKey(action, mimeTypeName), (Event)requestEvent, config.getApi());
+        requestEvent = validator.validate(config.getName(), SchemaCacheUtils.getSchemaCacheKey(action, mimeTypeName), (Event)requestEvent, config.getApi());
     }
 
     private String negotiateOutputRepresentation(List<String> mimeTypes) throws MuleRestException

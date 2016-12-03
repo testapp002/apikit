@@ -82,7 +82,7 @@ public class Console implements Processor, Initialisable, Startable, MuleContext
     @Override
     public Event process(Event event) throws MuleException
     {
-        HttpRestRequest request = new HttpRestRequest(event, getConfig());
+        HttpRestRequest request = new HttpRestRequest(event, muleContext, getConfig());
 
         //check for raml descriptor request
         if (ramlHandler.handles(request))

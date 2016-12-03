@@ -77,7 +77,7 @@ public class Configuration extends AbstractConfiguration
     @Override
     protected HttpRestRequest getHttpRestRequest(MuleEvent event)
     {
-        return new HttpRestRequest(event, this);
+        return new HttpRestRequest(event, muleContext, this);
     }
 
     protected void initializeRestFlowMap()

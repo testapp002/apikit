@@ -13,5 +13,5 @@ import org.mule.raml.interfaces.model.IRaml;
 public interface RestSchemaValidator
 {
 
-    void validate(String configId, String schemaPath, Event muleEvent, IRaml api) throws BadRequestException;
+    Event validate(String configId, String schemaPath, Event muleEvent, IRaml api) throws BadRequestException;
 }
