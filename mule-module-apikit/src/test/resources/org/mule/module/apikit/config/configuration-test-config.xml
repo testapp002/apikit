@@ -9,6 +9,7 @@
       http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
       http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 
+    <configuration defaultErrorHandler-ref="defaultErrorHandler"/>
 
     <apikit:config name="default" raml="org/mule/module/apikit/config/config.yaml"/>
 
@@ -47,11 +48,10 @@
             <httpn:response-builder statusCode="#[httpStatus]">
                 <httpn:headers>#[_outboundHeaders_]</httpn:headers>
             </httpn:response-builder>
-            <httpn:error-response-builder statusCode="500"/>
+            <httpn:error-response-builder statusCode="#[httpStatus]"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="default"/>
-        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
 
     <flow name="customEntry">
@@ -59,11 +59,10 @@
             <httpn:response-builder statusCode="#[httpStatus]">
                 <httpn:headers>#[_outboundHeaders_]</httpn:headers>
             </httpn:response-builder>
-            <httpn:error-response-builder statusCode="500"/>
+            <httpn:error-response-builder statusCode="#[httpStatus]"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="custom"/>
-        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
 
     <flow name="noConsoleEntry">
@@ -71,11 +70,10 @@
             <httpn:response-builder statusCode="#[httpStatus]">
                 <httpn:headers>#[_outboundHeaders_]</httpn:headers>
             </httpn:response-builder>
-            <httpn:error-response-builder statusCode="500"/>
+            <httpn:error-response-builder statusCode="#[httpStatus]"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="no-console"/>
-        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
 
     <flow name="mappingEntry">
@@ -83,11 +81,10 @@
             <httpn:response-builder statusCode="#[httpStatus]">
                 <httpn:headers>#[_outboundHeaders_]</httpn:headers>
             </httpn:response-builder>
-            <httpn:error-response-builder statusCode="500"/>
+            <httpn:error-response-builder statusCode="#[httpStatus]"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="mapped-flows"/>
-        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
 
     <flow name="noValidations">
@@ -95,11 +92,10 @@
             <httpn:response-builder statusCode="#[httpStatus]">
                 <httpn:headers>#[_outboundHeaders_]</httpn:headers>
             </httpn:response-builder>
-            <httpn:error-response-builder statusCode="500"/>
+            <httpn:error-response-builder statusCode="#[httpStatus]"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="no-validations"/>
-        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
 
     <flow name="get:/resource">
@@ -118,12 +114,16 @@
         <set-payload value="no validations performed"/>
     </flow>
 
-    <!--<apikit:mapping-exception-strategy name="Global_Mapping_Exception_Strategy">-->
-        <!--<apikit:mapping statusCode="404">-->
-            <!--<apikit:exception value="org.mule.module.apikit.exception.NotFoundException"/>-->
-            <!--<set-property propertyName="Content-Type" value="text/plain"/>-->
-            <!--<set-payload value="resource not found"/>-->
-        <!--</apikit:mapping>-->
-    <!--</apikit:mapping-exception-strategy>-->
+
+    <error-handler name="defaultErrorHandler">
+        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotFoundException)]">
+            <set-variable variableName="httpStatus" value="404"/>
+            <set-payload value="{ &quot;message&quot;: &quot;resource not found&quot; }" mimeType="application/json" />
+        </on-error-propagate>
+        <on-error-propagate>
+            <set-variable variableName="httpStatus" value="500"/>
+            <set-payload value="Server error" mimeType="text/plain"/>
+        </on-error-propagate>
+    </error-handler>
 
 </mule>

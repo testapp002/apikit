@@ -29,7 +29,6 @@
             <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
-        <!--<http:inbound-endpoint port="${serverPort}" host="localhost" path="myapi"/>-->
         <!--<cors:validate publicResource="true" config-ref="defaultConfig" />-->
         <apikit:router config-ref="localhost"/>
     </flow>
@@ -40,7 +39,6 @@
             <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
-        <!--<http:inbound-endpoint port="${serverPort}" host="localhost" path="konsole"/>-->
         <apikit:console config-ref="localhost"/>
     </flow>
 

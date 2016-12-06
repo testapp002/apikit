@@ -1,41 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit"
-      xmlns:context="http://www.springframework.org/schema/context"
-      xmlns:core="http://www.mulesoft.org/schema/mule/core"
       xmlns:http="http://www.mulesoft.org/schema/mule/http"
       xmlns:httpn="http://www.mulesoft.org/schema/mule/httpn"
-      xmlns:spring="http://www.springframework.org/schema/beans"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
       http://www.mulesoft.org/schema/mule/httpn http://www.mulesoft.org/schema/mule/httpn/current/mule-httpn.xsd
-      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
       http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
-      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
       http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 
-    <!--<apikit:mapping-exception-strategy name="Global_Mapping_Exception_Strategy">-->
-        <!--<apikit:mapping statusCode="404">-->
-            <!--<apikit:exception value="org.mule.module.apikit.exception.NotFoundException" />-->
-            <!--<set-payload value="resource not found" />-->
-        <!--</apikit:mapping>-->
-        <!--<apikit:mapping statusCode="405">-->
-            <!--<apikit:exception value="org.mule.module.apikit.exception.MethodNotAllowedException" />-->
-            <!--<set-payload value="method not allowed" />-->
-        <!--</apikit:mapping>-->
-        <!--<apikit:mapping statusCode="415">-->
-            <!--<apikit:exception value="org.mule.module.apikit.exception.UnsupportedMediaTypeException" />-->
-            <!--<set-payload value="unsupported media type" />-->
-        <!--</apikit:mapping>-->
-        <!--<apikit:mapping statusCode="406">-->
-            <!--<apikit:exception value="org.mule.module.apikit.exception.NotAcceptableException" />-->
-            <!--<set-payload value="not acceptable" />-->
-        <!--</apikit:mapping>-->
-        <!--<apikit:mapping statusCode="400">-->
-            <!--<apikit:exception value="org.mule.module.apikit.exception.BadRequestException" />-->
-            <!--<set-payload value="bad request" />-->
-        <!--</apikit:mapping>-->
-    <!--</apikit:mapping-exception-strategy>-->
+    <configuration defaultErrorHandler-ref="defaultErrorHandler"/>
+
+    <error-handler name="defaultErrorHandler">
+        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotFoundException)]">
+            <set-variable variableName="httpStatus" value="404"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Resource not found&quot; }" mimeType="application/json" />
+        </on-error-propagate>
+        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.MethodNotAllowedException)]">
+            <set-variable variableName="httpStatus" value="405"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Method not allowed&quot; }" mimeType="application/json" />
+        </on-error-propagate>
+        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.UnsupportedMediaTypeException)]">
+            <set-variable variableName="httpStatus" value="415"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Unsupported media type&quot; }" mimeType="application/json"/>
+        </on-error-propagate>
+        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotAcceptableException)]">
+            <set-variable variableName="httpStatus" value="406"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Not acceptable&quot; }" mimeType="application/json"/>
+        </on-error-propagate>
+        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
+            <set-variable variableName="httpStatus" value="400"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Bad request&quot; }" mimeType="application/json"/>
+        </on-error-propagate>
+        <on-error-propagate when="#[exception.causedBy(org.mule.examples.leagues.exceptions.ConflictException)]">
+            <set-variable variableName="httpStatus" value="409"/>
+            <set-payload value="conflict" mimeType="text/plain"/>
+        </on-error-propagate>
+        <on-error-propagate>
+            <set-variable variableName="httpStatus" value="500"/>
+            <set-payload value="Server error" mimeType="text/plain"/>
+        </on-error-propagate>
+    </error-handler>
 
     <apikit:config raml="org/mule/module/apikit/archetype/archetype.yaml" />
 
@@ -46,11 +51,10 @@
     <flow name="main">
         <httpn:listener config-ref="httpListenerConfig" path="/api/*">
             <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
-            <httpn:error-response-builder statusCode="500"/>
+            <httpn:error-response-builder statusCode="#[httpStatus]"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router />
-        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy" />-->
     </flow>
 
     <flow name="get:/resources">

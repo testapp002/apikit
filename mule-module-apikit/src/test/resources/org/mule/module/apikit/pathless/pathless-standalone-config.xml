@@ -9,6 +9,7 @@
       http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
       http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 
+    <configuration defaultErrorHandler-ref="defaultErrorHandler"/>
 
     <apikit:config name="noRouter" raml="org/mule/module/apikit/pathless/pathless.yaml" consoleEnabled="false"/>
 
@@ -36,37 +37,57 @@
     <flow name="consoleNoRouter">
         <httpn:listener config-ref="httpListenerConfigPathless" path="/*">
             <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
-            <httpn:error-response-builder statusCode="500"/>
+            <httpn:error-response-builder statusCode="#[httpStatus]"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
-        <!--<http:inbound-endpoint port="${serverPortNoRouter}" host="localhost"/>-->
         <apikit:console config-ref="noRouter"/>
-        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
 
     <flow name="consoleEmptyPath">
         <httpn:listener config-ref="httpListenerConfigEmptyPath" path="/*">
             <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
-            <httpn:error-response-builder statusCode="500"/>
+            <httpn:error-response-builder statusCode="#[httpStatus]"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
-        <!--<http:inbound-endpoint port="${serverPortEmptyPath}" host="localhost" path=""/>-->
         <apikit:console config-ref="emptyPath"/>
-        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
     <flow name="routerEmptyPath">
         <httpn:listener config-ref="httpListenerConfigEmptyPath" path="/api/*">
             <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
-            <httpn:error-response-builder statusCode="500"/>
+            <httpn:error-response-builder statusCode="#[httpStatus]"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
-        <!--<http:inbound-endpoint address="http://localhost:${serverPortEmptyPath}/api"/>-->
         <apikit:router config-ref="emptyPath"/>
-        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
 
     <flow name="get:/orders">
         <logger level="INFO" message="siamo qui"/>
     </flow>
 
+    <error-handler name="defaultErrorHandler">
+        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotFoundException)]">
+            <set-variable variableName="httpStatus" value="404"/>
+            <set-payload value="resource not found"/>
+        </on-error-propagate>
+        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.MethodNotAllowedException)]">
+            <set-variable variableName="httpStatus" value="405"/>
+            <set-payload value="method not allowed"/>
+        </on-error-propagate>
+        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.UnsupportedMediaTypeException)]">
+            <set-variable variableName="httpStatus" value="415"/>
+            <set-payload value="unsupported media type"/>
+        </on-error-propagate>
+        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotAcceptableException)]">
+            <set-variable variableName="httpStatus" value="406"/>
+            <set-payload value="not acceptable"/>
+        </on-error-propagate>
+        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
+            <set-variable variableName="httpStatus" value="400"/>
+            <set-payload value="bad request"/>
+        </on-error-propagate>
+        <on-error-propagate>
+            <set-variable variableName="httpStatus" value="500"/>
+            <set-payload value="Server error" mimeType="text/plain"/>
+        </on-error-propagate>
+    </error-handler>
 </mule>

@@ -13,6 +13,35 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
         http://www.mulesoft.org/schema/mule/test http://www.mulesoft.org/schema/mule/test/current/mule-test.xsd">
 
+    <configuration defaultErrorHandler-ref="defaultErrorHandler"/>
+
+    <error-handler name="defaultErrorHandler">
+        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotFoundException)]">
+            <set-variable variableName="httpStatus" value="404"/>
+            <set-payload value="resource not found"/>
+        </on-error-propagate>
+        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.MethodNotAllowedException)]">
+            <set-variable variableName="httpStatus" value="405"/>
+            <set-payload value="method not allowed"/>
+        </on-error-propagate>
+        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.UnsupportedMediaTypeException)]">
+            <set-variable variableName="httpStatus" value="415"/>
+            <set-payload value="unsupported media type"/>
+        </on-error-propagate>
+        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotAcceptableException)]">
+            <set-variable variableName="httpStatus" value="406"/>
+            <set-payload value="not acceptable"/>
+        </on-error-propagate>
+        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
+            <set-variable variableName="httpStatus" value="400"/>
+            <set-payload value="bad request"/>
+        </on-error-propagate>
+        <on-error-propagate>
+            <set-variable variableName="httpStatus" value="500"/>
+            <set-payload value="Server error" mimeType="text/plain"/>
+        </on-error-propagate>
+    </error-handler>
+
     <httpn:listener-config name="httpListenerConfigDefault">
         <httpn:listener-connection host="0.0.0.0" port="${serverPort}"/>
     </httpn:listener-config>
@@ -29,7 +58,6 @@
         <apikit:router/>
         <test:non-blocking-processor />
         <set-property propertyName="next" value="ok"/>
-        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
 
     <flow name="console">

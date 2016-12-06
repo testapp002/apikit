@@ -43,7 +43,6 @@ public class FormParametersTestCase extends MuleArtifactFunctionalTestCase
     public static Collection<Object[]> parameters()
     {
         return Arrays.asList(new Object[][] {
-                //{"org/mule/module/apikit/parameters/form-parameters-endpoint-config.xml"},
                 {"org/mule/module/apikit/parameters/form-parameters-config.xml"}
         });
     }

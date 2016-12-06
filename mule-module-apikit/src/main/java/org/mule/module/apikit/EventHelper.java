@@ -78,39 +78,19 @@ public class EventHelper
         return value;
     }
 
-    public static String getOutboundProperty(Event event, String name)
-    {
-        if (event.getVariable(outboundHeadersName) != null)
-        {
-            Map<String, String> outboundPropertiesMap = (Map<String, String>)event.getVariable(outboundHeadersName).getValue();
-            if (outboundPropertiesMap != null)
-            {
-                return outboundPropertiesMap.get(name);
-            }
-        }
-        return null;
-    }
-
-
-    public static Message addHeadersToMessage(Message message, String key, String value)
-    {
-        Map<String, String> headers = new HashMap<>();
-        headers.put(key, value);
-        return addHeadersToMessage(message, headers);
-    }
-
-
-    public static Message addHeadersToMessage(Message message, Map<String, String> headers)
-    {
-        HttpRequestAttributes oldAttributes = ((HttpRequestAttributes)message.getAttributes());
-        ParameterMap inboundHeaders = new ParameterMap(oldAttributes.getHeaders());
-        inboundHeaders.putAll(headers);
-        HttpRequestAttributes newAttributes = new HttpRequestAttributes(inboundHeaders, oldAttributes.getListenerPath(), oldAttributes.getRelativePath(), oldAttributes.getVersion(), oldAttributes.getScheme(), oldAttributes.getMethod(), oldAttributes.getRequestPath(), oldAttributes.getRequestUri(), oldAttributes.getQueryString(), oldAttributes.getQueryParams(), oldAttributes.getUriParams(), oldAttributes.getRemoteAddress(), oldAttributes.getClientCertificate());
-        InternalMessage.Builder messageBuilder = InternalMessage.builder(message);
-        messageBuilder.attributes(newAttributes);
-        return messageBuilder.build();
-    }
-
+    //public static String getOutboundProperty(Event event, String name)
+    //{
+    //    if (event.getVariable(outboundHeadersName) != null)
+    //    {
+    //        Map<String, String> outboundPropertiesMap = (Map<String, String>)event.getVariable(outboundHeadersName).getValue();
+    //        if (outboundPropertiesMap != null)
+    //        {
+    //            return outboundPropertiesMap.get(name);
+    //        }
+    //    }
+    //    return null;
+    //}
+    //
     public static Event setPayload(Event event, Object payload, String primaryType, String secondaryType)
     {
         Event.Builder builder = Event.builder(event);
@@ -162,8 +142,6 @@ public class EventHelper
         InternalMessage.Builder messageBuilder = InternalMessage.builder(event.getMessage());
 
         HttpRequestAttributes oldAttributes = ((HttpRequestAttributes) event.getMessage().getAttributes());
-        //Map inboundQueryParams = new HashMap(oldAttributes.getQueryParams());
-        //inboundQueryParams.putAll(queryParams);
         Map<String, LinkedList<String>> mapQueryParams = new HashMap<>();
         queryParams.putAll(oldAttributes.getQueryParams());
         for (Map.Entry<String, String> entry : queryParams.entrySet())
@@ -177,60 +155,6 @@ public class EventHelper
 
         messageBuilder.attributes(newAttributes);
         return builder.message(messageBuilder.build()).build();
-    }
-
-
-    public static Event addHeaders(Event event, Map<String, String> headers)
-    {
-        Event.Builder builder = Event.builder(event);
-        InternalMessage.Builder messageBuilder = InternalMessage.builder(event.getMessage());
-
-        HttpRequestAttributes oldAttributes = ((HttpRequestAttributes) event.getMessage().getAttributes());
-        Map <String, String> headersMap = new HashMap<>();
-        oldAttributes.getHeaders();
-        for (Map.Entry<String, String> kv : oldAttributes.getHeaders().entrySet())
-        {
-            headersMap.put(kv.getKey(), kv.getValue());
-        }
-        headersMap.putAll(headers);
-        //for(Map.Entry<String, String> kv : headers.entrySet())
-        //{
-        //    .put(kv.getKey(), kv.getValue());
-        //}
-        ParameterMap newHeaders = new ParameterMap(headersMap);
-        HttpRequestAttributes newAttributes = new HttpRequestAttributes(newHeaders, oldAttributes.getListenerPath(), oldAttributes.getRelativePath(), oldAttributes.getVersion(), oldAttributes.getScheme(), oldAttributes.getMethod(), oldAttributes.getRequestPath(), oldAttributes.getRequestUri(), oldAttributes.getQueryString(), oldAttributes.getQueryParams(), oldAttributes.getUriParams(), oldAttributes.getRemoteAddress(), oldAttributes.getClientCertificate());
-
-        messageBuilder.attributes(newAttributes);
-        return builder.message(messageBuilder.build()).build();
-    }
-
-    public static Event addResponseHeaders(Event event, Map<String, String> headers)
-    {
-        Event.Builder builder = Event.builder(event);
-        InternalMessage.Builder messageBuilder = InternalMessage.builder(event.getMessage());
-
-        HttpResponseAttributes oldAttributes = ((HttpResponseAttributes) event.getMessage().getAttributes());
-        ParameterMap newHeaders = new ParameterMap(oldAttributes.getHeaders());
-        newHeaders.putAll(headers);
-        HttpResponseAttributes newAttributes = new HttpResponseAttributes(oldAttributes.getStatusCode(), oldAttributes.getReasonPhrase(), newHeaders);
-//        HttpRequestAttributes newAttributes = new HttpResponseAttributes(oldAttributes. inboundHeaders, oldAttributes.getListenerPath(), oldAttributes.getRelativePath(), oldAttributes.getVersion(), oldAttributes.getScheme(), oldAttributes.getMethod(), oldAttributes.getRequestPath(), oldAttributes.getRequestUri(), oldAttributes.getQueryString(), oldAttributes.getQueryParams(), oldAttributes.getUriParams(), oldAttributes.getRemoteAddress(), oldAttributes.getClientCertificate());
-
-        messageBuilder.attributes(newAttributes);
-        return builder.message(messageBuilder.build()).build();
-    }
-
-
-    public static Event addHeader(Event event, String key, String value)
-    {
-        Map<String, String> headers = new HashMap<>();
-        headers.put(key, value);
-        return addHeaders(event, headers);
-    }
-    public static Event addResponseHeader(Event event, String key, String value)
-    {
-        Map<String, String> headers = new HashMap<>();
-        headers.put(key, value);
-        return addResponseHeaders(event, headers);
     }
 
 }

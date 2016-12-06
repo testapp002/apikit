@@ -16,18 +16,21 @@ http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/a
     <flow name="api-main">
         <httpn:listener config-ref="api-httpListenerConfig" path="/api/*"/>
         <apikit:router config-ref="api-config"/>
-        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
 
     <flow name="post:/test:application/xml:api-config">
         <set-payload value="#[NullPayload.getInstance()]"/>
     </flow>
 
-    <!--<apikit:mapping-exception-strategy name="Global_Mapping_Exception_Strategy">-->
-        <!--<apikit:mapping statusCode="400">-->
-            <!--<apikit:exception value="org.mule.module.apikit.exception.BadRequestException"/>-->
-            <!--<set-payload value="validation exception: #[exception.causeException.message]"/>-->
-        <!--</apikit:mapping>-->
-    <!--</apikit:mapping-exception-strategy>-->
+    <error-handler name="defaultErrorHandler">
+        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
+            <set-variable variableName="httpStatus" value="400"/>
+            <set-payload value="validation exception: #[exception.causeException.message]"/>
+        </on-error-propagate>
+        <on-error-propagate>
+            <set-variable variableName="httpStatus" value="500"/>
+            <set-payload value="Server error" mimeType="text/plain"/>
+        </on-error-propagate>
+    </error-handler>
 
 </mule>
