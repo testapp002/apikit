@@ -6,8 +6,8 @@
  */
 package org.mule.module.apikit.exception;
 
-import org.mule.runtime.core.api.MuleRuntimeException;
-import org.mule.runtime.core.config.i18n.I18nMessageFactory;
+import org.mule.runtime.api.exception.MuleRuntimeException;
+import org.mule.runtime.api.i18n.I18nMessageFactory;
 
 public class ApikitRuntimeException extends MuleRuntimeException
 {

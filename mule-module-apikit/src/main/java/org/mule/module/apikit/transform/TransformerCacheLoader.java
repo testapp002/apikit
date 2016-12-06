@@ -10,7 +10,7 @@ package org.mule.module.apikit.transform;
 import org.mule.runtime.api.metadata.DataType;
 import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.core.api.MuleContext;
-import org.mule.runtime.core.api.MuleException;
+import org.mule.runtime.api.exception.MuleException;
 //import org.mule.api.transformer.DataType;
 import org.mule.runtime.core.api.transformer.Transformer;
 import org.mule.runtime.module.json.transformers.JsonToObject;

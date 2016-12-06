@@ -33,7 +33,7 @@
 
     <flow name="doorwayPathless">
         <httpn:listener config-ref="httpListenerConfigPathless" path="/*">
-            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
             <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
@@ -44,7 +44,7 @@
     <!-- works since MULE-6968 -->
     <flow name="doorwayEmptyPath">
         <httpn:listener config-ref="httpListenerConfigEmptyPath" path="*">
-            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
             <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
@@ -55,7 +55,7 @@
     <!-- works since MULE-6968 -->
     <flow name="doorwaySlashPath">
         <httpn:listener config-ref="httpListenerConfigSlashPath" path="/*">
-            <httpn:response-builder statusCode="#[httpStatus]" headersRef="#[_outboundHeaders_]"/>
+            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
             <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>

@@ -6,6 +6,7 @@
  */
 package org.mule.module.apikit;
 
+//import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.runtime.api.message.Message;
 import org.mule.runtime.core.api.Event;

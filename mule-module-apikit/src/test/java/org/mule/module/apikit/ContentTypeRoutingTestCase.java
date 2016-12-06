@@ -12,7 +12,7 @@ import static org.hamcrest.CoreMatchers.startsWith;
 
 import org.mule.functional.junit4.FunctionalTestCase;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
-import org.mule.functional.junit4.runners.ArtifactClassLoaderRunnerConfig;
+import org.mule.test.runner.ArtifactClassLoaderRunnerConfig;
 import org.mule.tck.junit4.rule.DynamicPort;
 
 import com.jayway.restassured.RestAssured;
@@ -48,7 +48,6 @@ public class ContentTypeRoutingTestCase extends MuleArtifactFunctionalTestCase
     }
 
 
-    //TODO THESE TESTS ARE FAILING BECAUSE THE XML CONFIG IS LOOKING FOR THE INBOUNDPROPERTIES
     @Test
     public void postOnLeaguesJson() throws Exception
     {

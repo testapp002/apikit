@@ -12,14 +12,14 @@ import static org.mule.runtime.module.http.api.HttpConstants.RequestProperties.H
 //import org.mule.runtime.core.message.MuleEvent;
 //import org.mule.runtime.api.message.MuleEvent;
 import org.mule.extension.http.api.HttpRequestAttributes;
-import org.mule.runtime.core.NonBlockingVoidMuleEvent;
+//import org.mule.runtime.core.NonBlockingVoidMuleEvent;
 //import org.mule.runtime.core.OptimizedRequestContext;
-import org.mule.runtime.core.VoidMuleEvent;
+//import org.mule.runtime.core.VoidMuleEvent;
 import org.mule.runtime.core.api.DefaultMuleException;
 //import org.mule.runtime.core.api.MessagingException;
 //import org.mule.runtime.core.api.MuleEvent;
 import org.mule.runtime.core.api.Event;
-import org.mule.runtime.core.api.MuleException;
+import org.mule.runtime.api.exception.MuleException;
 //import org.mule.runtime.core.api.MuleMessage;
 import org.mule.runtime.core.api.construct.FlowConstruct;
 import org.mule.runtime.core.api.lifecycle.StartException;
@@ -39,7 +39,7 @@ import org.mule.runtime.core.processor.AbstractInterceptingMessageProcessor;
 import org.mule.runtime.core.processor.AbstractRequestResponseMessageProcessor;
 import org.mule.raml.interfaces.model.IResource;
 import org.mule.raml.interfaces.model.parameter.IParameter;
-import org.mule.runtime.module.http.internal.ParameterMap;
+import org.mule.runtime.core.model.ParameterMap;
 
 import com.google.common.cache.LoadingCache;
 
@@ -210,7 +210,7 @@ public abstract class AbstractRouter extends AbstractInterceptingMessageProcesso
 
     private Event processRouterResponse(Event event, Integer successStatus)
     {
-        if (event == null || VoidMuleEvent.getInstance().equals(event))
+        if (event == null)
         {
             return event;
         }

@@ -74,11 +74,17 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-http</artifactId>
-            <version>${mule.version}</version>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.mule.transports</groupId>-->
+        <!--<artifactId>mule-transport-http</artifactId>-->
+        <!--<version>${mule.version}</version>-->
+    <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.mule.transports</groupId>-->
+            <!--<artifactId>mule-transport-module-support</artifactId>-->
+            <!--<version>${mule.version}</version>-->
+            <!--<scope>provided</scope>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-spring-config</artifactId>
@@ -147,7 +153,21 @@
             <artifactId>jaxb-impl</artifactId>
             <version>2.1.5</version>
         </dependency>
+        <!--TODO: MULE-10837-->
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-service</artifactId>
+            <version>${mule.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
+        <dependency>
+            <groupId>org.mule.services</groupId>
+            <artifactId>mule-service-scheduler</artifactId>
+            <version>${mule.version}</version>
+            <scope>provided</scope>
+            <classifier>mule-service</classifier>
+        </dependency>
         <!--test deps -->
         <!--<dependency>-->
             <!--<groupId>org.mule.modules</groupId>-->
@@ -167,18 +187,24 @@
             <version>${mule.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-vm</artifactId>
-            <version>${mule.version}</version>
-            <scope>test</scope>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.mule.transports</groupId>-->
+            <!--<artifactId>mule-transport-vm</artifactId>-->
+            <!--<version>${mule.version}</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
         <!--<dependency>-->
             <!--<groupId>org.mule.transports</groupId>-->
             <!--<artifactId>mule-transport-jetty</artifactId>-->
             <!--<version>${mule.version}</version>-->
             <!--<scope>test</scope>-->
         <!--</dependency>-->
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-http</artifactId>
+            <version>${mule.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-http-ext</artifactId>
@@ -273,6 +299,7 @@
             <version>1.2.0</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
 </project>

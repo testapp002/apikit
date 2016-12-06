@@ -13,7 +13,7 @@ import static org.mule.module.apikit.AbstractConfiguration.APPLICATION_RAML;
 //import org.mule.tck.junit4.FunctionalTestCase;
 import org.mule.functional.junit4.FunctionalTestCase;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
-import org.mule.functional.junit4.runners.ArtifactClassLoaderRunnerConfig;
+import org.mule.test.runner.ArtifactClassLoaderRunnerConfig;
 import org.mule.tck.junit4.rule.DynamicPort;
 
 import com.jayway.restassured.RestAssured;

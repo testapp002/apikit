@@ -8,7 +8,7 @@ package org.mule.module.apikit.proxy;
 
 //import org.mule.api.lifecycle.InitialisationException;
 //import org.mule.module.apikit.ProxyConfiguration;
-import org.mule.runtime.core.api.lifecycle.InitialisationException;
+import org.mule.runtime.api.lifecycle.InitialisationException;
 import org.mule.tck.junit4.AbstractMuleContextTestCase;
 
 import org.junit.Ignore;

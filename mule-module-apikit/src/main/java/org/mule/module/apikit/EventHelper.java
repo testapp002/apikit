@@ -14,8 +14,9 @@ import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.message.InternalMessage;
+import org.mule.runtime.core.model.ParameterMap;
 import org.mule.runtime.core.util.SystemUtils;
-import org.mule.runtime.module.http.internal.ParameterMap;
+//import org.mule.runtime.module.http.internal.ParameterMap;
 
 import java.nio.charset.Charset;
 import java.util.HashMap;

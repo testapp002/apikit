@@ -12,7 +12,7 @@ import static org.junit.Assert.assertThat;
 
 import org.mule.functional.junit4.FunctionalTestCase;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
-import org.mule.functional.junit4.runners.ArtifactClassLoaderRunnerConfig;
+import org.mule.test.runner.ArtifactClassLoaderRunnerConfig;
 
 import java.util.Collection;
 

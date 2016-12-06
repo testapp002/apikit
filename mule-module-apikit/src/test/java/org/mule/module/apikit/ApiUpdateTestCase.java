@@ -18,7 +18,7 @@ import org.mule.module.apikit.uri.URIPattern;
 //import org.mule.module.http.internal.listener.DefaultHttpListener;
 //import org.mule.module.http.internal.listener.DefaultHttpListenerConfig;
 import org.mule.raml.interfaces.model.IAction;
-import org.mule.runtime.core.api.lifecycle.InitialisationException;
+import org.mule.runtime.api.lifecycle.InitialisationException;
 import org.mule.runtime.core.construct.Flow;
 import org.mule.runtime.module.http.internal.listener.DefaultHttpListener;
 import org.mule.runtime.module.http.internal.listener.DefaultHttpListenerConfig;

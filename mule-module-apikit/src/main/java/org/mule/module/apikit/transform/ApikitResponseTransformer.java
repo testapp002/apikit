@@ -7,8 +7,8 @@
 package org.mule.module.apikit.transform;
 
 import org.mule.common.metadata.datatype.DataTypeFactory;
-import org.mule.extension.http.api.HttpRequestAttributes;
-import org.mule.extension.http.api.HttpResponseAttributes;
+//import org.mule.extension.http.api.HttpRequestAttributes;
+//import org.mule.extension.http.api.HttpResponseAttributes;
 import org.mule.module.apikit.EventHelper;
 import org.mule.module.apikit.HttpVariableNames;
 import org.mule.runtime.api.message.Message;

@@ -9,8 +9,9 @@ package org.mule.module.apikit;
 import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.runtime.api.message.Message;
 import org.mule.runtime.core.api.Event;
+import org.mule.runtime.core.model.ParameterMap;
 import org.mule.runtime.core.util.StringUtils;
-import org.mule.runtime.module.http.internal.ParameterMap;
+//import org.mule.runtime.module.http.internal.ParameterMap;
 
 import java.net.URI;
 import java.net.URISyntaxException;

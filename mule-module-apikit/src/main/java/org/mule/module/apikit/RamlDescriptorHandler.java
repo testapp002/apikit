@@ -9,18 +9,9 @@ package org.mule.module.apikit;
 
 import static org.mule.module.apikit.AbstractConfiguration.APPLICATION_RAML;
 
-import org.mule.common.metadata.datatype.DataTypeFactory;
-import org.mule.extension.http.api.HttpRequestAttributes;
-import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.core.api.Event;
-//import org.mule.runtime.core.api.MuleEvent;
-import org.mule.runtime.core.api.MuleException;
-//import org.mule.transformer.types.DataTypeFactory;
-import org.mule.compatibility.transport.http.HttpConstants;
-import org.mule.runtime.core.api.message.InternalMessage;
-import org.mule.runtime.module.http.internal.ParameterMap;
+import org.mule.runtime.api.exception.MuleException;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.raml.model.ActionType;
@@ -68,9 +59,9 @@ public class RamlDescriptorHandler
     private Event process(Event event, String raml) throws MuleException
     {
         Map<String,String> headers = (Map<String, String>) event.getVariable("_outboundHeaders_").getValue();
-        headers.put(HttpConstants.HEADER_CONTENT_TYPE, APPLICATION_RAML);
-        headers.put(HttpConstants.HEADER_EXPIRES, "-1");//avoid IE ajax response caching
-        headers.put(HttpConstants.HEADER_CONTENT_LENGTH, Integer.toString(raml.length()));
+        headers.put(HttpVariableNames.HEADER_CONTENT_TYPE, APPLICATION_RAML);
+        headers.put(HttpVariableNames.HEADER_EXPIRES, "-1");//avoid IE ajax response caching
+        headers.put(HttpVariableNames.HEADER_CONTENT_LENGTH, Integer.toString(raml.length()));
         headers.put("Access-Control-Allow-Origin", "*");
 
         event = EventHelper.addOutboundProperties(event,headers);

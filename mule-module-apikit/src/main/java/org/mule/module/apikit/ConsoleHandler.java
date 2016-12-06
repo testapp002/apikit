@@ -8,21 +8,21 @@
 package org.mule.module.apikit;
 
 //import org.mule.runtime.core.DefaultMuleEvent;
-import org.mule.compatibility.transport.http.HttpConnector;
+//import org.mule.compatibility.transport.http.HttpConnector;
 import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.core.api.Event;
 //import org.mule.runtime.core.api.MuleEvent;
-import org.mule.runtime.core.api.MuleException;
+import org.mule.runtime.api.exception.MuleException;
 //import org.mule.runtime.core.api.processor.MessageProcessor;
 import org.mule.module.apikit.exception.NotFoundException;
 import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.core.api.processor.Processor;
-import org.mule.runtime.core.config.i18n.I18nMessage;
-import org.mule.runtime.core.message.DefaultMessageBuilder;
-import org.mule.runtime.module.http.api.HttpConstants;
-import org.mule.runtime.module.http.internal.HttpMessageBuilder;
-import org.mule.runtime.module.http.internal.component.ResourceNotFoundException;
+//import org.mule.runtime.core.config.i18n.I18nMessage;
+//import org.mule.runtime.core.message.DefaultMessageBuilder;
+//import org.mule.runtime.module.http.api.HttpConstants;
+//import org.mule.runtime.module.http.internal.HttpMessageBuilder;
+//import org.mule.runtime.module.http.internal.component.ResourceNotFoundException;
 //import org.mule.transport.http.i18n.HttpMessages; // TODO: it is in the compatibility package. it has messages only, check if we can copy this.
 import org.mule.runtime.core.util.FilenameUtils;
 import org.mule.runtime.core.util.IOUtils;
@@ -62,7 +62,7 @@ public class ConsoleHandler implements Processor
 
     public static final int SC_MOVED_PERMANENTLY = 301;
     public static final String HEADER_LOCATION = "Location"; // [Response]
-    public static final int SC_OK = org.mule.runtime.module.http.api.HttpConstants.HttpStatus.OK.getStatusCode();
+    public static final int SC_OK =  org.mule.runtime.module.http.api.HttpConstants.HttpStatus.OK.getStatusCode();
     public static final String HEADER_CONTENT_LENGTH = "Content-Length"; // [Entity]
     public static final String HEADER_EXPIRES = "Expires"; // [Entity]
 
@@ -273,7 +273,7 @@ public class ConsoleHandler implements Processor
         catch (IOException e)
         {
             //TODO FIX EXCEPTION
-            throw new ResourceNotFoundException(null, null);// fileNotFound(RESOURCE_BASE + path)
+            throw new NotFoundException(null);//ResourceNotFoundException(null, null);// fileNotFound(RESOURCE_BASE + path)
         }
 
         return resultEvent;
