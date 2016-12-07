@@ -47,21 +47,18 @@
     <flow name="doorway">
         <httpn:listener config-ref="httpListenerConfigDefault" path="/api/*">
             <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
-            <httpn:error-response-builder statusCode="500"/>
+            <httpn:error-response-builder statusCode="#[httpStatus]"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
-        <!--<http:inbound-endpoint port="${serverPort}" host="localhost" path="api"/>-->
         <apikit:router config-ref="api"/>
-        <!--<exception-strategy ref="Global_Mapping_Exception_Strategy"/>-->
     </flow>
 
     <flow name="console">
         <httpn:listener config-ref="httpListenerConfigDefault" path="/console/*">
             <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
-            <httpn:error-response-builder statusCode="500"/>
+            <httpn:error-response-builder statusCode="#[httpStatus]"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
-        <!--<http:inbound-endpoint port="${serverPort}" host="localhost" path="console"/>-->
         <apikit:console config-ref="api"/>
     </flow>
 

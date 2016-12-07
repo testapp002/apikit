@@ -26,6 +26,10 @@
             <set-variable variableName="httpStatus" value="406"/>
             <set-payload value="not acceptable"/>
         </on-error-propagate>
+        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
+            <set-variable variableName="httpStatus" value="400"/>
+            <set-payload value="bad request"/>
+        </on-error-propagate>
         <on-error-propagate>
             <set-variable variableName="httpStatus" value="500"/>
             <set-payload value="Server error" mimeType="text/plain"/>

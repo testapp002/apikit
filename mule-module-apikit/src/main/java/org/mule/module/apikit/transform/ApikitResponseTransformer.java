@@ -6,41 +6,27 @@
  */
 package org.mule.module.apikit.transform;
 
-import org.mule.common.metadata.datatype.DataTypeFactory;
-//import org.mule.extension.http.api.HttpRequestAttributes;
-//import org.mule.extension.http.api.HttpResponseAttributes;
 import org.mule.module.apikit.EventHelper;
 import org.mule.module.apikit.HttpVariableNames;
-import org.mule.runtime.api.message.Message;
-//import org.mule.runtime.core.api.MuleMessage;
-import org.mule.runtime.api.metadata.CollectionDataType;
 import org.mule.runtime.api.metadata.DataType;
 import org.mule.runtime.core.api.Event;
-import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.core.api.transformer.Transformer;
 import org.mule.runtime.core.api.transformer.TransformerException;
 import org.mule.module.apikit.RestContentTypeParser;
 import org.mule.module.apikit.exception.ApikitRuntimeException;
-import org.mule.raml.interfaces.model.IMimeType;
 import org.mule.runtime.core.transformer.AbstractMessageTransformer;
 import org.mule.runtime.core.util.SystemUtils;
-import org.mule.runtime.core.util.generics.GenericsUtils;
-//import org.mule.transformer.types.DataTypeFactory;
-//import org.mule.transport.NullPayload;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.net.MediaType;
 
-import java.beans.EventHandler;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import org.relaxng.datatype.DatatypeBuilder;
 
 public class ApikitResponseTransformer extends AbstractMessageTransformer
 {

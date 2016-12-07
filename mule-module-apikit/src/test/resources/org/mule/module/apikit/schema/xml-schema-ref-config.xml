@@ -9,6 +9,8 @@
         http://www.mulesoft.org/schema/mule/httpn http://www.mulesoft.org/schema/mule/httpn/current/mule-httpn.xsd
         http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd">
 
+    <configuration defaultErrorHandler-ref="defaultErrorHandler"/>
+
     <httpn:listener-config name="httpListenerConfigDefault">
         <httpn:listener-connection host="localhost" port="${serverPort}"/>
     </httpn:listener-config>
@@ -18,7 +20,7 @@
     <flow name="doorway-cam">
         <httpn:listener config-ref="httpListenerConfigDefault" path="/api/*">
             <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
-            <httpn:error-response-builder statusCode="500"/>
+            <httpn:error-response-builder statusCode="#[httpStatus]"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="config"/>
@@ -31,6 +33,7 @@
     <flow name="put:/last">
         <set-payload value="OK"/>
     </flow>
+
     <error-handler name="defaultErrorHandler">
         <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
             <set-variable variableName="httpStatus" value="400"/>
