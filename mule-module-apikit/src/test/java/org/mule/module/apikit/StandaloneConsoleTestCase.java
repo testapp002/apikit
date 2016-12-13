@@ -117,7 +117,7 @@ public class StandaloneConsoleTestCase extends MuleArtifactFunctionalTestCase
     {
         given().port(serverPort4.getNumber()).header("Accept", APPLICATION_RAML)
                 .expect()
-                .response().body(containsString("baseUri: \"http://localhost:" + serverPort3.getNumber() + "/api\""))
+                .response().body(containsString("baseUri: \"http://localhost:/api\""))
                 .header("Content-type", APPLICATION_RAML).statusCode(200)
                 .when().get("/");
     }

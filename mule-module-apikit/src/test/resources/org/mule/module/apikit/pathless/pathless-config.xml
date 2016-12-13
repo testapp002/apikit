@@ -11,10 +11,6 @@
 
     <configuration defaultErrorHandler-ref="defaultErrorHandler"/>
 
-    <httpn:listener-config name="httpListenerConfigPathless">
-        <httpn:listener-connection host="localhost" port="${serverPortPathless}"/>
-    </httpn:listener-config>
-
     <httpn:listener-config name="httpListenerConfigEmptyPath">
         <httpn:listener-connection host="localhost" port="${serverPortEmptyPath}"/>
     </httpn:listener-config>
@@ -23,23 +19,12 @@
         <httpn:listener-connection host="localhost" port="${serverPortSlashPath}"/>
     </httpn:listener-config>
 
-    <apikit:config name="pathless" raml="org/mule/module/apikit/pathless/pathless.yaml"/>
-
     <apikit:config name="emptyPath" raml="org/mule/module/apikit/pathless/pathless.yaml"/>
 
     <apikit:config name="slashPath" raml="org/mule/module/apikit/pathless/pathless.yaml"/>
 
     <apikit:config name="addressSlashPath" raml="org/mule/module/apikit/pathless/pathless.yaml"/>
 
-
-    <flow name="doorwayPathless">
-        <httpn:listener config-ref="httpListenerConfigPathless" path="/*">
-            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
-            <httpn:error-response-builder statusCode="#[httpStatus]"/>
-        </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
-        <apikit:router config-ref="pathless"/>
-    </flow>
 
     <!-- works since MULE-6968 -->
     <flow name="doorwayEmptyPath">
@@ -60,6 +45,17 @@
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
         <apikit:router config-ref="slashPath"/>
     </flow>
+
+    <!-- works since MULE-6968 -->
+    <flow name="consoleSlashPath">
+        <httpn:listener config-ref="httpListenerConfigSlashPath" path="/console/*">
+            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <httpn:error-response-builder statusCode="#[httpStatus]"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <apikit:console config-ref="slashPath"/>
+    </flow>
+
 
     <flow name="get:/orders">
         <logger level="INFO" message="siamo qui"/>

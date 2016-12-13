@@ -7,6 +7,7 @@
 package org.mule.module.apikit.transform;
 
 import org.mule.extension.http.api.HttpRequestAttributes;
+import org.mule.module.apikit.EventHelper;
 import org.mule.runtime.core.api.Event;
 //import org.mule.runtime.core.api.MuleMessage;
 import org.mule.runtime.api.metadata.DataType;
@@ -27,7 +28,15 @@ public class PayloadNormalizerTransformer extends AbstractMessageTransformer
     @Override
     public Object transformMessage(Event event, Charset encoding) throws TransformerException
     {
-        DataType sourceDataType = null;//DataTypeFactory.create(event.getMessage().getPayload().getClass(), (String) ((HttpRequestAttributes)event.getMessage().getAttributes()).getHeaders().get("content-type"));
+        DataType dataType = event.getMessage().getPayload().getDataType();
+        Charset messageEncoding = EventHelper.getEncoding(event, this.muleContext);
+
+        org.mule.runtime.api.metadata.DataTypeBuilder sourceDataTypeBuilder = DataType.builder();
+        sourceDataTypeBuilder.type(event.getMessage().getPayload().getClass());
+        sourceDataTypeBuilder.mediaType(dataType.getMediaType());
+        sourceDataTypeBuilder.charset(messageEncoding);
+        DataType sourceDataType = sourceDataTypeBuilder.build();
+//        DataType sourceDataType = DataTypeFactory.create(event.getMessage().getPayload().getClass(), (String) ((HttpRequestAttributes)event.getMessage().getAttributes()).getHeaders().get("content-type"));
         DataType resultDataType = getReturnDataType();
 
         Transformer transformer;

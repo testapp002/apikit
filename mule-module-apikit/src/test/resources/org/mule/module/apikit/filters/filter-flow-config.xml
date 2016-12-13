@@ -47,10 +47,16 @@
     <flow name="doorway">
         <httpn:listener config-ref="httpListenerConfig" path="/api/*">
             <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <!--TODO error-response-builder fails when using #[httpStatus]-->
             <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
         <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
-        <apikit:router/>
+        <message-filter throwOnUnaccepted="true">
+            <regex-filter pattern="x"/>
+        </message-filter>
+        <set-payload value="not filtered"/>
+
+        <!--<apikit:router/>-->
     </flow>
 
     <flow name="put:/some">

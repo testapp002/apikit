@@ -24,27 +24,15 @@ import org.junit.runners.Parameterized;
 
 @ArtifactClassLoaderRunnerConfig(plugins = {"org.mule.modules:mule-module-sockets", "org.mule.modules:mule-module-http-ext"},
         providedInclusions = "org.mule.modules:mule-module-sockets")
-@RunnerDelegateTo(Parameterized.class)
 public class FormParametersTestCase extends MuleArtifactFunctionalTestCase
 {
-
     @Rule
     public DynamicPort serverPort = new DynamicPort("serverPort");
-
-    private final String configFile;
 
     @Override
     public int getTestTimeoutSecs()
     {
         return 6000;
-    }
-
-    @Parameterized.Parameters
-    public static Collection<Object[]> parameters()
-    {
-        return Arrays.asList(new Object[][] {
-                {"org/mule/module/apikit/parameters/form-parameters-config.xml"}
-        });
     }
 
     @Override
@@ -57,12 +45,7 @@ public class FormParametersTestCase extends MuleArtifactFunctionalTestCase
     @Override
     protected String getConfigFile()
     {
-        return configFile;
-    }
-
-    public FormParametersTestCase(String configFile)
-    {
-        this.configFile = configFile;
+        return "org/mule/module/apikit/parameters/form-parameters-config.xml";
     }
 
     @Test
@@ -73,7 +56,7 @@ public class FormParametersTestCase extends MuleArtifactFunctionalTestCase
                 .multiPart("third", "true")
                 .multiPart("payload", "3.4")
                 .expect().response().statusCode(201)
-                .when().post("/test/api/multipart");
+                .when().post("/api/multipart");
     }
 
     @Test
@@ -83,7 +66,7 @@ public class FormParametersTestCase extends MuleArtifactFunctionalTestCase
                 .multiPart("third", "true")
                 .multiPart("payload", "3.4")
                 .expect().response().statusCode(400)
-                .when().post("/test/api/multipart");
+                .when().post("/api/multipart");
     }
 
     @Test
@@ -94,7 +77,7 @@ public class FormParametersTestCase extends MuleArtifactFunctionalTestCase
                 .formParam("second", "segundo")
                 .formParam("third", "true")
                 .expect().response().statusCode(201)
-                .when().post("/test/api/url-encoded");
+                .when().post("/api/url-encoded");
     }
 
     @Test
@@ -104,7 +87,7 @@ public class FormParametersTestCase extends MuleArtifactFunctionalTestCase
                 .formParam("second", "segundo")
                 .formParam("third", "true")
                 .expect().response().statusCode(400)
-                .when().post("/test/api/url-encoded");
+                .when().post("/api/url-encoded");
     }
 
     @Test
@@ -115,7 +98,7 @@ public class FormParametersTestCase extends MuleArtifactFunctionalTestCase
                 .formParam("second", "segundo")
                 .formParam("third", "35")
                 .expect().response().statusCode(400)
-                .when().post("/test/api/url-encoded");
+                .when().post("/api/url-encoded");
     }
 
     @Test
@@ -125,7 +108,7 @@ public class FormParametersTestCase extends MuleArtifactFunctionalTestCase
                 .formParam("first", "prime")
                 .formParam("second", "second")
                 .expect().response().statusCode(400)
-                .when().post("/test/api/url-encoded");
+                .when().post("/api/url-encoded");
     }
 
 }

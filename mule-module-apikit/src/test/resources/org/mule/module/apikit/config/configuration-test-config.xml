@@ -103,7 +103,7 @@
     </flow>
 
     <flow name="patch:/resource">
-        <set-payload value="#[org.mule.transport.NullPayload.getInstance()]"/>
+        <set-payload value="#[null]"/>
     </flow>
 
     <flow name="retrieve">

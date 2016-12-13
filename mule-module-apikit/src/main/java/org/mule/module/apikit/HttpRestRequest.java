@@ -28,8 +28,10 @@ import org.mule.runtime.api.exception.MuleException;
 //import org.mule.runtime.core.api.MuleMessage;
 //import org.mule.api.transformer.DataType;
 import org.mule.runtime.core.api.message.InternalMessage;
+import org.mule.runtime.core.api.message.MessageAttachments;
 import org.mule.runtime.core.api.transformer.TransformerException;
 //import org.mule.api.transport.PropertyScope;
+import org.mule.runtime.core.message.PartAttributes;
 import org.mule.runtime.core.message.ds.StringDataSource;
 import org.mule.module.apikit.exception.BadRequestException;
 import org.mule.module.apikit.exception.InvalidFormParameterException;
@@ -66,6 +68,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import javax.activation.DataHandler;
 
@@ -289,7 +292,6 @@ public class HttpRestRequest
         return incomingHeaders;
     }
 
-    //TODO FIX THIS METHOD. Used to add defalult headers //FIXED
     private void setHeader(String key, String value)
     {
         Event.Builder builder = Event.builder((Event)requestEvent);
@@ -448,18 +450,35 @@ public class HttpRestRequest
                 continue;
             }
             IParameter expected = formParameters.get(expectedKey).get(0);
-            DataHandler dataHandler = null;//requestEvent.getMessage().getInboundAttachment(expectedKey);
-            if (dataHandler == null && expected.isRequired())
+            Message data;
+            try
+            {
+                data = ((MultiPartPayload) requestEvent.getMessage().getPayload().getValue()).getPart(expectedKey);
+            }
+            catch (NoSuchElementException e)
+            {
+                data = null;
+            }
+            if (data == null && expected.isRequired())
             {
                 //perform only 'required' validation to avoid consuming the stream
                 throw new InvalidFormParameterException("Required form parameter " + expectedKey + " not specified");
             }
-            if (dataHandler == null && expected.getDefaultValue() != null)
+            if (data == null && expected.getDefaultValue() != null)
             {
-                DataHandler defaultDataHandler = new DataHandler(new StringDataSource(expected.getDefaultValue(), expectedKey));
+                //TODO create message for default values
+
+//                DataHandler defaultDataHandler = new DataHandler(new StringDataSource(expected.getDefaultValue(), expectedKey));
+                PartAttributes part1Attributes = new PartAttributes(expectedKey,
+                                                            null,
+                                                            expected.getDefaultValue().length(),
+                                                            Collections.emptyMap());
+                Message part1 = Message.builder().payload(expected.getDefaultValue()).attributes(part1Attributes).build();
+
+
                 try
                 {
-
+                    ((MultiPartPayload)requestEvent.getMessage().getPayload().getValue()).getParts().add(part1);
                     //((DefaultMuleMessage) requestEvent.getMessage()).addInboundAttachment(expectedKey, defaultDataHandler);
                 }
                 catch (Exception e)
@@ -469,6 +488,22 @@ public class HttpRestRequest
             }
         }
     }
+
+    //public static class CreatePartsMessageProcessor implements Processor {
+    //
+    //    @Override
+    //    public Event process(Event event) throws MuleException {
+    //        PartAttributes part1Attributes = new PartAttributes(TEXT_BODY_FIELD_NAME);
+    //        Message part1 = builder().payload(TEXT_BODY_FIELD_VALUE).attributes(part1Attributes).mediaType(TEXT_PLAIN_LATIN).build();
+    //        PartAttributes part2Attributes = new PartAttributes(FILE_BODY_FIELD_NAME,
+    //                                                            FILE_BODY_FIELD_FILENAME,
+    //                                                            FILE_BODY_FIELD_VALUE.length(),
+    //                                                            emptyMap());
+    //        Message part2 = builder().payload(FILE_BODY_FIELD_VALUE).attributes(part2Attributes).mediaType(BINARY).build();
+    //        return Event.builder(event).message(InternalMessage.of(new DefaultMultiPartPayload(part1, part2))).build();
+    //    }
+    //}
+
 
     private void validateSchemaV2(IMimeType mimeType, boolean trimBom) throws BadRequestException
     {
@@ -506,22 +541,7 @@ public class HttpRestRequest
                 byte[] bytes = baos.toByteArray();
 
                 String charset = getEncoding((Event)requestEvent, muleContext, bytes, logger);
-
-
-
-                DataType dataType = requestEvent.getMessage().getPayload().getDataType();
-
-                //org.mule.runtime.api.metadata.DataTypeBuilder sourceDataTypeBuilder = DataType.builder();
-                //sourceDataTypeBuilder.type(requestEvent.getMessage().getPayload().getClass());
-                //sourceDataTypeBuilder.mediaType(dataType.getMediaType());
-                //sourceDataTypeBuilder.charset(charset);
-                //DataType sourceDataType = sourceDataTypeBuilder.build();//DataTypeFactory.create(event.getMessage().getPayload().getClass(), msgMimeType);
                 requestEvent = EventHelper.setPayload((Event)requestEvent, new ByteArrayInputStream(baos.toByteArray()), requestEvent.getMessage().getPayload().getDataType().getMediaType());
-
-
-                //DataType<ByteArrayInputStream> dataType = DataTypeFactory.create(ByteArrayInputStream.class, message.getPayload().getDataType().getMimeType());
-                //dataType.setEncoding(message.getEncoding());
-                //message.setPayload(new ByteArrayInputStream(bytes), dataType);
                 input = byteArrayToString(bytes, charset, trimBom);
             }
             catch (IOException e)

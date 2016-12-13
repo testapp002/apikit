@@ -55,7 +55,7 @@
 
     <flow name="get:/resources">
         <logger level="INFO" message="siamo qui"/>
-        <set-payload value=""/>
+        <set-payload value="#[null]"/>
     </flow>
 
     <flow name="get:/multitype">
@@ -74,7 +74,7 @@
                 <set-property propertyName="Content-Type" value="text/html"/>
             </otherwise>
         </choice>
-        <!--<set-payload value="#[null]"/>-->
+        <set-payload value="#[null]"/>
         <set-payload value="never mind"/>
     </flow>
 

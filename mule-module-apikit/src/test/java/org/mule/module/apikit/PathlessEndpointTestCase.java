@@ -26,13 +26,9 @@ public class PathlessEndpointTestCase extends MuleArtifactFunctionalTestCase
 {
 
     @Rule
-    public DynamicPort serverPortPathless = new DynamicPort("serverPortPathless");
-    @Rule
     public DynamicPort serverPortEmptyPath = new DynamicPort("serverPortEmptyPath");
     @Rule
     public DynamicPort serverPortSlashPath = new DynamicPort("serverPortSlashPath");
-    @Rule
-    public DynamicPort serverPortAddressSlashPath = new DynamicPort("serverPortAddressSlashPath");
 
     @Override
     public int getTestTimeoutSecs()
@@ -44,35 +40,6 @@ public class PathlessEndpointTestCase extends MuleArtifactFunctionalTestCase
     protected String getConfigResources()
     {
         return "org/mule/module/apikit/pathless/pathless-config.xml";
-    }
-
-    @Test
-    public void consolePathless() throws Exception
-    {
-        RestAssured.port = serverPortPathless.getNumber();
-        console("");
-    }
-
-    @Test
-    public void ramlPathless() throws Exception
-    {
-        RestAssured.port = serverPortPathless.getNumber();
-        raml("");
-    }
-
-    @Test
-    public void baseuriPathless() throws Exception
-    {
-        int port = serverPortPathless.getNumber();
-        RestAssured.port = port;
-        baseUri("", "http://localhost:" + port);
-    }
-
-    @Test
-    public void consoleEmptyPath() throws Exception
-    {
-        RestAssured.port = serverPortEmptyPath.getNumber();
-        console("");
     }
 
     @Test
@@ -110,28 +77,6 @@ public class PathlessEndpointTestCase extends MuleArtifactFunctionalTestCase
         int port = serverPortSlashPath.getNumber();
         RestAssured.port = port;
         baseUri("", "http://localhost:" + port);
-    }
-
-    @Test
-    public void consoleAddressSlashPath() throws Exception
-    {
-        RestAssured.port = serverPortAddressSlashPath.getNumber();
-        console("/api/");
-    }
-
-    @Test
-    public void ramlAddressSlashPath() throws Exception
-    {
-        RestAssured.port = serverPortAddressSlashPath.getNumber();
-        raml("/api/");
-    }
-
-    @Test
-    public void baseuriAddressSlashPath() throws Exception
-    {
-        int port = serverPortAddressSlashPath.getNumber();
-        RestAssured.port = port;
-        baseUri("/api", "http://localhost:" + port + "/api");
     }
 
     private void console(String path)
