@@ -195,7 +195,7 @@ public abstract class AbstractRouter extends AbstractInterceptingMessageProcesso
 
         ResolvedVariables resolvedVariables = uriResolver.resolve(uriPattern);
 
-        processUriParameters(resource, event, resolvedVariables);
+        request.updateEvent(processUriParameters(resource, event, resolvedVariables));
 
         Flow flow = getFlow(resource, request);
         if (flow == null)
@@ -247,7 +247,7 @@ public abstract class AbstractRouter extends AbstractInterceptingMessageProcesso
         return config.getHttpRestRequest(event);
     }
 
-    private void processUriParameters(IResource resource, Event event, ResolvedVariables resolvedVariables) throws InvalidUriParameterException
+    private Event processUriParameters(IResource resource, Event event, ResolvedVariables resolvedVariables) throws InvalidUriParameterException
     {
         //ParameterMap resolvedVariables = ((HttpRequestAttributes)event.getMessage().getAttributes()).getUriParams();
         if (logger.isDebugEnabled())
@@ -272,6 +272,14 @@ public abstract class AbstractRouter extends AbstractInterceptingMessageProcesso
                 }
             }
         }
+
+        for (String name : resolvedVariables.names())
+        {
+            String value = String.valueOf(resolvedVariables.get(name));
+            event = EventHelper.addVariable(event, name, value);
+        }
+
+        return event;
     }
 
     protected abstract Flow getFlow(IResource resource, HttpRestRequest request);

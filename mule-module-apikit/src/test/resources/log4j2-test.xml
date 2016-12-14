@@ -20,7 +20,7 @@
         <!-- Mule classes -->
         <AsyncLogger name="org.mule" level="WARN"/>
         <AsyncLogger name="com.mulesoft" level="WARN"/>
-        <AsyncLogger name="org.mule.test.runner" level="DEBUG"/>
+        <AsyncLogger name="org.mule.test.runner" level="INFO"/>
 
 
         <AsyncRoot level="INFO">

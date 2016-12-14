@@ -66,7 +66,10 @@
     </flow>
 
     <flow name="get:/leagues">
-        <set-payload value="#[registry:list-of-leagues]"/>
+        <!-- TODO #[registry:...] no longer works -->
+        <set-payload value="#[app.registry:list-of-leagues]"/>
+        <!--<set-payload value="{&quot;leagues&quot;:[{&quot;name&quot;:&quot;Liga BBVA&quot;},{&quot;name&quot;:&quot;Premier League&quot;}]}"/>-->
+        <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
     </flow>
 
     <flow name="post:/leagues">
@@ -115,7 +118,6 @@
                     league = app.registry['list-of-leagues'].getLeague(leagueId);
                     league.name = payload.name;
                 </expression-component>
-                <set-payload value="#[org.mule.transport.NullPayload.getInstance()]"/>
             </otherwise>
         </choice>
     </flow>

@@ -53,9 +53,7 @@ public class TransformerCacheLoader extends CacheLoader<DataTypePair, Transforme
                                              DataType sourceDataType,
                                              DataType resultDataType) throws MuleException
     {
-        if (sourceDataType.getMediaType().equals(MediaType.JSON)
-            || sourceDataType.getMediaType().equals(MediaType.APPLICATION_JSON)
-            || sourceDataType.getMediaType().toString().endsWith("+json"))
+        if (isJson(sourceDataType))
         {
             JsonToObject jto = new JsonToObject();
             jto.setReturnDataType(resultDataType);
@@ -63,9 +61,7 @@ public class TransformerCacheLoader extends CacheLoader<DataTypePair, Transforme
             muleContext.getRegistry().applyProcessorsAndLifecycle(jto);
             return jto;
         }
-        else if (resultDataType.getMediaType().equals(MediaType.JSON)
-                 || resultDataType.getMediaType().equals(MediaType.APPLICATION_JSON)
-                 || resultDataType.getMediaType().toString().endsWith("+json"))
+        else if (isJson(resultDataType))
         {
             ObjectToJson otj = new ObjectToJson();
             otj.setSourceClass(sourceDataType.getType());
@@ -74,9 +70,7 @@ public class TransformerCacheLoader extends CacheLoader<DataTypePair, Transforme
             muleContext.getRegistry().applyProcessorsAndLifecycle(otj);
             return otj;
         }
-        else if (sourceDataType.getMediaType().equals(MediaType.XML)
-                 || sourceDataType.getMediaType().equals(MediaType.APPLICATION_XML)
-                 || sourceDataType.getMediaType().toString().endsWith("+xml"))
+        else if (isXml(sourceDataType))
         {
             try
             {
@@ -90,9 +84,7 @@ public class TransformerCacheLoader extends CacheLoader<DataTypePair, Transforme
                 LOGGER.error("Unable to create JAXB unmarshaller for " + resultDataType, e);
             }
         }
-        else if (resultDataType.getMediaType().equals(MediaType.XML)
-                 || resultDataType.getMediaType().equals(MediaType.APPLICATION_XML)
-                 || resultDataType.getMediaType().toString().endsWith("+xml"))
+        else if (isXml(resultDataType))
         {
             try
             {
@@ -125,6 +117,20 @@ public class TransformerCacheLoader extends CacheLoader<DataTypePair, Transforme
 
         }
         return muleContext.getRegistry().lookupTransformer(sourceDataType, resultDataType);
+    }
+
+    private boolean isXml(DataType dataType)
+    {
+        return dataType.getMediaType().matches(MediaType.XML)
+               || dataType.getMediaType().matches(MediaType.APPLICATION_XML)
+               || dataType.getMediaType().getSubType().endsWith("+xml");
+    }
+
+    private boolean isJson(DataType dataType)
+    {
+        return dataType.getMediaType().matches(MediaType.JSON)
+               || dataType.getMediaType().matches(MediaType.APPLICATION_JSON)
+               || dataType.getMediaType().getSubType().endsWith("+json");
     }
 
 }

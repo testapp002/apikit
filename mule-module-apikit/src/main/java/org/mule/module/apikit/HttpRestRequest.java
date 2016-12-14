@@ -655,4 +655,10 @@ public class HttpRestRequest
         //default success status
         return 200;
     }
+
+    public void updateEvent(Event event)
+    {
+        requestEvent = event;
+    }
+
 }

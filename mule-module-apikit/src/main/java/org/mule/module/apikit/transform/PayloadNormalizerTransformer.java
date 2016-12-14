@@ -32,7 +32,7 @@ public class PayloadNormalizerTransformer extends AbstractMessageTransformer
         Charset messageEncoding = EventHelper.getEncoding(event, this.muleContext);
 
         org.mule.runtime.api.metadata.DataTypeBuilder sourceDataTypeBuilder = DataType.builder();
-        sourceDataTypeBuilder.type(event.getMessage().getPayload().getClass());
+        sourceDataTypeBuilder.type(event.getMessage().getPayload().getValue().getClass());
         sourceDataTypeBuilder.mediaType(dataType.getMediaType());
         sourceDataTypeBuilder.charset(messageEncoding);
         DataType sourceDataType = sourceDataTypeBuilder.build();

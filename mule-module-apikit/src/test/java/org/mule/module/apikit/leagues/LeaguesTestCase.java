@@ -224,10 +224,10 @@ public class LeaguesTestCase extends MuleArtifactFunctionalTestCase
             .when().put("/api/leagues/liga-bbva");
 
         given().header("Accept", "application/json")
-            .expect()
-                .response().body("leagues.name", hasItems("Liga Hispanica", "Premier League"))
+                .expect()
+                .response().body("name", is("Hispanic League"))
                 .header("Content-type", "application/json").statusCode(200)
-            .when().get("/api/leagues");
+                .when().get("/api/leagues/liga-bbva");
     }
 
     @Test
@@ -242,9 +242,9 @@ public class LeaguesTestCase extends MuleArtifactFunctionalTestCase
 
         given().header("Accept", "application/json")
             .expect()
-                .response().body("leagues.name", hasItems("Hispanic League", "Premier League"))
+                .response().body("name", is("Hispanic League"))
                 .header("Content-type", "application/json").statusCode(200)
-            .when().get("/api/leagues");
+            .when().get("/api/leagues/liga-bbva");
     }
 
     @Test

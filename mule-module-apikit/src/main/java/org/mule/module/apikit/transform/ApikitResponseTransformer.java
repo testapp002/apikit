@@ -25,6 +25,7 @@ import com.google.common.net.MediaType;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -103,7 +104,9 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
             //SystemUtils.getDefaultEncoding(this.muleContext);
         }
 
-        String msgContentType = event.getMessage().getOutboundProperty("Content-Type");
+        //String msgContentType = event.getMessage().getOutboundProperty("Content-Type");
+        // TODO HACK that relies on using _outboundHeaders_ as the headers container
+        String msgContentType = (String) ((Map) event.getVariable("_outboundHeaders_").getValue()).get("Content-Type");
 
         // user is in charge of setting content-type when using */*
         if ("*/*".equals(responseRepresentation))
@@ -143,7 +146,7 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
             return event.getMessage();
         }
         org.mule.runtime.api.metadata.DataTypeBuilder sourceDataTypeBuilder = DataType.builder();
-        sourceDataTypeBuilder.type(event.getMessage().getPayload().getClass());
+        sourceDataTypeBuilder.type(event.getMessage().getPayload().getValue().getClass());
         sourceDataTypeBuilder.mediaType(dataType.getMediaType());
         sourceDataTypeBuilder.charset(charset);
         DataType sourceDataType = sourceDataTypeBuilder.build();//DataTypeFactory.create(event.getMessage().getPayload().getClass(), msgMimeType);
