@@ -26,6 +26,7 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
@@ -40,7 +41,11 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
     @Override
     public Object transformMessage(Event event, Charset encoding) throws TransformerException
     {
-        if (event.getVariable(APIKIT_ROUTER_REQUEST) == null)
+        try
+        {
+            event.getVariable(APIKIT_ROUTER_REQUEST);
+        }
+        catch (NoSuchElementException e)
         {
             // request not originated from an apikit router
             return event.getMessage();

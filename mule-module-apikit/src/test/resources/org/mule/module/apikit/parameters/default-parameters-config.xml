@@ -27,19 +27,25 @@
     </flow>
 
     <flow name="get:/headers">
-        <set-property propertyName="one" value="#[message.getAttributes().getHeaders()[one]]"/>
+        <expression-component>flowVars['_outboundHeaders_'].put('one', message.getAttributes().getHeaders().get('one'))</expression-component>
     </flow>
 
     <flow name="get:/queryParams">
-        <set-property propertyName="default" value="#[message.getAttributes().getQueryParams()['first']]"/>
+        <expression-component>flowVars['_outboundHeaders_'].put('default', message.getAttributes().getQueryParams().get('first'))</expression-component>
     </flow>
 
     <flow name="post:/url-encoded">
-        <set-property propertyName="first" value="#[payload.first]"/>
+        <expression-component>flowVars['_outboundHeaders_'].put('first', payload.first)</expression-component>
+
+        <!--<set-property propertyName="first" value="#[payload.first]"/>-->
     </flow>
 
     <flow name="post:/multipart">
-        <set-property propertyName="second" value="#[org.mule.util.IOUtils.toString(message.inboundAttachments['second'].getDataSource().getInputStream())]"/>
+        <!-- TODO CHANGE HOW TO READ INBOUND ATTACHMENTS -->
+        <expression-component>flowVars['_outboundHeaders_'].put('second', payload.second)</expression-component>
+
+        <!--((MultiPartPayload) requestEvent.getMessage().getPayload().getValue()).getPart(expectedKey)-->
+        <!--<set-property propertyName="second" value="#[org.mule.util.IOUtils.toString(message.inboundAttachments['second'].getDataSource().getInputStream())]"/>-->
     </flow>
 
 
