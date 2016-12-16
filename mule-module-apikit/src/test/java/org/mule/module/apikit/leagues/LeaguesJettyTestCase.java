@@ -11,7 +11,7 @@ import org.mule.tck.junit4.rule.SystemProperty;
 import org.junit.Ignore;
 import org.junit.Rule;
 
-@Ignore //MULE-8123
+@Ignore //TODO check jetty support in mule 4
 public class LeaguesJettyTestCase extends LeaguesTestCase
 {
 
@@ -29,9 +29,9 @@ public class LeaguesJettyTestCase extends LeaguesTestCase
     public SystemProperty p6 = new SystemProperty("mule.transport.jetty.defaultJettyConnectorClass", "org.eclipse.jetty.server.nio.BlockingChannelConnector");
 
     @Override
-    protected String getConfigResources()
+    protected String[] getConfigFiles()
     {
-        return "org/mule/module/apikit/leagues/leagues-base-flow-config.xml, org/mule/module/apikit/leagues/leagues-jetty-flow-config.xml";
+        return new String[] {"org/mule/module/apikit/leagues/leagues-base-flow-config.xml", "org/mule/module/apikit/leagues/leagues-jetty-flow-config.xml"};
     }
 
 }

@@ -21,9 +21,9 @@ public class LeaguesRaml1TestCase extends LeaguesTestCase
 {
 
     @Override
-    protected String getConfigResources()
+    protected String[] getConfigFiles()
     {
-        return "org/mule/module/apikit/leagues/leagues-raml1-flow-config.xml";
+        return new String[]{"org/mule/module/apikit/leagues/leagues-base-flow-config.xml", "org/mule/module/apikit/leagues/leagues-raml1-flow-config.xml"};
     }
 
     @Test
@@ -42,7 +42,7 @@ public class LeaguesRaml1TestCase extends LeaguesTestCase
     {
         given().header("Accept", APPLICATION_RAML)
             .expect()
-                .response().body(containsString("baseUri: http://localhost:" + port + "/api"))
+                .response().body(containsString("baseUri: http://localhost/overwrite"))
                 .header("Content-type", APPLICATION_RAML).statusCode(200)
             .when().get("/api/console/org/mule/module/apikit/leagues/?raml");
     }
@@ -52,7 +52,7 @@ public class LeaguesRaml1TestCase extends LeaguesTestCase
     {
         given().header("Accept", APPLICATION_RAML)
                 .expect()
-                .response().body(containsString("baseUri: http://localhost:" + port + "/api"))
+                .response().body(containsString("baseUri: http://localhost/overwrite"))
                 .header("Content-type", APPLICATION_RAML).statusCode(200)
                 .when().get("/api/console/org/mule/module/apikit/leagues/?raml");
     }

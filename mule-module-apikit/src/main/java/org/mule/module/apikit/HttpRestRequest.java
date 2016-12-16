@@ -106,6 +106,7 @@ public class HttpRestRequest
     public String getResourcePath()
     {
         String path = adapter.getRelativePath();
+        path = path.endsWith("/") ? path.substring(0, path.length() - 1) : path;
         return URICoder.decode(path);
         //String basePath = adapter.getBasePath();
         //int start = basePath.endsWith("/") ? basePath.length() - 1 : basePath.length();
