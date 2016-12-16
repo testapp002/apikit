@@ -69,23 +69,25 @@
     </flow>
 
     <flow name="post:/leagues">
-        <custom-transformer class="org.mule.module.apikit.transform.PayloadNormalizerTransformer"
-                            returnClass="org.mule.module.apikit.leagues.League"/>
-        <choice>
-            <when expression="#[!payload.name.matches('[\\w ]+')]">
-                <set-property propertyName="http.status" value="400"/>
-                <set-payload value="Invalid League Name"/>
-            </when>
-            <otherwise>
-                <set-property propertyName="Location"
-                              value="http://localhost:${serverPort}/api/leagues/#[app.registry['list-of-leagues'].getLeagues().size() + 1]"/>
-                <expression-component>
-                    payload.id = message.getAttributes().getHeader('Location');
-                    app.registry['list-of-leagues'].getLeagues().add(payload);
-                </expression-component>
-                <set-payload value="#[payload.description]" mimeType="text/plain" encoding="windows-1252"/>
-            </otherwise>
-        </choice>
+        <expression-component>flowVars['_outboundHeaders_'].put('Location', 'test')</expression-component>
+
+        <!--<custom-transformer class="org.mule.module.apikit.transform.PayloadNormalizerTransformer"-->
+                            <!--returnClass="org.mule.module.apikit.leagues.League"/>-->
+        <!--<choice>-->
+            <!--<when expression="#[!payload.name.matches('[\\w ]+')]">-->
+                <!--<set-property propertyName="http.status" value="400"/>-->
+                <!--<set-payload value="Invalid League Name"/>-->
+            <!--</when>-->
+            <!--<otherwise>-->
+                <!--<set-property propertyName="Location"-->
+                              <!--value="http://localhost:${serverPort}/api/leagues/#[app.registry['list-of-leagues'].getLeagues().size() + 1]"/>-->
+                <!--<expression-component>-->
+                    <!--payload.id = message.getAttributes().getHeader('Location');-->
+                    <!--app.registry['list-of-leagues'].getLeagues().add(payload);-->
+                <!--</expression-component>-->
+                <!--<set-payload value="#[payload.description]" mimeType="text/plain" encoding="windows-1252"/>-->
+            <!--</otherwise>-->
+        <!--</choice>-->
     </flow>
 
     <flow name="get:/leagues/{leagueId}">
@@ -95,7 +97,7 @@
                 <set-payload value="#[app.registry['list-of-leagues'].getLeague(leagueId)]"/>
             </when>
             <otherwise>
-                <set-property propertyName="http.status" value="404"/>
+                <set-variable variableName="httpStatus" value="404"/>
             </otherwise>
         </choice>
     </flow>
@@ -106,7 +108,7 @@
         <choice>
             <when expression="#[!payload.name.matches('[\\w ]+')]">
                 <logger level="WARN" message="invalid name returning 400"/>
-                <set-property propertyName="http.status" value="400"/>
+                <set-variable variableName="httpStatus" value="400"/>
                 <set-payload value=""/>
             </when>
             <otherwise>
@@ -140,17 +142,20 @@
                       value="#[org.mule.util.IOUtils.toString(message.inboundAttachments['description'].getDataSource().getInputStream())]"/>
         <set-variable variableName="mp2"
                       value="#[message.inboundAttachments['image'].getDataSource().getPart().getContentDispositionFilename()]"/>
-        <set-property propertyName="Content-Type" value="application/json"/>
+        <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
+        <!--<set-property propertyName="Content-Type" value="application/json"/>-->
         <set-payload value="{ &quot;upload&quot;: &quot;OK&quot; }"/>
     </flow>
 
     <flow name="get:/leagues/{leagueId}/badge">
-        <set-property propertyName="Content-Type" value="application/json"/>
+        <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
+        <!--<set-property propertyName="Content-Type" value="application/json"/>-->
         <set-payload value="{ &quot;name&quot;: &quot;Liga BBVA&quot; }"/>
     </flow>
 
     <flow name="get:/leagues/{leagueId}/teams/leader">
-        <set-property propertyName="Content-Type" value="application/json"/>
+        <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
+        <!--<set-property propertyName="Content-Type" value="application/json"/>-->
         <set-payload value="{ &quot;name&quot;: &quot;Aleti&quot; }"/>
     </flow>
 

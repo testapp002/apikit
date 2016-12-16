@@ -64,12 +64,14 @@
 
     <flow name="get:/pingüino">
         <set-payload value="my name is nestor"/>
-        <set-property propertyName="Content-Type" value="text/html;charset=utf-8"/>
+        <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'text/html;charset=utf-8')</expression-component>
+        <!--<set-property propertyName="Content-Type" value="text/html;charset=utf-8"/>-->
     </flow>
 
     <flow name="get:/pingüino/{id}">
         <set-payload value="my name is #[id]"/>
-        <set-property propertyName="Content-Type" value="text/html;charset=utf-8"/>
+        <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'text/html;charset=utf-8')</expression-component>
+        <!--<set-property propertyName="Content-Type" value="text/html;charset=utf-8"/>-->
     </flow>
 
     <flow name="post:/test">

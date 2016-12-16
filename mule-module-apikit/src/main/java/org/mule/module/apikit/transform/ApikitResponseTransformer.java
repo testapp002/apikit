@@ -118,7 +118,7 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
             return event.getMessage();
         }
 
-        if (event.getMessage().getPayload() == null)
+        if (event.getMessage().getPayload().getValue() == null)
         {
             if (logger.isDebugEnabled())
             {
@@ -138,7 +138,8 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
 //            builder.message(messageBuilder.build()).build();
 
             //TODO WE SHOULD MODIFY THE PROPERTY MESSAGE.OUTBOUNDPROPERTY
-            //event = EventHelper.addOutboundProperty(event, "Content-Type", msgAcceptedContentType);
+
+//            event = EventHelper.addOutboundProperty(event, "Content-Type", msgAcceptedContentType);
             if (logger.isDebugEnabled())
             {
                 logger.debug("Response transformation not required. Message payload type is " + msgAcceptedContentType);

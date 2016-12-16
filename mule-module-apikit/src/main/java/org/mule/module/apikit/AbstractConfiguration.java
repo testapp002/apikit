@@ -63,7 +63,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractConfiguration implements Initialisable, MuleContextAware, Startable
 {
 
-    private static final boolean KEEP_RAML_BASEURI = Boolean.valueOf(System.getProperty("apikit.keep_raml_baseuri"));
+    private static final boolean KEEP_RAML_BASEURI = true;//TODO CHERRYPICK KEEPRAMLBASEURI PROPERTY Boolean.valueOf(System.getProperty("apikit.keep_raml_baseuri"));
     public static final String APPLICATION_RAML = "application/raml+yaml";
     private static final String CONSOLE_URL_FILE = "consoleurl";
     private static final int URI_CACHE_SIZE = 1000;

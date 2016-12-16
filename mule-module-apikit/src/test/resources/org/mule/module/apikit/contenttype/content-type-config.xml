@@ -63,15 +63,21 @@
         <choice>
             <when expression="#[message.getAttributes().getHeaders()['ctype'] == 'json']">
                 <logger level="INFO" message="returning json"/>
-                <set-property propertyName="Content-Type" value="application/json"/>
+                <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
+
+                <!--<set-property propertyName="Content-Type" value="application/json"/>-->
             </when>
             <when expression="#[message.getAttributes().getHeaders()['ctype'] == 'xml']">
                 <logger level="INFO" message="returning xml"/>
-                <set-property propertyName="Content-Type" value="application/xml"/>
+                <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/xml')</expression-component>
+
+                <!--<set-property propertyName="Content-Type" value="application/xml"/>-->
             </when>
             <otherwise>
                 <logger level="INFO" message="returning html"/>
-                <set-property propertyName="Content-Type" value="text/html"/>
+                <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'text/html')</expression-component>
+
+                <!--<set-property propertyName="Content-Type" value="text/html"/>-->
             </otherwise>
         </choice>
         <set-payload value="#[null]"/>

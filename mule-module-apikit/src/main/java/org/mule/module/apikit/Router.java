@@ -116,10 +116,10 @@ public class Router extends AbstractRouter
             //builder.addVariable("_outboundHeaders_", headers);
         }
         //event = EventHelper.addOutboundProperty(event, "Content-type", "text/plain");
-        for (String outboundProperty : event.getMessage().getOutboundPropertyNames())
-        {
-            event = EventHelper.addOutboundProperty(event, outboundProperty, event.getMessage().getOutboundProperty(outboundProperty));
-        }
+        //for (String outboundProperty : event.getMessage().getOutboundPropertyNames())
+        //{
+        //    event = EventHelper.addOutboundProperty(event, outboundProperty, event.getMessage().getOutboundProperty(outboundProperty));
+        //}
         return event;
     }
 

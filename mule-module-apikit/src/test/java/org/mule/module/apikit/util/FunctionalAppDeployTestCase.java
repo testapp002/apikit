@@ -21,10 +21,13 @@ import static org.mockito.Mockito.verify;
 //import org.mule.module.launcher.application.ApplicationStatus;
 import org.mule.runtime.core.api.config.MuleProperties;
 import org.mule.runtime.core.util.FileUtils;
+import org.mule.runtime.module.artifact.classloader.ArtifactClassLoader;
 import org.mule.runtime.module.deployment.api.DeploymentListener;
 import org.mule.runtime.deployment.model.api.application.Application;
 import org.mule.runtime.deployment.model.api.application.ApplicationStatus;
+import org.mule.runtime.module.deployment.impl.internal.MuleArtifactResourcesRegistry;
 import org.mule.runtime.module.deployment.internal.MuleDeploymentService;
+import org.mule.runtime.module.service.ServiceManager;
 import org.mule.tck.junit4.AbstractMuleContextTestCase;
 import org.mule.tck.probe.JUnitProbe;
 import org.mule.tck.probe.PollingProber;
@@ -63,7 +66,13 @@ public class FunctionalAppDeployTestCase extends AbstractMuleContextTestCase
         applicationDeploymentListener = mock(DeploymentListener.class);
         //domainDeploymentListener = mock(DeploymentListener.class);
         //TODO FIX
-        //deploymentService = new MuleDeploymentService(new MulePluginClassLoaderManager());
+//        deploymentService = new MuleDeploymentService(new MulePluginClassLoaderManager());
+        MuleArtifactResourcesRegistry muleArtifactResourcesRegistry = new MuleArtifactResourcesRegistry();
+        //ArtifactClassLoader containerClassLoader = muleArtifactResourcesRegistry.getContainerClassLoader();
+        //ServiceManager serviceManager = muleArtifactResourcesRegistry.getServiceManager();
+        deploymentService = new MuleDeploymentService(muleArtifactResourcesRegistry.getDomainFactory(),
+                                                      muleArtifactResourcesRegistry.getApplicationFactory());
+
         deploymentService.addDeploymentListener(applicationDeploymentListener);
         //deploymentService.addDomainDeploymentListener(domainDeploymentListener);
     }

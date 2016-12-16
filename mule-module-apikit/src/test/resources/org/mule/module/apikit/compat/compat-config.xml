@@ -25,7 +25,8 @@
     </flow>
 
     <flow name="get:/world/user">
-        <set-property propertyName="Content-Type" value="application/json"/>
+        <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
+        <!--<set-property propertyName="Content-Type" value="application/json"/>-->
         <set-payload value="{ &quot;name&quot;: &quot;Lisa&quot; }"/>
     </flow>
 

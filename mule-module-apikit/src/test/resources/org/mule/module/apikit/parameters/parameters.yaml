@@ -1,6 +1,8 @@
 #%RAML 0.8
 ---
 title: Parameters API
+baseUri: http://pepe.com
+
 /resources:
   get:
     headers:

@@ -57,18 +57,26 @@ public class PathlessEndpointStandaloneTestCase extends MuleArtifactFunctionalTe
     }
 
     @Test
-    public void ramlPathless() throws Exception
+
+    public void ramlEmptyPathNoRouter() throws Exception
     {
         RestAssured.port = serverPortPathless.getNumber();
-        raml("");
+        given().header("Accept", "application/raml+yaml")
+                .expect()
+                .response().body(containsString("Server error"))
+                .statusCode(500)
+                .when().get("");
     }
 
     @Test
-    public void baseuriPathless() throws Exception
+    public void baseuriEmptyPathNoRouter() throws Exception
     {
-        int port = serverPortPathless.getNumber();
-        RestAssured.port = port;
-        baseUri("", "http://localhost:" + port);
+        RestAssured.port = serverPortPathless.getNumber();
+        given().header("Accept", "application/raml+yaml")
+                .expect()
+                .response().body(containsString("Server error"))
+                .statusCode(500)
+                .when().get("/");
     }
 
     @Test
@@ -90,7 +98,7 @@ public class PathlessEndpointStandaloneTestCase extends MuleArtifactFunctionalTe
     {
         int port = serverPortEmptyPath.getNumber();
         RestAssured.port = port;
-        baseUri("", "http://localhost:" + port);
+        baseUri("", "http://api.myapp.com/api/v1");
     }
 
     private void console(String path)
@@ -117,7 +125,7 @@ public class PathlessEndpointStandaloneTestCase extends MuleArtifactFunctionalTe
     {
         given().header("Accept", "application/raml+yaml")
                 .expect()
-                .response().body(containsString("baseUri: \"" + expectedBaseUri + "/api\""))
+                .response().body(containsString("baseUri: \"" + expectedBaseUri + "\""))
                 .statusCode(200)
                 .when().get(path + "/");
     }

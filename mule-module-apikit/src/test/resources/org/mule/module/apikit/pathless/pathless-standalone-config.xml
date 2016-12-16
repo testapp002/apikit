@@ -19,8 +19,6 @@
 
     <apikit:config name="slashPath" raml="org/mule/module/apikit/pathless/pathless.yaml" consoleEnabled="false"/>
 
-    <apikit:config name="addressSlashPath" raml="org/mule/module/apikit/pathless/pathless.yaml" consoleEnabled="false"/>
-
     <httpn:listener-config name="httpListenerConfigPathless">
         <httpn:listener-connection host="localhost" port="${serverPortPathless}"/>
     </httpn:listener-config>

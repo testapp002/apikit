@@ -120,6 +120,7 @@ public class EncodingTestCase extends MuleArtifactFunctionalTestCase
                 .contentType("application/json;charset=UTF-16")
                 .expect()
                 .statusCode(200)
+                .contentType("application/json; charset=UTF-16")
                 .body(is(responseBody))
                 .when().post(api + "/testJson");
     }

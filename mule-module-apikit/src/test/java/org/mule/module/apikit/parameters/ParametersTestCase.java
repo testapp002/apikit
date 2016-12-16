@@ -201,7 +201,7 @@ public class ParametersTestCase extends MuleArtifactFunctionalTestCase
         given().header("Accept", "application/raml+yaml")
             .expect()
                 .response().body(allOf(containsString("baseUri"),
-                                       containsString("http://localhost:" + serverPort.getNumber() + "/api")))
+                                       containsString("http://pepe.com")))
                 .statusCode(200).when().get("/api");
     }
 

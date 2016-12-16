@@ -44,11 +44,15 @@
 
 
     <flow name="post-leagues-json">
-        <set-property propertyName="incoming-content-type" value="application/json"/>
+        <expression-component>flowVars['_outboundHeaders_'].put('incoming-content-type', 'application/json')</expression-component>
+
+        <!--<set-property propertyName="incoming-content-type" value="application/json"/>-->
     </flow>
 
     <flow name="post-leagues-xml">
-        <set-property propertyName="incoming-content-type" value="application/xml"/>
+        <expression-component>flowVars['_outboundHeaders_'].put('incoming-content-type', 'application/xml')</expression-component>
+
+        <!--<set-property propertyName="incoming-content-type" value="application/xml"/>-->
     </flow>
 
     <flow name="get-leagueId">
@@ -56,7 +60,9 @@
     </flow>
 
     <flow name="put-leagueId">
-        <set-property propertyName="incoming-content-type" value="#[message.getAttributes().getHeaders()['content-type']]"/>
+        <expression-component>flowVars['_outboundHeaders_'].put('incoming-content-type', message.getAttributes().getHeaders()['content-type'])</expression-component>
+
+        <!--<set-property propertyName="incoming-content-type" value="#[message.getAttributes().getHeaders()['content-type']]"/>-->
     </flow>
 
     <error-handler name="defaultErrorHandler">

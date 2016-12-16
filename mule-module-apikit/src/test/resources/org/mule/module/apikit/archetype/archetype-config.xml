@@ -59,7 +59,8 @@
 
     <flow name="get:/resources">
         <set-payload value="                {\n                  &quot;name&quot;: &quot;Barcelona&quot;,\n                  &quot;id&quot;: &quot;BAR&quot;,\n                  &quot;homeCity&quot;: &quot;Barcelona&quot;,\n                  &quot;stadium&quot;: &quot;Camp Nou&quot;,\n                  &quot;matches&quot;: 24\n                }" />
-        <set-property propertyName="Content-Type" value="application/json"/>
+        <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
+        <!--<set-property propertyName="Content-Type" value="application/json"/>-->
         <!--
         <scripting:component>
             <scripting:script engine="Groovy">

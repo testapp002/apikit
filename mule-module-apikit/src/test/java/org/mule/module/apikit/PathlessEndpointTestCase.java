@@ -54,7 +54,7 @@ public class PathlessEndpointTestCase extends MuleArtifactFunctionalTestCase
     {
         int port = serverPortEmptyPath.getNumber();
         RestAssured.port = port;
-        baseUri("", "http://localhost:" + port);
+        baseUri("", "http://api.myapp.com/api/v1");
     }
 
     @Test
@@ -76,7 +76,7 @@ public class PathlessEndpointTestCase extends MuleArtifactFunctionalTestCase
     {
         int port = serverPortSlashPath.getNumber();
         RestAssured.port = port;
-        baseUri("", "http://localhost:" + port);
+        baseUri("", "http://api.myapp.com/api/v1");
     }
 
     private void console(String path)

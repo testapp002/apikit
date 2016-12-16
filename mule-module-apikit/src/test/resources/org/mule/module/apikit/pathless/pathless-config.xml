@@ -23,9 +23,6 @@
 
     <apikit:config name="slashPath" raml="org/mule/module/apikit/pathless/pathless.yaml"/>
 
-    <apikit:config name="addressSlashPath" raml="org/mule/module/apikit/pathless/pathless.yaml"/>
-
-
     <!-- works since MULE-6968 -->
     <flow name="doorwayEmptyPath">
         <httpn:listener config-ref="httpListenerConfigEmptyPath" path="*">

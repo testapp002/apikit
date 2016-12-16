@@ -66,6 +66,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -298,9 +299,14 @@ public class HttpRestRequest
         InternalMessage.Builder messageBuilder = InternalMessage.builder(requestEvent.getMessage());
 
         HttpRequestAttributes oldAttributes = ((HttpRequestAttributes)requestEvent.getMessage().getAttributes());
+        ParameterMap newHeaders = new ParameterMap();
         ParameterMap headers = oldAttributes.getHeaders();
-        headers.put(key, value);
-        HttpRequestAttributes newAttributes = new HttpRequestAttributes(headers, oldAttributes.getListenerPath(), oldAttributes.getRelativePath(), oldAttributes.getVersion(), oldAttributes.getScheme(), oldAttributes.getMethod(), oldAttributes.getRequestPath(), oldAttributes.getRequestUri(), oldAttributes.getQueryString(), oldAttributes.getQueryParams(), oldAttributes.getUriParams(), oldAttributes.getRemoteAddress(), oldAttributes.getClientCertificate());
+        for (Map.Entry<String, String> entry : headers.entrySet())
+        {
+            newHeaders.put(entry.getKey(), entry.getValue());
+        }
+        newHeaders.put(key, value);
+        HttpRequestAttributes newAttributes = new HttpRequestAttributes(newHeaders, oldAttributes.getListenerPath(), oldAttributes.getRelativePath(), oldAttributes.getVersion(), oldAttributes.getScheme(), oldAttributes.getMethod(), oldAttributes.getRequestPath(), oldAttributes.getRequestUri(), oldAttributes.getQueryString(), oldAttributes.getQueryParams(), oldAttributes.getUriParams(), oldAttributes.getRemoteAddress(), oldAttributes.getClientCertificate());
 
 
         messageBuilder.attributes(newAttributes);
@@ -488,22 +494,6 @@ public class HttpRestRequest
             }
         }
     }
-
-    //public static class CreatePartsMessageProcessor implements Processor {
-    //
-    //    @Override
-    //    public Event process(Event event) throws MuleException {
-    //        PartAttributes part1Attributes = new PartAttributes(TEXT_BODY_FIELD_NAME);
-    //        Message part1 = builder().payload(TEXT_BODY_FIELD_VALUE).attributes(part1Attributes).mediaType(TEXT_PLAIN_LATIN).build();
-    //        PartAttributes part2Attributes = new PartAttributes(FILE_BODY_FIELD_NAME,
-    //                                                            FILE_BODY_FIELD_FILENAME,
-    //                                                            FILE_BODY_FIELD_VALUE.length(),
-    //                                                            emptyMap());
-    //        Message part2 = builder().payload(FILE_BODY_FIELD_VALUE).attributes(part2Attributes).mediaType(BINARY).build();
-    //        return Event.builder(event).message(InternalMessage.of(new DefaultMultiPartPayload(part1, part2))).build();
-    //    }
-    //}
-
 
     private void validateSchemaV2(IMimeType mimeType, boolean trimBom) throws BadRequestException
     {

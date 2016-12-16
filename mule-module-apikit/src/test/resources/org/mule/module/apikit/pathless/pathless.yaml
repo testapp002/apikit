@@ -2,7 +2,7 @@
 ---
 title: Endpoint API
 version: v1
-baseUri: http://api.myapp.com/api/{version}
+baseUri: http://api.myapp.com/api/v1
 
 /orders:
   displayName: Get Orders Summary

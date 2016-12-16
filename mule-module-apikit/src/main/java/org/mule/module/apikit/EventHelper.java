@@ -59,7 +59,6 @@ public class EventHelper
     public static Event addVariable(Event event, String key, String value)
     {
         Event.Builder builder = Event.builder(event);
-        Map<String, String> outboundHeaders = new HashMap<>();
         builder.addVariable(key, value);
         return builder.build();
     }
@@ -78,19 +77,6 @@ public class EventHelper
         return value;
     }
 
-    //public static String getOutboundProperty(Event event, String name)
-    //{
-    //    if (event.getVariable(outboundHeadersName) != null)
-    //    {
-    //        Map<String, String> outboundPropertiesMap = (Map<String, String>)event.getVariable(outboundHeadersName).getValue();
-    //        if (outboundPropertiesMap != null)
-    //        {
-    //            return outboundPropertiesMap.get(name);
-    //        }
-    //    }
-    //    return null;
-    //}
-    //
     public static Event setPayload(Event event, Object payload, String primaryType, String secondaryType)
     {
         Event.Builder builder = Event.builder(event);

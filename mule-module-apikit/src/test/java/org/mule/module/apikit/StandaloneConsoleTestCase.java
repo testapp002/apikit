@@ -10,6 +10,8 @@ import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.port;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.mule.module.apikit.Configuration.APPLICATION_RAML;
 
 import org.mule.functional.junit4.FunctionalTestCase;
@@ -85,7 +87,7 @@ public class StandaloneConsoleTestCase extends MuleArtifactFunctionalTestCase
     {
         given().header("Accept", APPLICATION_RAML)
                 .expect()
-                .response().body(containsString("baseUri: \"http://localhost:" + port + "/api\""))
+                .response().body(containsString("baseUri: \"http://localhost/api\""))
                 .header("Content-type", APPLICATION_RAML).statusCode(200)
                 .when().get("/api");
     }
@@ -107,7 +109,7 @@ public class StandaloneConsoleTestCase extends MuleArtifactFunctionalTestCase
     {
         given().port(serverPort2.getNumber()).header("Accept", APPLICATION_RAML)
                 .expect()
-                .response().body(containsString("baseUri: \"http://localhost:" + serverPort.getNumber() + "/api\""))
+                .response().body(containsString("baseUri: \"http://localhost/api\""))
                 .header("Content-type", APPLICATION_RAML).statusCode(200)
                 .when().get("/");
     }
@@ -117,19 +119,19 @@ public class StandaloneConsoleTestCase extends MuleArtifactFunctionalTestCase
     {
         given().port(serverPort4.getNumber()).header("Accept", APPLICATION_RAML)
                 .expect()
-                .response().body(containsString("baseUri: \"http://localhost:/api\""))
+                .response().body(containsString("baseUri: \"http://localhost/api\""))
                 .header("Content-type", APPLICATION_RAML).statusCode(200)
                 .when().get("/");
     }
 
-    @Test
-    public void consoleEmbeddedNoPath() throws Exception
-    {
-        given().port(serverPort5.getNumber()).redirects().follow(false)
-                .header("Accept", "text/html")
-                .expect()
-                .response().statusCode(301)
-                .when().get("/console");
-    }
+    //@Test
+    //public void consoleEmbeddedNoPath() throws Exception
+    //{
+    //    given().port(serverPort5.getNumber()).redirects().follow(false)
+    //            .header("Accept", "text/html")
+    //            .expect()
+    //            .response().statusCode(301)
+    //            .when().get("/console");
+    //}
 
 }

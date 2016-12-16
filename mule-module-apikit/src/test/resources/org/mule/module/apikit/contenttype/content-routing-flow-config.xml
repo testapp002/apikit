@@ -37,13 +37,12 @@
 
 
     <flow name="post:/leagues:application/json">
-        <!-- TODO we should add this variable to the outbound headers map -->
-        <set-property propertyName="incoming-content-type" value="application/json"/>
+        <expression-component>flowVars['_outboundHeaders_'].put('incoming-content-type', 'application/json')</expression-component>
+
     </flow>
 
     <flow name="post:/leagues:application/xml">
-        <!-- TODO we should add this variable to the outbound headers map -->
-        <set-property propertyName="incoming-content-type" value="application/xml"/>
+        <expression-component>flowVars['_outboundHeaders_'].put('incoming-content-type', 'application/xml')</expression-component>
     </flow>
 
     <flow name="get:/leagues/{leagueId}">
@@ -51,8 +50,10 @@
     </flow>
 
     <flow name="put:/leagues/{leagueId}">
-        <!-- TODO we should add this variable to the outbound headers map -->
-        <set-property propertyName="incoming-content-type" value="#[message.getAttributes().getHeaders()['content-type']]"/>
+        <expression-component>flowVars['_outboundHeaders_'].put('incoming-content-type', message.getAttributes().getHeaders()['content-type'])</expression-component>
+
+        <!--&lt;!&ndash; TODO we should add this variable to the outbound headers map &ndash;&gt;-->
+        <!--<set-property propertyName="incoming-content-type" value="#[message.getAttributes().getHeaders()['content-type']]"/>-->
     </flow>
 
 

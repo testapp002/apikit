@@ -192,7 +192,7 @@ public class ConsoleHandler implements Processor
                 event = EventHelper.addOutboundProperty(event, HEADER_LOCATION, redirectLocation);
                 return event;
             }
-            if (path.equals(embeddedConsolePath) || path.equals(embeddedConsolePath + "/") || path.equals(embeddedConsolePath + "/index.html"))
+            if (path.equals(embeddedConsolePath) || path.equals(embeddedConsolePath + "/") || path.equals(embeddedConsolePath + "/index.html") || path.equals(embeddedConsolePath + "index.html"))
             {
                 path = RESOURCE_BASE + "/index.html";
                 in = new ByteArrayInputStream(cachedIndexHtml.getBytes());
