@@ -117,7 +117,7 @@ public class UrlUtils
         String relativePath = requestPath.substring(character);
         if (!"".equals(relativePath))
         {
-            for (; character > 1 && Character.compare(requestPath.charAt(character - 1), '/') == 0; character--)
+            for (; character > 0 && Character.compare(requestPath.charAt(character - 1), '/') == 0; character--)
             {
                 relativePath = "/" + relativePath;
             }

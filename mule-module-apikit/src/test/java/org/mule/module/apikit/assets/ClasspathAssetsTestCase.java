@@ -57,7 +57,7 @@ public class ClasspathAssetsTestCase extends MuleArtifactFunctionalTestCase
     {
         given().header("Accept", APPLICATION_RAML)
                 .expect()
-                .response().body(containsString("baseUri: http://localhost:" + serverPort.getValue() + "/myapi"), containsString("!include example.json"))
+                .response().body(containsString("baseUri: http://localhost/myapi"), containsString("!include example.json"))
                 .header("Content-type", APPLICATION_RAML).statusCode(200)
                 .when().get("/assets/?raml");
     }
