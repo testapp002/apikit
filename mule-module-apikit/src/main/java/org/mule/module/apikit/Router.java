@@ -9,6 +9,7 @@ package org.mule.module.apikit;
 import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.extension.http.api.HttpResponseAttributes;
 import org.mule.runtime.api.message.MuleEvent;
+import org.mule.runtime.api.message.NullAttributes;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.core.api.lifecycle.StartException;
@@ -17,7 +18,7 @@ import org.mule.runtime.core.api.registry.RegistrationException;
 import org.mule.runtime.api.i18n.I18nMessageFactory;
 import org.mule.runtime.core.construct.Flow;
 import org.mule.raml.interfaces.model.IResource;
-import org.mule.runtime.core.message.NullAttributes;
+//import org.mule.runtime.core.message.NullAttributes;
 //import org.mule.runtime.module.http.internal.ParameterMap;
 
 import java.util.Map;

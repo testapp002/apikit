@@ -52,9 +52,10 @@ import org.mule.raml.interfaces.model.IMimeType;
 import org.mule.raml.interfaces.model.IResponse;
 import org.mule.raml.interfaces.model.parameter.IParameter;
 //import org.mule.transformer.types.DataTypeFactory;
-import org.mule.runtime.core.model.ParameterMap;
+//import org.mule.runtime.core.model.ParameterMap;
 import org.mule.runtime.core.util.CaseInsensitiveHashMap;
 import org.mule.runtime.core.util.IOUtils;
+import org.mule.service.http.api.domain.ParameterMap;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.net.MediaType;

@@ -42,7 +42,7 @@
 
     <flow name="post:/multipart">
         <!-- TODO CHANGE HOW TO READ INBOUND ATTACHMENTS -->
-        <expression-component>flowVars['_outboundHeaders_'].put('second', payload.second)</expression-component>
+        <expression-component>flowVars['_outboundHeaders_'].put('second', org.mule.util.IOUtils.toString(payload.getPart('second').getPayload().getDataSource().getInputStream()))</expression-component>
 
         <!--((MultiPartPayload) requestEvent.getMessage().getPayload().getValue()).getPart(expectedKey)-->
         <!--<set-property propertyName="second" value="#[org.mule.util.IOUtils.toString(message.inboundAttachments['second'].getDataSource().getInputStream())]"/>-->

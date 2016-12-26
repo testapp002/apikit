@@ -39,7 +39,7 @@ import org.mule.runtime.core.processor.AbstractInterceptingMessageProcessor;
 import org.mule.runtime.core.processor.AbstractRequestResponseMessageProcessor;
 import org.mule.raml.interfaces.model.IResource;
 import org.mule.raml.interfaces.model.parameter.IParameter;
-import org.mule.runtime.core.model.ParameterMap;
+//import org.mule.runtime.core.model.ParameterMap;
 
 import com.google.common.cache.LoadingCache;
 
