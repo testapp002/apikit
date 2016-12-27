@@ -13,26 +13,15 @@ import static org.mule.module.apikit.transform.ApikitResponseTransformer.APIKIT_
 import static org.mule.module.apikit.transform.ApikitResponseTransformer.BEST_MATCH_REPRESENTATION;
 import static org.mule.module.apikit.transform.ApikitResponseTransformer.CONTRACT_MIME_TYPES;
 
-//import org.mule.DefaultMuleMessage;
-//import org.mule.runtime.core.api.MuleEvent;
-import org.mule.common.metadata.datatype.DataTypeFactory;
 import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.runtime.api.message.Message;
 import org.mule.runtime.api.message.MuleEvent;
 import org.mule.runtime.api.message.MultiPartPayload;
-import org.mule.runtime.api.metadata.DataType;
-import org.mule.runtime.core.PropertyScope;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.api.exception.MuleException;
-//import org.mule.runtime.core.api.MuleMessage;
-//import org.mule.api.transformer.DataType;
 import org.mule.runtime.core.api.message.InternalMessage;
-import org.mule.runtime.core.api.message.MessageAttachments;
-import org.mule.runtime.core.api.transformer.TransformerException;
-//import org.mule.api.transport.PropertyScope;
 import org.mule.runtime.core.message.PartAttributes;
-import org.mule.runtime.core.message.ds.StringDataSource;
 import org.mule.module.apikit.exception.BadRequestException;
 import org.mule.module.apikit.exception.InvalidFormParameterException;
 import org.mule.module.apikit.exception.InvalidHeaderException;
@@ -43,19 +32,17 @@ import org.mule.module.apikit.exception.UnsupportedMediaTypeException;
 import org.mule.module.apikit.uri.URICoder;
 import org.mule.module.apikit.validation.RestSchemaValidator;
 import org.mule.module.apikit.validation.RestSchemaValidatorFactory;
-import org.mule.module.apikit.validation.RestXmlSchemaValidator;
 import org.mule.module.apikit.validation.SchemaType;
 import org.mule.module.apikit.validation.cache.SchemaCacheUtils;
-//import org.mule.runtime.module.http.internal.ParameterMap;
 import org.mule.raml.interfaces.model.IAction;
 import org.mule.raml.interfaces.model.IMimeType;
 import org.mule.raml.interfaces.model.IResponse;
 import org.mule.raml.interfaces.model.parameter.IParameter;
-//import org.mule.transformer.types.DataTypeFactory;
-//import org.mule.runtime.core.model.ParameterMap;
-import org.mule.runtime.core.util.CaseInsensitiveHashMap;
+import org.mule.raml.implv2.v10.model.MimeTypeImpl;
 import org.mule.runtime.core.util.IOUtils;
 import org.mule.service.http.api.domain.ParameterMap;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.net.MediaType;
@@ -68,17 +55,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import javax.activation.DataHandler;
-
 import org.raml.v2.api.model.common.ValidationResult;
-import org.raml.v2.internal.utils.StreamUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 public class HttpRestRequest
 {
@@ -470,7 +454,16 @@ public class HttpRestRequest
         else if (actionMimeType.getFormParameters() != null &&
                  mimeTypeName.contains("application/x-www-form-urlencoded"))
         {
-            validateUrlencodedForm(actionMimeType.getFormParameters());
+//            validateUrlencodedForm(actionMimeType.getFormParameters());
+            if (config.isParserV2())
+            {
+                validateUrlencodedFormV2(actionMimeType);
+            }
+            else
+            {
+                validateUrlencodedForm(actionMimeType.getFormParameters());
+
+            }
         }
     }
 
@@ -521,12 +514,43 @@ public class HttpRestRequest
                 {
                     String msg = String.format("Invalid value '%s' for form parameter %s. %s",
                                                actual, expectedKey, expected.message((String) actual));
-                    throw new InvalidQueryParameterException(msg);
+                    throw new InvalidFormParameterException(msg);
                 }
             }
         }
         //TODO SETPAYLOAD SHOULD USE A MIMETYPE
         requestEvent = EventHelper.setPayload((Event) requestEvent, paramMap);
+    }
+
+    private void validateUrlencodedFormV2(IMimeType actionMimeType) throws MuleRestException
+    {
+        if (!(actionMimeType instanceof MimeTypeImpl))
+        {
+            // validate only raml 1.0
+            return;
+        }
+        String jsonText;
+        try
+        {
+            Map<String, String> payload = (Map<String, String>) requestEvent.getMessage().getPayload().getValue();
+            jsonText = new ObjectMapper().writeValueAsString(payload);
+        }
+        catch (Exception e)
+        {
+            logger.warn("Cannot validate url-encoded form", e);
+            return;
+        }
+
+        List<ValidationResult> validationResult = ((MimeTypeImpl) actionMimeType).validate(jsonText);
+        if (validationResult.size() > 0)
+        {
+            String resultString =  "";
+            for (ValidationResult result : validationResult)
+            {
+                resultString += result.getMessage() + "\n";
+            }
+            throw new InvalidFormParameterException(resultString);
+        }
     }
 
 
