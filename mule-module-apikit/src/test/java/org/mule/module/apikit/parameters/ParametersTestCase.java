@@ -196,6 +196,17 @@ public class ParametersTestCase extends MuleArtifactFunctionalTestCase
     }
 
     @Test
+    public void nonRepeatableQueryParamRepeated()
+    {
+
+        given().queryParam("orderId","1234")
+                .queryParam("orderId","2345")
+                .queryParam("email", "s@cisco.com")
+                .expect().response().statusCode(400)
+                .when().get("/api/trackOrder");
+    }
+
+    @Test
     public void raml() throws Exception
     {
         given().header("Accept", "application/raml+yaml")
