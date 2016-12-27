@@ -6,12 +6,12 @@
       xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
         http://www.mulesoft.org/schema/mule/httpn http://www.mulesoft.org/schema/mule/httpn/current/mule-httpn.xsd
         http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd">
-      <!--xmlns:cors="http://www.mulesoft.org/schema/mule/cors"-->
-        <!--http://www.mulesoft.org/schema/mule/cors http://www.mulesoft.org/schema/mule/cors/current/mule-cors.xsd"-->
+    <!--xmlns:cors="http://www.mulesoft.org/schema/mule/cors"-->
+    <!--http://www.mulesoft.org/schema/mule/cors http://www.mulesoft.org/schema/mule/cors/current/mule-cors.xsd"-->
 
-    <apikit:config name="localhost" raml="org/mule/module/apikit/console/console.raml" consoleEnabled="false"/>
+    <apikit:config name="localhost" raml="org/mule/module/apikit/console/console.raml" keepRamlBaseUri="false" consoleEnabled="false"/>
 
-    <apikit:config name="bindAll" raml="org/mule/module/apikit/console/console.raml" consoleEnabled="false"/>
+    <apikit:config name="bindAll" raml="org/mule/module/apikit/console/console.raml" keepRamlBaseUri="false" consoleEnabled="false"/>
 
     <!--<apikit:config name="embedded" raml="org/mule/module/apikit/console/console.raml" consoleEnabled="true" />-->
 
@@ -85,12 +85,12 @@
     </flow>
 
     <!--<flow name="routerEmbedded">-->
-        <!--<httpn:listener config-ref="httpListenerConfig5" path="/*">-->
-            <!--<httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>-->
-            <!--<httpn:error-response-builder statusCode="500"/>-->
-        <!--</httpn:listener>-->
-        <!--<set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>-->
-        <!--<apikit:router config-ref="embedded"/>-->
+    <!--<httpn:listener config-ref="httpListenerConfig5" path="/*">-->
+    <!--<httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>-->
+    <!--<httpn:error-response-builder statusCode="500"/>-->
+    <!--</httpn:listener>-->
+    <!--<set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>-->
+    <!--<apikit:router config-ref="embedded"/>-->
     <!--</flow>-->
 
     <flow name="get:/user">
