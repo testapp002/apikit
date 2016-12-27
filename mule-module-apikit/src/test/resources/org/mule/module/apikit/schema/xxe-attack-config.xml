@@ -13,6 +13,11 @@ http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/a
         <httpn:listener-connection host="localhost" port="${serverPort}"/>
     </httpn:listener-config>
 
+    <httpn:listener-config name="api-httpListenerConfig2">
+        <httpn:listener-connection host="0.0.0.0" port="${serverPort2}"/>
+    </httpn:listener-config>
+
+
     <apikit:config name="api-config" raml="org/mule/module/apikit/schema/xxe-attack.raml" consoleEnabled="true" consolePath="console"/>
 
     <flow name="api-main">
@@ -26,6 +31,15 @@ http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/a
 
     <flow name="post:/test:application/xml:api-config">
         <set-payload value="#[NullPayload.getInstance()]"/>
+    </flow>
+
+    <flow name="should-not-be-called-flow">
+        <httpn:listener config-ref="api-httpListenerConfig2" path="/*">
+            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <httpn:error-response-builder statusCode="#[httpStatus]"/>
+        </httpn:listener>
+        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-property propertyName="invalidheader" value="invalid"/>
     </flow>
 
     <error-handler name="defaultErrorHandler">
