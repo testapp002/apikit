@@ -8,6 +8,8 @@ package org.mule.module.apikit.validation;
 
 import static org.mule.module.apikit.CharsetUtils.getEncoding;
 
+import com.github.fge.jsonschema.core.report.LogLevel;
+import com.github.fge.jsonschema.core.report.ProcessingMessage;
 import org.mule.module.apikit.CharsetUtils;
 import org.mule.module.apikit.EventHelper;
 import org.mule.runtime.api.metadata.DataType;
@@ -31,14 +33,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.util.Iterator;
 import java.util.concurrent.ExecutionException;
 
 import org.raml.parser.utils.StreamUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.github.fge.jsonschema.core.report.LogLevel.ERROR;
+import static com.github.fge.jsonschema.core.report.LogLevel.WARNING;
+
 public class RestJsonSchemaValidator extends AbstractRestSchemaValidator
 {
+    private static final String JSON_SCHEMA_FAIL_ON_WARNING_KEY = "raml.json_schema.fail_on_warning";
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -95,10 +102,6 @@ public class RestJsonSchemaValidator extends AbstractRestSchemaValidator
                 //update message encoding
 
                 newMuleEvent = EventHelper.setPayload(muleEvent, input, encoding);
-                //DataType<byte[]> dataType = DataTypeFactory.create(byte[].class, muleEvent.getMessage().getDataType().getMimeType());
-                //dataType.setEncoding(encoding);
-                //muleEvent.getMessage().setPayload(input, dataType);
-
             }
             else
             {
@@ -107,11 +110,22 @@ public class RestJsonSchemaValidator extends AbstractRestSchemaValidator
 
             JsonSchema schema = JsonSchemaCache.getJsonSchemaCache(muleContext, configId, api).get(schemaPath);
             ProcessingReport report = schema.validate(data);
-            if (!report.isSuccess())
+            Iterator<ProcessingMessage> iterator = report.iterator();
+
+            while (iterator.hasNext())
             {
-                String message = report.iterator().hasNext() ? report.iterator().next().toString() : "no message";
-                logger.info("Schema validation failed: " + message);
-                throw new BadRequestException(message);
+                ProcessingMessage next = iterator.next();
+                LogLevel logLevel = next.getLogLevel();
+                String message = next.toString();
+
+                boolean failOnWarning = Boolean.valueOf(
+                        System.getProperty(JSON_SCHEMA_FAIL_ON_WARNING_KEY, "false"));
+
+                if (logLevel.equals(ERROR) || (logLevel.equals(WARNING) && failOnWarning))
+                {
+                    logger.info("Schema validation failed: " + message);
+                    throw new BadRequestException(message);
+                }
             }
         }
         catch (ExecutionException e)
