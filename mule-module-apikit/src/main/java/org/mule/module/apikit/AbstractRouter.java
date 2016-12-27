@@ -15,6 +15,7 @@ import org.mule.extension.http.api.HttpRequestAttributes;
 //import org.mule.runtime.core.NonBlockingVoidMuleEvent;
 //import org.mule.runtime.core.OptimizedRequestContext;
 //import org.mule.runtime.core.VoidMuleEvent;
+import org.mule.module.apikit.exception.UnsupportedMediaTypeException;
 import org.mule.runtime.core.api.DefaultMuleException;
 //import org.mule.runtime.core.api.MessagingException;
 //import org.mule.runtime.core.api.MuleEvent;
@@ -282,7 +283,7 @@ public abstract class AbstractRouter extends AbstractInterceptingMessageProcesso
         return event;
     }
 
-    protected abstract Flow getFlow(IResource resource, HttpRestRequest request);
+    protected abstract Flow getFlow(IResource resource, HttpRestRequest request) throws UnsupportedMediaTypeException;
 
     private static class RouterRequest
     {

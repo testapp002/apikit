@@ -15,6 +15,8 @@
                    consoleEnabled="false">
         <apikit:flow-mapping resource="/leagues" action="post" content-type="application/json" flow-ref="post-leagues-json"/>
         <apikit:flow-mapping resource="/leagues" action="post" content-type="application/xml" flow-ref="post-leagues-xml"/>
+        <apikit:flow-mapping resource="/leagues2" action="post" content-type="application/json" flow-ref="post-leagues2-json"/>
+        <apikit:flow-mapping resource="/leagues3" action="post" flow-ref="post-leagues3"/>
         <apikit:flow-mapping resource="/leagues/{leagueId}" action="get" flow-ref="get-leagueId"/>
         <apikit:flow-mapping resource="/leagues/{leagueId}" action="put" flow-ref="put-leagueId"/>
     </apikit:config>
@@ -45,14 +47,18 @@
 
     <flow name="post-leagues-json">
         <expression-component>flowVars['_outboundHeaders_'].put('incoming-content-type', 'application/json')</expression-component>
-
-        <!--<set-property propertyName="incoming-content-type" value="application/json"/>-->
     </flow>
 
     <flow name="post-leagues-xml">
         <expression-component>flowVars['_outboundHeaders_'].put('incoming-content-type', 'application/xml')</expression-component>
+    </flow>
 
-        <!--<set-property propertyName="incoming-content-type" value="application/xml"/>-->
+    <flow name="post-leagues2-json">
+        <expression-component>flowVars['_outboundHeaders_'].put('incoming-content-type', 'application/json')</expression-component>
+    </flow>
+
+    <flow name="post-leagues3">
+        <expression-component>flowVars['_outboundHeaders_'].put('incoming-content-type', 'application/json')</expression-component>
     </flow>
 
     <flow name="get-leagueId">
@@ -61,30 +67,12 @@
 
     <flow name="put-leagueId">
         <expression-component>flowVars['_outboundHeaders_'].put('incoming-content-type', message.getAttributes().getHeaders()['content-type'])</expression-component>
-
-        <!--<set-property propertyName="incoming-content-type" value="#[message.getAttributes().getHeaders()['content-type']]"/>-->
     </flow>
 
     <error-handler name="defaultErrorHandler">
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotFoundException)]">
-            <set-variable variableName="httpStatus" value="404"/>
-            <set-payload value="resource not found"/>
-        </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.MethodNotAllowedException)]">
-            <set-variable variableName="httpStatus" value="405"/>
-            <set-payload value="method not allowed"/>
-        </on-error-propagate>
         <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.UnsupportedMediaTypeException)]">
             <set-variable variableName="httpStatus" value="415"/>
             <set-payload value="unsupported media type"/>
-        </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotAcceptableException)]">
-            <set-variable variableName="httpStatus" value="406"/>
-            <set-payload value="not acceptable"/>
-        </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
-            <set-variable variableName="httpStatus" value="400"/>
-            <set-payload value="bad request"/>
         </on-error-propagate>
         <on-error-propagate>
             <set-variable variableName="httpStatus" value="500"/>

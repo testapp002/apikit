@@ -8,6 +8,7 @@ package org.mule.module.apikit;
 
 import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.extension.http.api.HttpResponseAttributes;
+import org.mule.module.apikit.exception.UnsupportedMediaTypeException;
 import org.mule.runtime.api.message.MuleEvent;
 import org.mule.runtime.api.message.NullAttributes;
 import org.mule.runtime.core.api.Event;
@@ -83,7 +84,7 @@ public class Router extends AbstractRouter
      * if there is no match it retries using method and resource only.
      */
     @Override
-    protected Flow getFlow(IResource resource, HttpRestRequest request)
+    protected Flow getFlow(IResource resource, HttpRestRequest request) throws UnsupportedMediaTypeException
     {
         String baseKey = request.getMethod() + ":" + resource.getUri();
         String contentType = request.getContentType();
@@ -92,8 +93,24 @@ public class Router extends AbstractRouter
         if (flow == null)
         {
             flow = rawRestFlowMap.get(baseKey);
+            if (flow == null && isFlowDeclaredWithDifferentMediaType(rawRestFlowMap, baseKey))
+            {
+                throw new UnsupportedMediaTypeException();
+            }
         }
         return flow;
+    }
+
+    protected boolean isFlowDeclaredWithDifferentMediaType(Map<String, Flow> map, String baseKey)
+    {
+        for (String flowName : map.keySet())
+        {
+            String [] split = flowName.split(":");
+            String methodAndResoruce = split[0] + ":" + split[1];
+            if (methodAndResoruce.equals(baseKey))
+                return true;
+        }
+        return false;
     }
 
     @Override
