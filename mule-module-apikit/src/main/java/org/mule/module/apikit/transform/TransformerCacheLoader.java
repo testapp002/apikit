@@ -13,6 +13,7 @@ import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.api.exception.MuleException;
 //import org.mule.api.transformer.DataType;
 import org.mule.runtime.core.api.transformer.Transformer;
+import org.mule.runtime.core.internal.transformer.simple.ObjectToString;
 import org.mule.runtime.module.json.transformers.JsonToObject;
 import org.mule.runtime.module.json.transformers.ObjectToJson;
 import org.mule.runtime.module.xml.transformer.jaxb.JAXBMarshallerTransformer;
@@ -86,6 +87,13 @@ public class TransformerCacheLoader extends CacheLoader<DataTypePair, Transforme
         }
         else if (isXml(resultDataType))
         {
+            if (String.class.equals(sourceDataType.getType()))
+            {
+                ObjectToString ots = new ObjectToString();
+                ots.setReturnDataType(resultDataType);
+                muleContext.getRegistry().applyProcessorsAndLifecycle(ots);
+                return ots;
+            }
             try
             {
                 TransientAnnotationReader reader = new TransientAnnotationReader();

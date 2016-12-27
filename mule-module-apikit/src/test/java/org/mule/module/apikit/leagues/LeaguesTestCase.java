@@ -126,6 +126,16 @@ public class LeaguesTestCase extends MuleArtifactFunctionalTestCase
     }
 
     @Test
+    public void getOnLeaguesJsonStatic() throws Exception
+    {
+        given().header("Accept", "application/json")
+            .expect()
+                .response().body("leagues.name", hasItems("Liga BBVA", "Premier League"))
+                .header("Content-type", "application/json").statusCode(200)
+            .when().get("/api/leagues.json");
+    }
+
+    @Test
     public void getOnLeaguesJsonTrailingSlash() throws Exception
     {
         given().header("Accept", "application/json")
@@ -143,6 +153,16 @@ public class LeaguesTestCase extends MuleArtifactFunctionalTestCase
                 .response().body("leagues.league.name", hasItems("Liga BBVA", "Premier League"))
                 .header("Content-type", "text/xml").statusCode(200)
             .when().get("/api/leagues");
+    }
+
+    @Test
+    public void getOnLeaguesXmlStatic() throws Exception
+    {
+        given().header("Accept", "text/xml")
+            .expect()
+                .response().body("leagues.league.name", hasItems("Liga BBVA", "Premier League"))
+                .header("Content-type", "text/xml").statusCode(200)
+            .when().get("/api/leagues.xml");
     }
 
     @Test
