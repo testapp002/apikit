@@ -7,23 +7,12 @@
 
 package org.mule.module.apikit;
 
-//import org.mule.runtime.core.DefaultMuleEvent;
-//import org.mule.compatibility.transport.http.HttpConnector;
 import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.core.api.Event;
-//import org.mule.runtime.core.api.MuleEvent;
 import org.mule.runtime.api.exception.MuleException;
-//import org.mule.runtime.core.api.processor.MessageProcessor;
 import org.mule.module.apikit.exception.NotFoundException;
-import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.core.api.processor.Processor;
-//import org.mule.runtime.core.config.i18n.I18nMessage;
-//import org.mule.runtime.core.message.DefaultMessageBuilder;
-//import org.mule.runtime.module.http.api.HttpConstants;
-//import org.mule.runtime.module.http.internal.HttpMessageBuilder;
-//import org.mule.runtime.module.http.internal.component.ResourceNotFoundException;
-//import org.mule.transport.http.i18n.HttpMessages; // TODO: it is in the compatibility package. it has messages only, check if we can copy this.
 import org.mule.runtime.core.util.FilenameUtils;
 import org.mule.runtime.core.util.IOUtils;
 import org.mule.runtime.core.util.StringUtils;
@@ -101,7 +90,9 @@ public class ConsoleHandler implements Processor
                 consoleElement = CONSOLE_ELEMENT_OLD;
                 consoleAttributes = CONSOLE_ATTRIBUTES_OLD;
             }
-            String indexHtml = IOUtils.toString(getClass().getResourceAsStream(RESOURCE_BASE + "/index.html"));
+            InputStream indexInputStream = getClass().getResourceAsStream(RESOURCE_BASE + "/index.html");
+            String indexHtml = IOUtils.toString(indexInputStream);
+            IOUtils.closeQuietly(indexInputStream);
             indexHtml = indexHtml.replaceFirst(consoleElement + " src=\"[^\"]+\"",
                                                consoleElement + " src=\"" + relativeRamlUri + "\"");
             cachedIndexHtml = indexHtml.replaceFirst(CONSOLE_ATTRIBUTES_PLACEHOLDER, consoleAttributes);
@@ -174,6 +165,7 @@ public class ConsoleHandler implements Processor
         }
         Event resultEvent;
         InputStream in = null;
+        ByteArrayOutputStream baos = null;
         try
         {
             boolean addContentEncodingHeader = false;
@@ -238,7 +230,7 @@ public class ConsoleHandler implements Processor
                 throw new NotFoundException(path);
             }
 
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            baos = new ByteArrayOutputStream();
             IOUtils.copyLarge(in, baos);
 
             byte[] buffer = baos.toByteArray();
@@ -248,10 +240,6 @@ public class ConsoleHandler implements Processor
             {
                 mimetype = DEFAULT_MIME_TYPE;
             }
-            //Event.Builder builder = Event.builder(event);
-            //InternalMessage.Builder messageBuilder = InternalMessage.builder().payload(buffer);
-            //builder.message(messageBuilder.build());
-            //resultEvent = builder.build();
             event = EventHelper.addVariable(event, HttpVariableNames.HTTP_STATUS,String.valueOf(SC_OK));
 
             Map<String, String> headers = new HashMap<>();
@@ -275,7 +263,11 @@ public class ConsoleHandler implements Processor
             //TODO FIX EXCEPTION
             throw new NotFoundException(null);//ResourceNotFoundException(null, null);// fileNotFound(RESOURCE_BASE + path)
         }
-
+        finally
+        {
+            IOUtils.closeQuietly(in);
+            IOUtils.closeQuietly(baos);
+        }
         return resultEvent;
     }
 
