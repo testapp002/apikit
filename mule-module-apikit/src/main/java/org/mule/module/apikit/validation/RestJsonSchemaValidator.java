@@ -6,8 +6,6 @@
  */
 package org.mule.module.apikit.validation;
 
-//import static org.mule.module.apikit.CharsetUtils.getEncoding;
-
 import static org.mule.module.apikit.CharsetUtils.getEncoding;
 
 import org.mule.module.apikit.CharsetUtils;
@@ -15,18 +13,14 @@ import org.mule.module.apikit.EventHelper;
 import org.mule.runtime.api.metadata.DataType;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
-//import org.mule.runtime.core.api.MuleEvent;
 import org.mule.runtime.core.api.registry.RegistrationException;
-//import org.mule.api.transformer.DataType;
 import org.mule.module.apikit.exception.BadRequestException;
 import org.mule.module.apikit.validation.cache.JsonSchemaCache;
+import org.mule.module.apikit.validation.io.JsonUtils;
 import org.mule.raml.interfaces.model.IRaml;
-//import org.mule.transformer.types.DataTypeFactory;
 import org.mule.runtime.core.util.IOUtils;
-import org.mule.runtime.core.util.SystemUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
@@ -37,8 +31,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.nio.charset.Charset;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import org.raml.parser.utils.StreamUtils;
@@ -88,17 +80,17 @@ public class RestJsonSchemaValidator extends AbstractRestSchemaValidator
 
                 //convert to string to remove BOM
                 String str = StreamUtils.toString(new ByteArrayInputStream(baos.toByteArray()));
-                data = JsonLoader.fromReader(new StringReader(str));
+                data = JsonUtils.parseJson(new StringReader(str));
             }
             else if (input instanceof String)
             {
-                data = JsonLoader.fromReader(new StringReader((String) input));
+                data = JsonUtils.parseJson(new StringReader((String) input));
             }
             else if (input instanceof byte[])
             {
                 String encoding = getEncoding(muleEvent, muleContext, (byte[]) input, logger);
                 input = org.raml.v2.internal.utils.StreamUtils.trimBom((byte[]) input);
-                data = JsonLoader.fromReader(new InputStreamReader(new ByteArrayInputStream((byte[]) input), encoding));
+                data = JsonUtils.parseJson(new InputStreamReader(new ByteArrayInputStream((byte[]) input), encoding));
 
                 //update message encoding
 
