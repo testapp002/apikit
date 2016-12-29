@@ -917,10 +917,10 @@ public class ScaffolderMule4Test {
     private Scaffolder createScaffolder(List<File> ramls, List<File> xmls, File muleXmlOut)
             throws FileNotFoundException
     {
-        return createScaffolder(ramls, xmls, muleXmlOut, null, null, null);
+        return createScaffolder(ramls, xmls, muleXmlOut, null, "4.0.0", null);
     }
     private Scaffolder createScaffolder(List<File> ramls, List<File> xmls, File muleXmlOut, File domainFile) throws FileNotFoundException {
-        return createScaffolder(ramls, xmls, muleXmlOut, domainFile, null, null);
+        return createScaffolder(ramls, xmls, muleXmlOut, domainFile, "4.0.0", null);
     }
     private Scaffolder createScaffolder(List<File> ramls, List<File> xmls, File muleXmlOut, File domainFile, String muleVersion, Set<File> ramlsWithExtensionEnabled)
             throws FileNotFoundException {

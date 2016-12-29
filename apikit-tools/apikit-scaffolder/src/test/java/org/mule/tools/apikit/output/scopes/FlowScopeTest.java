@@ -35,6 +35,7 @@ public class FlowScopeTest {
         when(api.getId()).thenReturn("file");
         when(api.getPath()).thenReturn("/api/*");
         when(api.getConfig()).thenReturn(config);
+        when(api.getMuleVersion()).thenReturn("3.7.3");
         when(api.getHttpListenerConfig()).thenReturn(listenerConfig);
         new HttpListenerConfigScope(api,mule).generate();
         new FlowScope(mule, "ExceptionStrategyNameHere", api, null, "HTTP_Listener_Configuration").generate();
@@ -78,6 +79,7 @@ public class FlowScopeTest {
         when(api.getId()).thenReturn("file");
         when(api.getPath()).thenReturn("/api/*");
         when(api.getConfig()).thenReturn(config);
+        when(api.getMuleVersion()).thenReturn("3.7.3");
         when(api.getHttpListenerConfig()).thenReturn(listenerConfig);
         new HttpListenerConfigScope(api,mule).generate();
         new FlowScope(mule, "ExceptionStrategyNameHere", api, null, "HTTP_Listener_Configuration").generate();

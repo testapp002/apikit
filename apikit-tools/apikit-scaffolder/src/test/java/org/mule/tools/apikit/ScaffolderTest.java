@@ -339,7 +339,7 @@ public class ScaffolderTest {
     }
 
     public void testSimpleGenerateWithEmptyDomain() throws Exception {
-        File muleXmlSimple = simpleGeneration("simple", "empty-domain/mule-domain-config.xml", null);
+        File muleXmlSimple = simpleGeneration("simple", "empty-domain/mule-domain-config.xml", "3.7.3");
         assertTrue(muleXmlSimple.exists());
         String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
         assertEquals(1, countOccurences(s, "<http:listener-config"));
@@ -413,7 +413,7 @@ public class ScaffolderTest {
     }
 
     public void testNoNameGenerate() throws Exception {
-        File muleXmlSimple = simpleGeneration("no-name", null, null);
+        File muleXmlSimple = simpleGeneration("no-name", null, "3.7.3");
         assertTrue(muleXmlSimple.exists());
         String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
         assertEquals(1, countOccurences(s, "http:listener-config name=\"no-name-httpListenerConfig\" host=\"0.0.0.0\" port=\"8081\""));

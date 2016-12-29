@@ -23,11 +23,11 @@
     </flow>
 
     <flow name="get:/">
-        <set-payload xmlns="" value="Root!"/>
+        <set-payload value="Root!"/>
     </flow>
 
     <flow name="get:/pet">
-        <set-payload xmlns="" value="Hello world!"/>
+        <set-payload value="Hello world!"/>
     </flow>
 
 </mule>
