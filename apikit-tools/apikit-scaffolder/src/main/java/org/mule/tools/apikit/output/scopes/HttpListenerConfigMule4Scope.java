@@ -9,7 +9,7 @@ package org.mule.tools.apikit.output.scopes;
 import static org.mule.tools.apikit.output.MuleConfigGenerator.HTTPN_NAMESPACE;
 
 import org.mule.tools.apikit.model.API;
-import org.mule.tools.apikit.model.HttpListenerConfig;
+import org.mule.tools.apikit.model.HttpListener3xConfig;
 
 import org.jdom2.Element;
 
@@ -25,7 +25,7 @@ public class HttpListenerConfigMule4Scope implements Scope
 
         if (api.getHttpListenerConfig() != null)
         {
-            httpListenerConfig = new Element(HttpListenerConfig.ELEMENT_NAME, HTTPN_NAMESPACE.getNamespace());
+            httpListenerConfig = new Element(HttpListener3xConfig.ELEMENT_NAME, HTTPN_NAMESPACE.getNamespace());
             httpListenerConfig.setAttribute("name", api.getHttpListenerConfig().getName());
             //httpListenerConfig.setAttribute("host", api.getHttpListenerConfig().getHost());
             //httpListenerConfig.setAttribute("port", api.getHttpListenerConfig().getPort());

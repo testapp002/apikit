@@ -16,7 +16,7 @@ import org.jdom2.JDOMException;
 import org.mule.tools.apikit.model.API;
 import org.mule.tools.apikit.model.APIFactory;
 import org.mule.tools.apikit.model.APIKitConfig;
-import org.mule.tools.apikit.model.HttpListenerConfig;
+import org.mule.tools.apikit.model.HttpListener3xConfig;
 import org.mule.tools.apikit.model.ResourceActionMimeTypeTriplet;
 
 import java.io.File;
@@ -43,7 +43,7 @@ public class MuleConfigParserTest {
 
         HashMap<File, InputStream> streams = new HashMap<File, InputStream>();
         streams.put(new File(""), resourceAsStream);
-        Map<String, HttpListenerConfig> domainHttpListenerConfigs = new HashMap<>();
+        Map<String, HttpListener3xConfig> domainHttpListenerConfigs = new HashMap<>();
         MuleConfigParser muleConfigParser =
                 new MuleConfigParser(log, new APIFactory(domainHttpListenerConfigs)).parse(ramlPaths, streams);
         Set<ResourceActionMimeTypeTriplet> set = muleConfigParser.getEntries();
@@ -163,7 +163,7 @@ public class MuleConfigParserTest {
 
         HashMap<File, InputStream> streams = new HashMap<File, InputStream>();
         streams.put(new File(""), resourceAsStream);
-        HashMap<String, HttpListenerConfig> domainStreams = new HashMap<>();
+        HashMap<String, HttpListener3xConfig> domainStreams = new HashMap<>();
 
         MuleConfigParser muleConfigParser =
                 new MuleConfigParser(log, new APIFactory(domainStreams)).parse(ramlPaths, streams);
@@ -194,9 +194,9 @@ public class MuleConfigParserTest {
 
         HashMap<File, InputStream> streams = new HashMap<File, InputStream>();
         streams.put(new File(""), resourceAsStream);
-        HashMap<String, HttpListenerConfig> domainStreams = new HashMap<>();
-        HttpListenerConfig httpListenerConfig = new HttpListenerConfig("http-lc-0.0.0.0-8081", "0.0.0.0", "8081", "/");
-        domainStreams.put("http-lc-0.0.0.0-8081", httpListenerConfig);
+        HashMap<String, HttpListener3xConfig> domainStreams = new HashMap<>();
+        HttpListener3xConfig httpListener3xConfig = new HttpListener3xConfig("http-lc-0.0.0.0-8081", "0.0.0.0", "8081", "/");
+        domainStreams.put("http-lc-0.0.0.0-8081", httpListener3xConfig);
         MuleConfigParser muleConfigParser =
                 new MuleConfigParser(log, new APIFactory(domainStreams)).parse(ramlPaths, streams);
         Set<ResourceActionMimeTypeTriplet> set = muleConfigParser.getEntries();
@@ -227,9 +227,9 @@ public class MuleConfigParserTest {
         HashMap<File, InputStream> streams = new HashMap<File, InputStream>();
         streams.put(new File(""), resourceAsStream);
 
-        HashMap<String, HttpListenerConfig> domainStreams = new HashMap<>();
-        HttpListenerConfig httpListenerConfig = new HttpListenerConfig("http-lc-0.0.0.0-8081", "0.0.0.0", "8081", "/");
-        domainStreams.put("http-lc-0.0.0.0-8081", httpListenerConfig);
+        HashMap<String, HttpListener3xConfig> domainStreams = new HashMap<>();
+        HttpListener3xConfig httpListener3xConfig = new HttpListener3xConfig("http-lc-0.0.0.0-8081", "0.0.0.0", "8081", "/");
+        domainStreams.put("http-lc-0.0.0.0-8081", httpListener3xConfig);
 
         MuleConfigParser muleConfigParser =
                 new MuleConfigParser(log, new APIFactory(domainStreams)).parse(ramlPaths, streams);
@@ -261,7 +261,7 @@ public class MuleConfigParserTest {
         HashMap<File, InputStream> streams = new HashMap<File, InputStream>();
         streams.put(new File(""), resourceAsStream);
 
-        Map<String, HttpListenerConfig> domainHttpListenerConfigs = new HashMap<>();
+        Map<String, HttpListener3xConfig> domainHttpListenerConfigs = new HashMap<>();
         MuleConfigParser muleConfigParser =
                 new MuleConfigParser(log, new APIFactory(domainHttpListenerConfigs)).parse(ramlPaths, streams);
         Set<ResourceActionMimeTypeTriplet> set = muleConfigParser.getEntries();
@@ -291,7 +291,7 @@ public class MuleConfigParserTest {
         HashMap<File, InputStream> streams = new HashMap<File, InputStream>();
         streams.put(new File(""), resourceAsStream);
 
-        Map<String, HttpListenerConfig> domainHttpListenerConfigs = new HashMap<>();
+        Map<String, HttpListener3xConfig> domainHttpListenerConfigs = new HashMap<>();
         MuleConfigParser muleConfigParser =
                 new MuleConfigParser(log, new APIFactory(domainHttpListenerConfigs)).parse(ramlPaths, streams);
         Set<ResourceActionMimeTypeTriplet> set = muleConfigParser.getEntries();
@@ -333,9 +333,9 @@ public class MuleConfigParserTest {
         HashMap<File, InputStream> streams = new HashMap<File, InputStream>();
         streams.put(new File(""), resourceAsStream);
 
-        HashMap<String, HttpListenerConfig> domainStreams = new HashMap<>();
-        HttpListenerConfig httpListenerConfig = new HttpListenerConfig("http-lc-0.0.0.0-8081", "0.0.0.0", "8081", "/");
-        domainStreams.put("http-lc-0.0.0.0-8081", httpListenerConfig);
+        HashMap<String, HttpListener3xConfig> domainStreams = new HashMap<>();
+        HttpListener3xConfig httpListener3xConfig = new HttpListener3xConfig("http-lc-0.0.0.0-8081", "0.0.0.0", "8081", "/");
+        domainStreams.put("http-lc-0.0.0.0-8081", httpListener3xConfig);
 
         MuleConfigParser muleConfigParser =
                 new MuleConfigParser(log, new APIFactory(domainStreams)).parse(ramlPaths, streams);
@@ -375,7 +375,7 @@ public class MuleConfigParserTest {
         HashMap<File, InputStream> streams = new HashMap<File, InputStream>();
         streams.put(new File(""), resourceAsStream);
 
-        Map<String, HttpListenerConfig> domainHttpListenerConfigs = new HashMap<>();
+        Map<String, HttpListener3xConfig> domainHttpListenerConfigs = new HashMap<>();
         MuleConfigParser muleConfigParser =
                 new MuleConfigParser(log, new APIFactory(domainHttpListenerConfigs)).parse(ramlPaths, streams);
         Set<ResourceActionMimeTypeTriplet> set = muleConfigParser.getEntries();

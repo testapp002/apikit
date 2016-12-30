@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.mule.tools.apikit.Helper;
 import org.mule.tools.apikit.model.API;
 import org.mule.tools.apikit.model.APIKitConfig;
-import org.mule.tools.apikit.model.HttpListenerConfig;
+import org.mule.tools.apikit.model.HttpListener3xConfig;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -31,7 +31,7 @@ public class ConsoleScopeTest {
         APIKitConfig config = new APIKitConfig.Builder("path/to/file.raml").setExtensionEnabled(true).build();
         new APIKitConfigScope(config, mule, "3.7.3").generate();
         API api = mock(API.class);
-        HttpListenerConfig listenerConfig = new HttpListenerConfig.Builder("HTTP_Listener_Configuration","localhost","7777","").build();
+        HttpListener3xConfig listenerConfig = new HttpListener3xConfig.Builder("HTTP_Listener_Configuration", "localhost", "7777", "").build();
 
         when(api.getId()).thenReturn("file");
         when(api.getPath()).thenReturn("/api/*");

@@ -10,7 +10,7 @@ import org.mule.tools.apikit.misc.APIKitTools;
 
 import org.apache.commons.lang.StringUtils;
 
-public class HttpListenerConfig
+public class HttpListener3xConfig implements IHttpListenerConfig
 {
     public static final String ELEMENT_NAME = "listener-config";
     public static final String NAME_ATTRIBUTE = "name";
@@ -89,15 +89,15 @@ public class HttpListenerConfig
             this.basePath = API.DEFAULT_BASE_PATH;
         }
 
-        public HttpListenerConfig build() {
-            return new HttpListenerConfig(this.name, this.host, this.port, this.basePath);
+        public HttpListener3xConfig build() {
+            return new HttpListener3xConfig(this.name, this.host, this.port, this.basePath);
         }
     }
 
-    public HttpListenerConfig(final String name,
-                         final String host,
-                         final String port,
-                         final String basePath) {
+    public HttpListener3xConfig(final String name,
+                                final String host,
+                                final String port,
+                                final String basePath) {
         this.name = name;
         this.host = host;
         this.port = port;
@@ -114,6 +114,12 @@ public class HttpListenerConfig
 
     public String getPort() {
         return port;
+    }
+
+    @Override
+    public String getProtocol()
+    {
+        return null;
     }
 
     public String getBasePath()

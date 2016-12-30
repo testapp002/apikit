@@ -10,7 +10,7 @@ import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
-import org.mule.tools.apikit.model.HttpListenerConfig;
+import org.mule.tools.apikit.model.HttpListener3xConfig;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -28,11 +28,11 @@ public class MuleDomainParserTest
         Log log = mock(Log.class);
 
         MuleDomainParser muleDomainParser = new MuleDomainParser(log, resourceAsStream);
-        Map<String, HttpListenerConfig> httpListenerConfigs = muleDomainParser.getHttpListenerConfigs();
+        Map<String, HttpListener3xConfig> httpListenerConfigs = muleDomainParser.getHttpListenerConfigs();
         assertNotNull(httpListenerConfigs);
         assertEquals(1, httpListenerConfigs.size());
         String expectedKey = "http-lc-0.0.0.0-8081";
-        HttpListenerConfig value = httpListenerConfigs.get(expectedKey);
+        HttpListener3xConfig value = httpListenerConfigs.get(expectedKey);
         Assert.assertNotNull(value);
         Assert.assertEquals("http-lc-0.0.0.0-8081", value.getName());
         Assert.assertEquals("0.0.0.0", value.getHost());
@@ -48,12 +48,12 @@ public class MuleDomainParserTest
         Log log = mock(Log.class);
 
         MuleDomainParser muleDomainParser = new MuleDomainParser(log, resourceAsStream);
-        Map<String, HttpListenerConfig> httpListenerConfigs = muleDomainParser.getHttpListenerConfigs();
+        Map<String, HttpListener3xConfig> httpListenerConfigs = muleDomainParser.getHttpListenerConfigs();
         assertNotNull(httpListenerConfigs);
         assertEquals(4, httpListenerConfigs.size());
 
         String expectedKey = "abcd";
-        HttpListenerConfig value = httpListenerConfigs.get(expectedKey);
+        HttpListener3xConfig value = httpListenerConfigs.get(expectedKey);
         Assert.assertNotNull(value);
         Assert.assertEquals("abcd", value.getName());
         Assert.assertEquals("localhost", value.getHost());
@@ -61,7 +61,7 @@ public class MuleDomainParserTest
         Assert.assertEquals("/", value.getBasePath());
 
         String expectedKey2 = "http-lc-0.0.0.0-8083";
-        HttpListenerConfig value2 = httpListenerConfigs.get(expectedKey2);
+        HttpListener3xConfig value2 = httpListenerConfigs.get(expectedKey2);
         Assert.assertNotNull(value2);
         Assert.assertEquals("http-lc-0.0.0.0-8083", value2.getName());
         Assert.assertEquals("0.0.0.0", value2.getHost());
@@ -69,7 +69,7 @@ public class MuleDomainParserTest
         Assert.assertEquals("/test", value2.getBasePath());
 
         String expectedKey3 = "http-lc-0.0.0.0-8080";
-        HttpListenerConfig value3 = httpListenerConfigs.get(expectedKey3);
+        HttpListener3xConfig value3 = httpListenerConfigs.get(expectedKey3);
         Assert.assertNotNull(value3);
         Assert.assertEquals("http-lc-0.0.0.0-8080", value3.getName());
         Assert.assertEquals("localhost", value3.getHost());
@@ -78,7 +78,7 @@ public class MuleDomainParserTest
 
 
         String expectedKey4 = "https-lc-0.0.0.0-8082";
-        HttpListenerConfig value4 = httpListenerConfigs.get(expectedKey4);
+        HttpListener3xConfig value4 = httpListenerConfigs.get(expectedKey4);
         Assert.assertNotNull(value4);
         Assert.assertEquals("https-lc-0.0.0.0-8082", value4.getName());
         Assert.assertEquals("0.0.0.0", value4.getHost());
@@ -95,7 +95,7 @@ public class MuleDomainParserTest
         Log log = mock(Log.class);
 
         MuleDomainParser muleDomainParser = new MuleDomainParser(log, resourceAsStream);
-        Map<String, HttpListenerConfig> httpListenerConfigs = muleDomainParser.getHttpListenerConfigs();
+        Map<String, HttpListener3xConfig> httpListenerConfigs = muleDomainParser.getHttpListenerConfigs();
         assertNotNull(httpListenerConfigs);
         assertEquals(0, httpListenerConfigs.size());
     }

@@ -6,8 +6,8 @@
  */
 package org.mule.tools.apikit.input;
 
-import org.mule.tools.apikit.input.parsers.HttpListenerConfigParser;
-import org.mule.tools.apikit.model.HttpListenerConfig;
+import org.mule.tools.apikit.input.parsers.HttpListener3xConfigParser;
+import org.mule.tools.apikit.model.HttpListener3xConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +22,7 @@ import org.jdom2.input.sax.XMLReaders;
 
 public class MuleDomainParser
 {
-    private Map<String, HttpListenerConfig> httpListenerConfigs = new HashMap<String, HttpListenerConfig>();
+    private Map<String, HttpListener3xConfig> httpListenerConfigs = new HashMap<String, HttpListener3xConfig>();
 
     public MuleDomainParser(Log log, InputStream domainStream)
     {
@@ -45,10 +45,10 @@ public class MuleDomainParser
     {
         SAXBuilder saxBuilder = new SAXBuilder(XMLReaders.NONVALIDATING);
         Document document = saxBuilder.build(stream);
-        httpListenerConfigs = new HttpListenerConfigParser().parse(document);
+        httpListenerConfigs = new HttpListener3xConfigParser().parse(document);
     }
 
-    public Map<String, HttpListenerConfig> getHttpListenerConfigs()
+    public Map<String, HttpListener3xConfig> getHttpListenerConfigs()
     {
         return httpListenerConfigs;
     }

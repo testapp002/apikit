@@ -8,7 +8,7 @@ package org.mule.tools.apikit.output;
 
 import org.mule.tools.apikit.misc.APIKitTools;
 import org.mule.tools.apikit.model.API;
-import org.mule.tools.apikit.model.HttpListenerConfig;
+import org.mule.tools.apikit.model.HttpListener3xConfig;
 import org.mule.tools.apikit.output.deployer.MuleDeployWriter;
 import org.mule.tools.apikit.output.scopes.APIKitConfigScope;
 import org.mule.tools.apikit.output.scopes.APIKitFlowScope;
@@ -70,11 +70,11 @@ public class MuleConfigGenerator {
     private final List<GenerationModel> flowEntries;
     private final Log log;
     private final File rootDirectory;
-    private final Map<String, HttpListenerConfig> domainHttpListenerConfigs;
+    private final Map<String, HttpListener3xConfig> domainHttpListenerConfigs;
     private final String muleVersion;
     private final Set<File> ramlsWithExtensionEnabled;
 
-    public MuleConfigGenerator(Log log, File muleConfigOutputDirectory, List<GenerationModel> flowEntries, Map<String, HttpListenerConfig> domainHttpListenerConfigs, String muleVersion, Set<File> ramlsWithExtensionEnabled) {
+    public MuleConfigGenerator(Log log, File muleConfigOutputDirectory, List<GenerationModel> flowEntries, Map<String, HttpListener3xConfig> domainHttpListenerConfigs, String muleVersion, Set<File> ramlsWithExtensionEnabled) {
         this.log = log;
         this.flowEntries = flowEntries;
         this.rootDirectory = muleConfigOutputDirectory;

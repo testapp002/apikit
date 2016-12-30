@@ -16,11 +16,12 @@ public class API {
     public static final int DEFAULT_PORT = 8081;
     public static final String DEFAULT_BASE_URI = "http://0.0.0.0:" + DEFAULT_PORT + "/api";
     public static final String DEFAULT_BASE_PATH = "/";
+    public static final String DEFAULT_PROTOCOL = "HTTP";
     public static final String DEFAULT_CONSOLE_PATH = "/console/*";
     public static final String DEFAULT_CONSOLE_PATH_INBOUND = "http://0.0.0.0:" + DEFAULT_PORT + "/console";
 
     private APIKitConfig config;
-    private HttpListenerConfig httpListenerConfig;
+    private HttpListener3xConfig httpListener3xConfig;
     private String path;
 
     private String baseUri;
@@ -76,8 +77,8 @@ public class API {
         this.path = path;
     }
 
-    public HttpListenerConfig getHttpListenerConfig() {
-        return httpListenerConfig;
+    public HttpListener3xConfig getHttpListenerConfig() {
+        return httpListener3xConfig;
     }
 
     public APIKitConfig getConfig() {
@@ -88,8 +89,8 @@ public class API {
         this.config = config;
     }
 
-    public void setHttpListenerConfig(HttpListenerConfig httpListenerConfig) {
-        this.httpListenerConfig = httpListenerConfig;
+    public void setHttpListenerConfig(HttpListener3xConfig httpListener3xConfig) {
+        this.httpListener3xConfig = httpListener3xConfig;
     }
 
     public void setDefaultAPIKitConfig() {
@@ -98,8 +99,8 @@ public class API {
 
     public void setDefaultHttpListenerConfig()
     {
-        String httpListenerConfigName = id == null? HttpListenerConfig.DEFAULT_CONFIG_NAME : id + "-" + HttpListenerConfig.DEFAULT_CONFIG_NAME;
-        httpListenerConfig = new HttpListenerConfig.Builder(httpListenerConfigName, API.DEFAULT_BASE_URI).build();
+        String httpListenerConfigName = id == null ? HttpListener3xConfig.DEFAULT_CONFIG_NAME : id + "-" + HttpListener3xConfig.DEFAULT_CONFIG_NAME;
+        httpListener3xConfig = new HttpListener3xConfig.Builder(httpListenerConfigName, API.DEFAULT_BASE_URI).build();
     }
 
     public Boolean useInboundEndpoint()
