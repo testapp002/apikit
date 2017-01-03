@@ -6,12 +6,10 @@
  */
 package org.mule.module.apikit;
 
-//import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.runtime.api.message.Message;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
-//import org.mule.transport.http.HttpConstants;
 
 import org.raml.parser.utils.StreamUtils;
 import org.slf4j.Logger;

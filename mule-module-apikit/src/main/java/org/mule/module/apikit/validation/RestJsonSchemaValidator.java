@@ -6,24 +6,26 @@
  */
 package org.mule.module.apikit.validation;
 
+import static com.github.fge.jsonschema.core.report.LogLevel.ERROR;
+import static com.github.fge.jsonschema.core.report.LogLevel.WARNING;
 import static org.mule.module.apikit.CharsetUtils.getEncoding;
 
-import com.github.fge.jsonschema.core.report.LogLevel;
-import com.github.fge.jsonschema.core.report.ProcessingMessage;
 import org.mule.module.apikit.CharsetUtils;
 import org.mule.module.apikit.EventHelper;
-import org.mule.runtime.api.metadata.DataType;
-import org.mule.runtime.core.api.Event;
-import org.mule.runtime.core.api.MuleContext;
-import org.mule.runtime.core.api.registry.RegistrationException;
 import org.mule.module.apikit.exception.BadRequestException;
 import org.mule.module.apikit.validation.cache.JsonSchemaCache;
 import org.mule.module.apikit.validation.io.JsonUtils;
 import org.mule.raml.interfaces.model.IRaml;
+import org.mule.runtime.api.metadata.DataType;
+import org.mule.runtime.core.api.Event;
+import org.mule.runtime.core.api.MuleContext;
+import org.mule.runtime.core.api.registry.RegistrationException;
 import org.mule.runtime.core.util.IOUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.report.LogLevel;
+import com.github.fge.jsonschema.core.report.ProcessingMessage;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 
@@ -39,9 +41,6 @@ import java.util.concurrent.ExecutionException;
 import org.raml.parser.utils.StreamUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static com.github.fge.jsonschema.core.report.LogLevel.ERROR;
-import static com.github.fge.jsonschema.core.report.LogLevel.WARNING;
 
 public class RestJsonSchemaValidator extends AbstractRestSchemaValidator
 {

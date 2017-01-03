@@ -6,22 +6,13 @@
  */
 package org.mule.module.apikit.validation;
 
-import org.mule.common.metadata.datatype.DataTypeFactory;
-import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.module.apikit.EventHelper;
-import org.mule.runtime.api.message.Message;
-import org.mule.runtime.api.metadata.DataType;
-import org.mule.runtime.core.api.Event;
-import org.mule.runtime.core.api.MuleContext;
-//import org.mule.runtime.core.api.MuleEvent;
-//import org.mule.runtime.core.api.MuleMessage;
-//import org.mule.api.transformer.DataType;
 import org.mule.module.apikit.exception.BadRequestException;
 import org.mule.module.apikit.validation.cache.XmlSchemaCache;
 import org.mule.raml.interfaces.model.IRaml;
-//import org.mule.transformer.types.DataTypeFactory;
-import org.mule.runtime.core.metadata.DefaultDataTypeBuilderFactory;
-import org.mule.runtime.module.http.api.HttpConstants;
+import org.mule.runtime.api.metadata.DataType;
+import org.mule.runtime.core.api.Event;
+import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.util.IOUtils;
 
 import java.io.ByteArrayInputStream;
@@ -56,7 +47,6 @@ public class RestXmlSchemaValidator extends AbstractRestSchemaValidator
         super(muleContext);
     }
 
-    //TODO FIX THIS METHOD
     @Override
     public Event validate(String configId, String schemaPath, Event muleEvent, IRaml api) throws BadRequestException
     {
@@ -67,7 +57,6 @@ public class RestXmlSchemaValidator extends AbstractRestSchemaValidator
             Document data;
             Object input = muleEvent.getMessage().getPayload().getValue();
             Charset messageEncoding = EventHelper.getEncoding(muleEvent, this.muleContext);
-            //String charset = getHeaderCharset(muleEvent.getMessage());
             if (input instanceof InputStream)
             {
                 logger.debug("transforming payload to perform XSD validation");
@@ -81,7 +70,6 @@ public class RestXmlSchemaValidator extends AbstractRestSchemaValidator
                     IOUtils.closeQuietly((InputStream) input);
                 }
 
-                //Charset charset = EventHelper.getEncoding(muleEvent, muleContext);
                 DataType dataType = muleEvent.getMessage().getPayload().getDataType();
 
                 org.mule.runtime.api.metadata.DataTypeBuilder sourceDataTypeBuilder = DataType.builder();
@@ -90,18 +78,6 @@ public class RestXmlSchemaValidator extends AbstractRestSchemaValidator
                 sourceDataTypeBuilder.charset(messageEncoding);
                 DataType sourceDataType = sourceDataTypeBuilder.build();//DataTypeFactory.create(event.getMessage().getPayload().getClass(), msgMimeType);
                 newMuleEvent = EventHelper.setPayload(muleEvent, new ByteArrayInputStream(baos.toByteArray()), sourceDataType.getMediaType());
-
-
-
-
-
-
-                //ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                //IOUtils.copyLarge((InputStream) input, baos);
-
-                //DataType<ByteArrayInputStream> dataType = DataTypeFactory.create(ByteArrayInputStream.class, muleEvent.getMessage().getDataType().getMimeType());
-                //dataType.setEncoding(messageEncoding);
-                //muleEvent = EventHelper.setPayload(muleEvent, new ByteArrayInputStream(baos.toByteArray()), dataType);
                 data = loadDocument(new ByteArrayInputStream(baos.toByteArray()), messageEncoding.toString());
             }
             else if (input instanceof String)

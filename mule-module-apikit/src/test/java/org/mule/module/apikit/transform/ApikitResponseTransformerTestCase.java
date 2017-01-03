@@ -23,7 +23,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 //import org.mule.api.transformer.Transformer;
 //import org.mule.api.transformer.TransformerException;
 //import org.mule.config.i18n.CoreMessages;
-import org.mule.common.metadata.datatype.DataTypeFactory;
 import org.mule.module.apikit.exception.ApikitRuntimeException;
 import org.mule.raml.interfaces.model.IMimeType;
 import org.mule.runtime.api.message.Message;

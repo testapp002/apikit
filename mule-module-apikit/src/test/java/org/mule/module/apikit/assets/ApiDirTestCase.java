@@ -11,6 +11,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.mule.module.apikit.AbstractConfiguration.APPLICATION_RAML;
 
 import org.mule.module.apikit.util.FunctionalAppDeployTestCase;
+import org.mule.runtime.core.util.FileUtils;
 import org.mule.tck.junit4.rule.DynamicPort;
 
 import com.jayway.restassured.RestAssured;
@@ -19,6 +20,7 @@ import java.io.File;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 public class ApiDirTestCase extends FunctionalAppDeployTestCase
 {
@@ -27,6 +29,8 @@ public class ApiDirTestCase extends FunctionalAppDeployTestCase
     public DynamicPort serverPort = new DynamicPort("serverPort");
     @Rule
     public DynamicPort serverPort2 = new DynamicPort("serverPort2");
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     @Override
     public int getTestTimeoutSecs()
@@ -44,8 +48,19 @@ public class ApiDirTestCase extends FunctionalAppDeployTestCase
     @Test
     public void ramlApi() throws Exception
     {
-        File appDir = new File("src/test/resources", "org/mule/module/apikit/assets");
+        File appDir = new File(this.getClass().getClassLoader().getResource("org/mule/module/apikit/assets").getFile());//"src/test/resources", "org/mule/module/apikit/assets");
         String appName = "ramlApi";
+        //deploymentService.deployDomain(new File(this.getClass().getClassLoader().getResource("org/mule/module/apikit/domain/default")));
+        //File domainDir = Files.createTempDirectory("/default");//new File(this.getClass().getClassLoader().getResource("org/mule/module/apikit/domain").getFile());//"src/test/resources", "org/mule/module/apikit/assets");
+//        URL folderUrl = new URL("file://", folder.getRoot().getPath());
+
+//        deploymentService.deployDomain(folderUrl);
+        File tempAppFolder = new File(muleHome, "default");
+        FileUtils.copyDirectory(new File(muleHome.getPath() + "/domains"), tempAppFolder);
+        //File appFolder = new File(appsDir, appName);
+        //tempAppFolder.renameTo(appFolder);
+
+
         deployExplodedApp(appDir, appName);
         deploymentService.start();
         assertApplicationDeploymentSuccess(applicationDeploymentListener, appName);
@@ -70,5 +85,4 @@ public class ApiDirTestCase extends FunctionalAppDeployTestCase
                 .header("Content-type", "text/html").statusCode(200)
                 .when().get("/");
     }
-
 }

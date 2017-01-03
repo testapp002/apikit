@@ -8,24 +8,18 @@ package org.mule.module.apikit;
 
 
 import org.mule.extension.http.api.HttpRequestAttributes;
-import org.mule.extension.http.api.HttpResponseAttributes;
-import org.mule.runtime.api.message.Message;
 import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.message.InternalMessage;
-//import org.mule.runtime.core.model.ParameterMap;
 import org.mule.runtime.core.util.SystemUtils;
 import org.mule.service.http.api.domain.ParameterMap;
-//import org.mule.runtime.module.http.internal.ParameterMap;
 
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Optional;
-
-import org.apache.commons.collections.KeyValue;
 
 public class EventHelper
 {

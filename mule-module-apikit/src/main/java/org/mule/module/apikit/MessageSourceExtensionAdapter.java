@@ -7,7 +7,6 @@
 package org.mule.module.apikit;
 
 import org.mule.runtime.module.extension.internal.runtime.source.ExtensionMessageSource;
-import org.mule.runtime.module.http.internal.listener.DefaultHttpListener;
 import org.mule.runtime.module.http.internal.listener.DefaultHttpListenerConfig;
 
 public class MessageSourceExtensionAdapter //implements IMessageSource

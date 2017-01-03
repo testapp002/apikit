@@ -6,19 +6,13 @@
  */
 package org.mule.module.apikit;
 
-//import org.mule.api.construct.FlowConstruct;
-//import org.mule.api.construct.Pipeline;
-//import org.mule.api.processor.DefaultMessageProcessorPathElement;
-//import org.mule.api.processor.MessageProcessor;
-import org.mule.functional.junit4.FunctionalTestCase;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
-import org.mule.test.runner.ArtifactClassLoaderRunnerConfig;
 import org.mule.runtime.core.api.construct.FlowConstruct;
 import org.mule.runtime.core.api.construct.Pipeline;
 import org.mule.runtime.core.api.processor.DefaultMessageProcessorPathElement;
 import org.mule.runtime.core.api.processor.Processor;
 import org.mule.runtime.core.util.NotificationUtils;
-//import org.mule.util.NotificationUtils;
+import org.mule.test.runner.ArtifactClassLoaderRunnerConfig;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;

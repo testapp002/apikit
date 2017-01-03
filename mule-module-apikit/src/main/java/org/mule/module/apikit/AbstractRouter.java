@@ -6,45 +6,26 @@
  */
 package org.mule.module.apikit;
 
-import static org.mule.runtime.module.http.api.HttpConstants.RequestProperties.HTTP_URI_PARAMS;
-
-//import org.mule.runtime.core.DefaultMuleEvent;
-//import org.mule.runtime.core.message.MuleEvent;
-//import org.mule.runtime.api.message.MuleEvent;
-import org.mule.extension.http.api.HttpRequestAttributes;
-//import org.mule.runtime.core.NonBlockingVoidMuleEvent;
-//import org.mule.runtime.core.OptimizedRequestContext;
-//import org.mule.runtime.core.VoidMuleEvent;
-import org.mule.module.apikit.exception.UnsupportedMediaTypeException;
-import org.mule.runtime.core.api.DefaultMuleException;
-//import org.mule.runtime.core.api.MessagingException;
-//import org.mule.runtime.core.api.MuleEvent;
-import org.mule.runtime.core.api.Event;
-import org.mule.runtime.api.exception.MuleException;
-//import org.mule.runtime.core.api.MuleMessage;
-import org.mule.runtime.core.api.construct.FlowConstruct;
-import org.mule.runtime.core.api.lifecycle.StartException;
-import org.mule.runtime.core.api.connector.ReplyToHandler;
-import org.mule.runtime.core.construct.Flow;
 import org.mule.module.apikit.exception.ApikitRuntimeException;
 import org.mule.module.apikit.exception.InvalidUriParameterException;
 import org.mule.module.apikit.exception.MethodNotAllowedException;
 import org.mule.module.apikit.exception.MuleRestException;
+import org.mule.module.apikit.exception.UnsupportedMediaTypeException;
 import org.mule.module.apikit.uri.ResolvedVariables;
 import org.mule.module.apikit.uri.URIPattern;
 import org.mule.module.apikit.uri.URIResolver;
-//import org.mule.runtime.core.message.DefaultMuleMessageBuilder;
-import org.mule.runtime.core.exception.MessagingException;
-import org.mule.runtime.core.message.DefaultMessageBuilder;
-import org.mule.runtime.core.processor.AbstractInterceptingMessageProcessor;
-import org.mule.runtime.core.processor.AbstractRequestResponseMessageProcessor;
 import org.mule.raml.interfaces.model.IResource;
 import org.mule.raml.interfaces.model.parameter.IParameter;
-//import org.mule.runtime.core.model.ParameterMap;
+import org.mule.runtime.api.exception.MuleException;
+import org.mule.runtime.core.api.DefaultMuleException;
+import org.mule.runtime.core.api.Event;
+import org.mule.runtime.core.api.construct.FlowConstruct;
+import org.mule.runtime.core.api.lifecycle.StartException;
+import org.mule.runtime.core.construct.Flow;
+import org.mule.runtime.core.processor.AbstractInterceptingMessageProcessor;
 
 import com.google.common.cache.LoadingCache;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 

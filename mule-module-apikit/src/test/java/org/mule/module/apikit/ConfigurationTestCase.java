@@ -12,8 +12,8 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
-import org.mule.test.runner.ArtifactClassLoaderRunnerConfig;
 import org.mule.tck.junit4.rule.DynamicPort;
+import org.mule.test.runner.ArtifactClassLoaderRunnerConfig;
 
 import com.jayway.restassured.RestAssured;
 

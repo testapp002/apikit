@@ -6,12 +6,14 @@
  */
 package org.mule.tools.apikit;
 
-import org.junit.Test;
+import static org.mule.tools.apikit.Helper.testEqualsHelper;
+
 import org.mule.tools.apikit.model.API;
 import org.mule.tools.apikit.model.APIFactory;
 
 import java.io.File;
-import static org.mule.tools.apikit.Helper.testEqualsHelper;
+
+import org.junit.Test;
 
 public class APITest {
 

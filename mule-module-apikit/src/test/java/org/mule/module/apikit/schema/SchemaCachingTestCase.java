@@ -9,8 +9,8 @@ package org.mule.module.apikit.schema;
 import static com.jayway.restassured.RestAssured.given;
 
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
-import org.mule.test.runner.ArtifactClassLoaderRunnerConfig;
 import org.mule.tck.junit4.rule.DynamicPort;
+import org.mule.test.runner.ArtifactClassLoaderRunnerConfig;
 
 import com.jayway.restassured.RestAssured;
 

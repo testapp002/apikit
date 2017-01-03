@@ -7,20 +7,15 @@
 package org.mule.module.apikit;
 
 import org.mule.extension.http.api.HttpRequestAttributes;
-import org.mule.extension.http.api.HttpResponseAttributes;
 import org.mule.module.apikit.exception.UnsupportedMediaTypeException;
-import org.mule.runtime.api.message.MuleEvent;
+import org.mule.raml.interfaces.model.IResource;
+import org.mule.runtime.api.exception.MuleException;
+import org.mule.runtime.api.i18n.I18nMessageFactory;
 import org.mule.runtime.api.message.NullAttributes;
 import org.mule.runtime.core.api.Event;
-import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.core.api.lifecycle.StartException;
-import org.mule.runtime.core.api.message.InternalMessage;
 import org.mule.runtime.core.api.registry.RegistrationException;
-import org.mule.runtime.api.i18n.I18nMessageFactory;
 import org.mule.runtime.core.construct.Flow;
-import org.mule.raml.interfaces.model.IResource;
-//import org.mule.runtime.core.message.NullAttributes;
-//import org.mule.runtime.module.http.internal.ParameterMap;
 
 import java.util.Map;
 
@@ -128,16 +123,7 @@ public class Router extends AbstractRouter
                 successStatus = 200;
             }
             event = EventHelper.addVariable(event, HttpVariableNames.HTTP_STATUS, Integer.toString(successStatus));
-            //Event.Builder builder = Event.builder(event);
-            //Map<String,String> headers = (Map<String, String>) event.getVariable("_outboundHeaders_");
-            //headers.put("http.status", Integer.toString(successStatus));
-            //builder.addVariable("_outboundHeaders_", headers);
         }
-        //event = EventHelper.addOutboundProperty(event, "Content-type", "text/plain");
-        //for (String outboundProperty : event.getMessage().getOutboundPropertyNames())
-        //{
-        //    event = EventHelper.addOutboundProperty(event, outboundProperty, event.getMessage().getOutboundProperty(outboundProperty));
-        //}
         return event;
     }
 

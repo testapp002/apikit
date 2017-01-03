@@ -6,9 +6,9 @@
  */
 package org.mule.module.apikit.validation;
 
-import org.mule.runtime.core.api.Event;
 import org.mule.module.apikit.exception.BadRequestException;
 import org.mule.raml.interfaces.model.IRaml;
+import org.mule.runtime.core.api.Event;
 
 public interface RestSchemaValidator
 {

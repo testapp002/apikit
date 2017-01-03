@@ -6,8 +6,8 @@
  */
 package org.mule.module.apikit;
 
-import org.mule.runtime.core.api.construct.FlowConstructAware;
 import org.mule.runtime.api.lifecycle.Startable;
+import org.mule.runtime.core.api.construct.FlowConstructAware;
 
 public interface ApiRouter extends Startable, FlowConstructAware
 {

@@ -7,21 +7,13 @@
 package org.mule.module.apikit.compat;
 
 import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.RestAssured.port;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.is;
-import static org.junit.matchers.JUnitMatchers.hasItems;
-import static org.mule.module.apikit.AbstractConfiguration.APPLICATION_RAML;
 
-import org.mule.functional.junit4.FunctionalTestCase;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
-import org.mule.test.runner.ArtifactClassLoaderRunnerConfig;
-import org.mule.module.apikit.util.FunctionalAppDeployTestCase;
 import org.mule.tck.junit4.rule.DynamicPort;
+import org.mule.test.runner.ArtifactClassLoaderRunnerConfig;
 
 import com.jayway.restassured.RestAssured;
-
-import java.io.File;
 
 import org.junit.Rule;
 import org.junit.Test;

@@ -6,17 +6,17 @@
  */
 package org.mule.module.apikit;
 
-import org.mule.runtime.core.api.Event;
-import org.mule.runtime.core.api.MuleContext;
-import org.mule.runtime.api.message.MuleEvent;
-import org.mule.runtime.api.exception.MuleException;
-import org.mule.runtime.core.api.processor.DynamicPipelineException;
-import org.mule.runtime.core.api.processor.Processor;
-import org.mule.runtime.core.construct.Flow;
 import org.mule.module.apikit.exception.ApikitRuntimeException;
 import org.mule.module.apikit.transform.ApikitResponseTransformer;
 import org.mule.raml.interfaces.model.IAction;
 import org.mule.raml.interfaces.model.IResource;
+import org.mule.runtime.api.exception.MuleException;
+import org.mule.runtime.api.message.MuleEvent;
+import org.mule.runtime.core.api.Event;
+import org.mule.runtime.core.api.MuleContext;
+import org.mule.runtime.core.api.processor.DynamicPipelineException;
+import org.mule.runtime.core.api.processor.Processor;
+import org.mule.runtime.core.construct.Flow;
 
 import java.util.ArrayList;
 import java.util.Arrays;

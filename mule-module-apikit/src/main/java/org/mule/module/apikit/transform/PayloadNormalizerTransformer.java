@@ -6,19 +6,13 @@
  */
 package org.mule.module.apikit.transform;
 
-import org.mule.extension.http.api.HttpRequestAttributes;
 import org.mule.module.apikit.EventHelper;
-import org.mule.runtime.core.api.Event;
-//import org.mule.runtime.core.api.MuleMessage;
+import org.mule.runtime.api.i18n.I18nMessageFactory;
 import org.mule.runtime.api.metadata.DataType;
+import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.transformer.Transformer;
 import org.mule.runtime.core.api.transformer.TransformerException;
-import org.mule.runtime.api.i18n.I18nMessageFactory;
-//import org.mule.runtime.core.config.i18n.MessageFactory;
 import org.mule.runtime.core.transformer.AbstractMessageTransformer;
-//import org.mule.transformer.types.DataTypeFactory;
-import org.mule.common.metadata.datatype.DataTypeFactory;
-
 
 import java.nio.charset.Charset;
 

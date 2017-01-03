@@ -9,8 +9,8 @@ package org.mule.module.apikit;
 
 import static org.mule.module.apikit.AbstractConfiguration.APPLICATION_RAML;
 
-import org.mule.runtime.core.api.Event;
 import org.mule.runtime.api.exception.MuleException;
+import org.mule.runtime.core.api.Event;
 
 import java.util.Map;
 

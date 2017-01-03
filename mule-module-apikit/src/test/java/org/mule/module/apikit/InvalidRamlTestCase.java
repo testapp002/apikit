@@ -10,7 +10,6 @@ import static junit.framework.Assert.fail;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
 
-//import org.mule.api.lifecycle.InitialisationException;
 import org.mule.module.apikit.exception.ApikitRuntimeException;
 import org.mule.runtime.api.lifecycle.InitialisationException;
 import org.mule.tck.junit4.AbstractMuleContextTestCase;

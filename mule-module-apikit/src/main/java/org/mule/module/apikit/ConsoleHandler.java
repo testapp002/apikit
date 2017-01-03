@@ -8,10 +8,10 @@
 package org.mule.module.apikit;
 
 import org.mule.extension.http.api.HttpRequestAttributes;
+import org.mule.module.apikit.exception.NotFoundException;
+import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.core.api.Event;
-import org.mule.runtime.api.exception.MuleException;
-import org.mule.module.apikit.exception.NotFoundException;
 import org.mule.runtime.core.api.processor.Processor;
 import org.mule.runtime.core.util.FilenameUtils;
 import org.mule.runtime.core.util.IOUtils;

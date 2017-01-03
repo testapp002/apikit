@@ -8,12 +8,12 @@ package org.mule.module.apikit.transform;
 
 import org.mule.module.apikit.EventHelper;
 import org.mule.module.apikit.HttpVariableNames;
+import org.mule.module.apikit.RestContentTypeParser;
+import org.mule.module.apikit.exception.ApikitRuntimeException;
 import org.mule.runtime.api.metadata.DataType;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.transformer.Transformer;
 import org.mule.runtime.core.api.transformer.TransformerException;
-import org.mule.module.apikit.RestContentTypeParser;
-import org.mule.module.apikit.exception.ApikitRuntimeException;
 import org.mule.runtime.core.transformer.AbstractMessageTransformer;
 import org.mule.runtime.core.util.SystemUtils;
 
@@ -93,23 +93,14 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
     public Object transformToExpectedContentType(Event event, String responseRepresentation, List<String> responseMimeTypes,
                                                  String acceptedHeader) throws TransformerException
     {
-        //Object payload = event.getMessage().getPayload().getValue();
-        //String msgMimeType = null;
         DataType dataType = event.getMessage().getPayload().getDataType();
         Charset charset = null;
         if (dataType != null && dataType.getMediaType() != null)
         {
-            //TODO FIX METHOD
             Optional<Charset> payloadEncoding = event.getMessage().getPayload().getDataType().getMediaType().getCharset();
             charset = payloadEncoding.orElse(SystemUtils.getDefaultEncoding(this.muleContext));
-            //charset = payloadEncoding.get();
-
-            //msgMimeType = dataType.getMediaType() + ";charset=" + event.getMessage().getPayload().getDataType().getMediaType(); //+ event.getMessage().getEncoding();
-        //event.getMessage().getPayload().getDataType().getMediaType().getCharset()
-            //SystemUtils.getDefaultEncoding(this.muleContext);
         }
 
-        //String msgContentType = event.getMessage().getOutboundProperty("Content-Type");
         // TODO HACK that relies on using _outboundHeaders_ as the headers container
         String msgContentType = (String) ((Map) event.getVariable("_outboundHeaders_").getValue()).get("Content-Type");
 
@@ -136,15 +127,6 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
         String msgAcceptedContentType = acceptedContentType(dataType.getMediaType().toString(), msgContentType, conjunctionTypes);
         if (msgAcceptedContentType != null)
         {
-//            Event.Builder builder = Event.builder(event);
-//            InternalMessage.Builder messageBuilder = InternalMessage.builder(event.getMessage());
-//            messageBuilder.addOutboundProperty("Content-Type", null, msgAcceptedContentType);
-////            messageBuilder.mediaType(org.mule.runtime.api.metadata.MediaType.create(primaryType, secondaryType));
-//            builder.message(messageBuilder.build()).build();
-
-            //TODO WE SHOULD MODIFY THE PROPERTY MESSAGE.OUTBOUNDPROPERTY
-
-//            event = EventHelper.addOutboundProperty(event, "Content-Type", msgAcceptedContentType);
             if (logger.isDebugEnabled())
             {
                 logger.debug("Response transformation not required. Message payload type is " + msgAcceptedContentType);
@@ -160,8 +142,7 @@ public class ApikitResponseTransformer extends AbstractMessageTransformer
         org.mule.runtime.api.metadata.DataTypeBuilder resultDataTypeBuilder = DataType.builder();
         resultDataTypeBuilder.type(String.class);
         resultDataTypeBuilder.mediaType(responseRepresentation);
-//        resultDataTypeBuilder.charset(charset);
-        DataType resultDataType = resultDataTypeBuilder.build();//DataTypeFactory.create(String.class, responseRepresentation);
+        DataType resultDataType = resultDataTypeBuilder.build();
 
         if (logger.isDebugEnabled())
         {

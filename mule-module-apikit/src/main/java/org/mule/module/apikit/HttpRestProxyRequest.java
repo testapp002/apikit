@@ -6,10 +6,6 @@
  */
 package org.mule.module.apikit;
 
-import org.mule.runtime.core.api.Event;
-import org.mule.module.apikit.exception.NotAcceptableException;
-import org.mule.module.apikit.exception.UnsupportedMediaTypeException;
-
 //public class HttpRestProxyRequest extends HttpRestRequest
 //{
 //

@@ -13,26 +13,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-//import org.mule.api.config.MuleProperties;
-//import org.mule.module.launcher.DeploymentListener;
-//import org.mule.module.launcher.MuleDeploymentService;
-//import org.mule.module.launcher.MulePluginClassLoaderManager;
-//import org.mule.module.launcher.application.Application;
-//import org.mule.module.launcher.application.ApplicationStatus;
 import org.mule.runtime.core.api.config.MuleProperties;
 import org.mule.runtime.core.util.FileUtils;
-import org.mule.runtime.module.artifact.classloader.ArtifactClassLoader;
-import org.mule.runtime.module.deployment.api.DeploymentListener;
 import org.mule.runtime.deployment.model.api.application.Application;
 import org.mule.runtime.deployment.model.api.application.ApplicationStatus;
+import org.mule.runtime.module.deployment.api.DeploymentListener;
 import org.mule.runtime.module.deployment.impl.internal.MuleArtifactResourcesRegistry;
 import org.mule.runtime.module.deployment.internal.MuleDeploymentService;
-import org.mule.runtime.module.service.ServiceManager;
 import org.mule.tck.junit4.AbstractMuleContextTestCase;
 import org.mule.tck.probe.JUnitProbe;
 import org.mule.tck.probe.PollingProber;
 import org.mule.tck.probe.Prober;
-//import org.mule.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;

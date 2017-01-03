@@ -6,6 +6,14 @@
  */
 package org.mule.tools.apikit;
 
+import static org.mockito.Mockito.mock;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.HashSet;
+import java.util.List;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
@@ -16,14 +24,6 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.sonatype.plexus.build.incremental.DefaultBuildContext;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.HashSet;
-import java.util.List;
-
-import static org.mockito.Mockito.mock;
 
 
 @RunWith(JUnit4.class)
