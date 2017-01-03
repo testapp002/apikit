@@ -21,7 +21,7 @@ public class API {
     public static final String DEFAULT_CONSOLE_PATH_INBOUND = "http://0.0.0.0:" + DEFAULT_PORT + "/console";
 
     private APIKitConfig config;
-    private HttpListener3xConfig httpListener3xConfig;
+    private IHttpListenerConfig httpListenerConfig;
     private String path;
 
     private String baseUri;
@@ -77,8 +77,8 @@ public class API {
         this.path = path;
     }
 
-    public HttpListener3xConfig getHttpListenerConfig() {
-        return httpListener3xConfig;
+    public IHttpListenerConfig getHttpListenerConfig() {
+        return httpListenerConfig;
     }
 
     public APIKitConfig getConfig() {
@@ -89,8 +89,8 @@ public class API {
         this.config = config;
     }
 
-    public void setHttpListenerConfig(HttpListener3xConfig httpListener3xConfig) {
-        this.httpListener3xConfig = httpListener3xConfig;
+    public void setHttpListenerConfig(IHttpListenerConfig httpListenerConfig) {
+        this.httpListenerConfig = httpListenerConfig;
     }
 
     public void setDefaultAPIKitConfig() {
@@ -100,7 +100,7 @@ public class API {
     public void setDefaultHttpListenerConfig()
     {
         String httpListenerConfigName = id == null ? HttpListener3xConfig.DEFAULT_CONFIG_NAME : id + "-" + HttpListener3xConfig.DEFAULT_CONFIG_NAME;
-        httpListener3xConfig = new HttpListener3xConfig.Builder(httpListenerConfigName, API.DEFAULT_BASE_URI).build();
+        httpListenerConfig = new HttpListener3xConfig.Builder(httpListenerConfigName, API.DEFAULT_BASE_URI).build();
     }
 
     public Boolean useInboundEndpoint()

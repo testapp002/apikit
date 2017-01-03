@@ -34,12 +34,12 @@ public class APIFactory
         return createAPIBinding(ramlFile, xmlFile, baseUri, path, config, null, "3.5.0");
     }
 
-    public API createAPIBindingListenerMule3(File ramlFile, File xmlFile, String path, APIKitConfig config, HttpListener3xConfig httpListener3xConfig)
+    public API createAPIBindingListenerMule3(File ramlFile, File xmlFile, String path, APIKitConfig config, IHttpListenerConfig httpListener3xConfig)
     {
         return createAPIBinding(ramlFile, xmlFile, null, path, config, httpListener3xConfig, "3.7.0");
     }
 
-    public API createAPIBinding(File ramlFile, File xmlFile, String baseUri, String path, APIKitConfig config, HttpListener3xConfig httpListener3xConfig, String muleVersion)
+    public API createAPIBinding(File ramlFile, File xmlFile, String baseUri, String path, APIKitConfig config, IHttpListenerConfig httpListenerConfig, String muleVersion)
     {
         Validate.notNull(ramlFile);
         if(apis.containsKey(ramlFile))
@@ -54,7 +54,7 @@ public class APIFactory
         API api = new API(ramlFile, xmlFile, baseUri, path, config, muleVersion);
         if (!org.mule.tools.apikit.misc.APIKitTools.defaultIsInboundEndpoint(muleVersion))
         {
-            if (httpListener3xConfig == null)
+            if (httpListenerConfig == null)
             {
                 if (domainHttpListenerConfigs.size() >0)
                 {
@@ -67,7 +67,7 @@ public class APIFactory
             }
             else
             {
-                api.setHttpListenerConfig(httpListener3xConfig);
+                api.setHttpListenerConfig(httpListenerConfig);
             }
         }
         api.setConfig(config);

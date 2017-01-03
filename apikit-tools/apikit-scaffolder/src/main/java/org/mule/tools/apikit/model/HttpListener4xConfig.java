@@ -109,6 +109,14 @@ public class HttpListener4xConfig implements IHttpListenerConfig
         this.connection = new HttpListenerConnection.Builder(host, port, protocol).build();
     }
 
+    public HttpListener4xConfig(final String name,
+                                final String basePath,
+                                final HttpListenerConnection httpListenerConnection) {
+        this.name = name;
+        this.basePath = basePath;
+        this.connection = httpListenerConnection;
+    }
+
     public String getName() {
         return name;
     }

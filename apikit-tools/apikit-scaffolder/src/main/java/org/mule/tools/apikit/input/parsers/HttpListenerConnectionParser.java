@@ -8,7 +8,9 @@ package org.mule.tools.apikit.input.parsers;
 
 import static org.mule.tools.apikit.output.MuleConfigGenerator.HTTPN_NAMESPACE;
 
+import org.mule.tools.apikit.model.API;
 import org.mule.tools.apikit.model.HttpListener3xConfig;
+import org.mule.tools.apikit.model.HttpListenerConnection;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,38 +24,33 @@ import org.jdom2.xpath.XPathFactory;
 
 public class HttpListenerConnectionParser implements MuleConfigFileParser
 {
-    public Map<String, HttpListener3xConfig> parse(Document document){
-        Map<String,HttpListener3xConfig> httpListenerConfigMap = new HashMap<String, HttpListener3xConfig>();
-        XPathExpression<Element> xp = XPathFactory.instance().compile("//*/*[local-name()='" + HttpListener3xConfig.ELEMENT_NAME + "']",
+    public static final String ELEMENT_NAME = "listener-connector";
+
+    //TODO THIS SHOULD WORK WITH MORE THAN ONE CONNECTOR, PROVIDED IN DIFFERENT LISTENER-CONFIGS
+    public HttpListenerConnection parse(Document document){
+
+        XPathExpression<Element> xp = XPathFactory.instance().compile("//*/*[local-name()='" + ELEMENT_NAME + "']",
                                                                       Filters.element(HTTPN_NAMESPACE.getNamespace()));
         List<Element> elements = xp.evaluate(document);
         for (Element element : elements) {
-            String name = element.getAttributeValue("name");
-            if (name == null)
+            String host = element.getAttributeValue("host");
+            if (host == null)
             {
-                throw new IllegalStateException("Cannot retrieve name.");
+                throw new IllegalStateException("Cannot retrieve host.");
             }
-            //String host = element.getAttributeValue("host");
-            //if (host == null)
-            //{
-            //    throw new IllegalStateException("Cannot retrieve host.");
-            //}
-            //String port = element.getAttributeValue("port");
-            //if (port == null)
-            //{
-            //    port = Integer.toString(API.DEFAULT_PORT);
-            //}
-            //String basePath = element.getAttributeValue("basePath");
-            //if (basePath == null)
-            //{
-            //    basePath = "/";
-            //}
-            //else  if (!basePath.startsWith("/")) {
-            //    basePath = "/" + basePath;
-            //}
-            httpListenerConfigMap.put(name, new HttpListener3xConfig(name, host, port, basePath));
+            String port = element.getAttributeValue("port");
+            if (port == null)
+            {
+                port = Integer.toString(API.DEFAULT_PORT);
+            }
+            String protocol = element.getAttributeValue("protocol");
+            if (protocol == null)
+            {
+                protocol = API.DEFAULT_PROTOCOL;
+            }
+            return new HttpListenerConnection(host, port, protocol);
         }
-        return httpListenerConfigMap;
+        return null;
     }
 
 }
