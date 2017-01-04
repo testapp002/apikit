@@ -83,6 +83,7 @@ public class GenerationModelTest {
         IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
+        when(api.useListenerMule3()).thenReturn(true);
         assertEquals("{\n\"hello\": \">world<\"\n}",
                 new GenerationModel(api, resource, action).getExample());
     }
@@ -103,6 +104,7 @@ public class GenerationModelTest {
         IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
+        when(api.useListenerMule3()).thenReturn(true);
         assertEquals("<hello>world</hello>",
                 new GenerationModel(api, resource, action).getExample());
     }
@@ -123,6 +125,7 @@ public class GenerationModelTest {
         IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
+        when(api.useListenerMule3()).thenReturn(true);
         assertEquals("<hello>world</hello>",
                 new GenerationModel(api, resource, action).getExample());
     }
@@ -134,6 +137,7 @@ public class GenerationModelTest {
         IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
+        when(api.useListenerMule3()).thenReturn(true);
         assertEquals(GenerationModel.DEFAULT_TEXT, new GenerationModel(api, resource, action).getExample());
     }
 
@@ -144,6 +148,7 @@ public class GenerationModelTest {
         IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
+        when(api.useListenerMule3()).thenReturn(true);
         assertEquals("retrievePet", new GenerationModel(api, resource, action).getName());
     }
 
@@ -155,6 +160,7 @@ public class GenerationModelTest {
         when(resource.getDisplayName()).thenReturn("Animal");
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
+        when(api.useListenerMule3()).thenReturn(true);
         assertEquals("retrieveAnimal", new GenerationModel(api, resource, action).getName());
     }
 
@@ -165,6 +171,7 @@ public class GenerationModelTest {
         IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
+        when(api.useListenerMule3()).thenReturn(true);
         GenerationModel model1 = new GenerationModel(api, resource, action, "text/xml");
         GenerationModel model2 = new GenerationModel(api, resource, action, "application/json");
         assertTrue(model1.compareTo(model2) != 0);
@@ -179,6 +186,7 @@ public class GenerationModelTest {
         IResource resource = mock(IResource.class);
         when(resource.getUri()).thenReturn("/api/pet");
         API api = mock(API.class);
+        when(api.useListenerMule3()).thenReturn(true);
         assertEquals("/pet", new GenerationModel(api, resource, action).getRelativeURI());
     }
 }

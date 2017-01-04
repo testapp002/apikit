@@ -37,8 +37,9 @@ public class ConsoleScopeTest {
         when(api.getPath()).thenReturn("/api/*");
         when(api.getConfig()).thenReturn(config);
         when(api.getMuleVersion()).thenReturn("3.7.3");
+        when(api.useListenerMule3()).thenReturn(true);
         when(api.getHttpListenerConfig()).thenReturn(listenerConfig);
-        new HttpListenerConfigScope(api,mule).generate();
+        new HttpListenerConfigMule3Scope(api, mule).generate();
         new FlowScope(mule, "ExceptionStrategyNameHere", api, null, "HTTP_Listener_Configuration").generate();
         new ConsoleFlowScope(
                 mule,

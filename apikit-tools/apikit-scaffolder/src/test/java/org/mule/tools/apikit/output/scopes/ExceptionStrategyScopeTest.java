@@ -16,7 +16,8 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.junit.Test;
 
-public class ExceptionStrategyScopeTest {
+public class ExceptionStrategyScopeTest
+{
 
     private static final String API_ID = "id";
 
@@ -25,7 +26,7 @@ public class ExceptionStrategyScopeTest {
         Document document = new Document();
         Element mule = new MuleScope("3.7.0").generate();
         document.setRootElement(mule);
-        mule.addContent(new ExceptionStrategyScope(API_ID).generate());
+        mule.addContent(new ExceptionStrategyScope(true, API_ID).generate());
 
         String s = Helper.nonSpaceOutput(mule);
 

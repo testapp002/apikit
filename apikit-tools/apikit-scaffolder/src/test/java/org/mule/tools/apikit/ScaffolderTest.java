@@ -80,6 +80,7 @@ public class ScaffolderTest {
         assertEquals(0, countOccurences(s, "extensionEnabled"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
+        assertEquals(0, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -103,6 +104,7 @@ public class ScaffolderTest {
         assertNotNull(s);
         assertEquals(1, countOccurences(s, "post:/Queue:application/json:api-config"));
         assertEquals(1, countOccurences(s, "post:/Queue:text/xml:api-config"));
+        assertEquals(0, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -120,6 +122,7 @@ public class ScaffolderTest {
         assertNotNull(s);
         assertEquals(1, countOccurences(s, "post:/Queue:application/json:api-config"));
         assertEquals(1, countOccurences(s, "post:/Queue:text/xml:api-config"));
+        assertEquals(0, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -140,6 +143,7 @@ public class ScaffolderTest {
         assertEquals(1, countOccurences(s, "extensionEnabled"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
+        assertEquals(0, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -166,6 +170,7 @@ public class ScaffolderTest {
         assertEquals(0, countOccurences(s, "extensionEnabled"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
+        assertEquals(0, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -192,6 +197,7 @@ public class ScaffolderTest {
         assertEquals(0, countOccurences(s, "extensionEnabled"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
+        assertEquals(0, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -218,6 +224,7 @@ public class ScaffolderTest {
         assertEquals(0, countOccurences(s, "extensionEnabled"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
+        assertEquals(0, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -245,6 +252,7 @@ public class ScaffolderTest {
         assertEquals(1, countOccurences(s, "extensionEnabled"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
+        assertEquals(0, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -261,7 +269,7 @@ public class ScaffolderTest {
     }
 
     public void testSimpleGenerateWithCustomDomain() throws Exception {
-        File muleXmlSimple = simpleGeneration("simple", "custom-domain/mule-domain-config.xml",null);
+        File muleXmlSimple = simpleGeneration("simple", "custom-domain/mule-domain-config.xml","3.7.3");
         assertTrue(muleXmlSimple.exists());
         String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
         assertEquals(0, countOccurences(s, "<http:listener-config"));
@@ -271,6 +279,7 @@ public class ScaffolderTest {
         assertEquals(0, countOccurences(s, "extensionEnabled"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
+        assertEquals(0, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -298,6 +307,7 @@ public class ScaffolderTest {
         assertEquals(1, countOccurences(s, "extensionEnabled"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
+        assertEquals(0, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -314,7 +324,7 @@ public class ScaffolderTest {
     }
 
     public void testSimpleGenerateWithCustomDomainWithMultipleLC() throws Exception {
-        File muleXmlSimple = simpleGeneration("simple", "custom-domain-multiple-lc/mule-domain-config.xml", null);
+        File muleXmlSimple = simpleGeneration("simple", "custom-domain-multiple-lc/mule-domain-config.xml", "3.7.3");
         assertTrue(muleXmlSimple.exists());
         String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
         assertEquals(0, countOccurences(s, "<http:listener-config"));
@@ -323,6 +333,7 @@ public class ScaffolderTest {
         assertEquals(1, countOccurences(s, "get:/pet:simple-config"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
+        assertEquals(0, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -347,6 +358,7 @@ public class ScaffolderTest {
         assertEquals(1, countOccurences(s, "get:/pet:simple-config"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
+        assertEquals(0, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -364,7 +376,7 @@ public class ScaffolderTest {
 
     @Test
     public void testTwoResourceGenerate() throws Exception {
-        File muleXmlSimple = simpleGeneration("two", null, null);
+        File muleXmlSimple = simpleGeneration("two", null, "3.7.3");
         assertTrue(muleXmlSimple.exists());
         String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
 
@@ -373,6 +385,7 @@ public class ScaffolderTest {
 
         assertEquals(1, countOccurences(s, "get:/car:two-config"));
         assertEquals(1, countOccurences(s, "post:/car:two-config"));
+        assertEquals(0, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -389,7 +402,7 @@ public class ScaffolderTest {
     }
 
     public void testNestedGenerate() throws Exception {
-        File muleXmlSimple = simpleGeneration("nested", null, null);
+        File muleXmlSimple = simpleGeneration("nested", null, "3.7.3");
         assertTrue(muleXmlSimple.exists());
         String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
         assertEquals(1, countOccurences(s, "get:/pet:nested-config"));
@@ -397,6 +410,7 @@ public class ScaffolderTest {
         assertEquals(1, countOccurences(s, "get:/pet/owner:nested-config"));
         assertEquals(1, countOccurences(s, "get:/car:nested-config"));
         assertEquals(1, countOccurences(s, "post:/car:nested-config"));
+        assertEquals(0, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -474,6 +488,7 @@ public class ScaffolderTest {
         assertEquals(1, countOccurences(s, "post:/pet"));
         assertEquals(1, countOccurences(s, "get:/\""));
         assertEquals(1, countOccurences(s, "extensionEnabled=\"false\""));
+        assertEquals(0, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -578,6 +593,7 @@ public class ScaffolderTest {
         assertEquals(1, countOccurences(s, "post:/pet"));
         assertEquals(1, countOccurences(s, "get:/\""));
         assertEquals(0, countOccurences(s, "extensionEnabled"));
+        assertEquals(0, countOccurences(s, "#[null]"));
     }
 
     @Test

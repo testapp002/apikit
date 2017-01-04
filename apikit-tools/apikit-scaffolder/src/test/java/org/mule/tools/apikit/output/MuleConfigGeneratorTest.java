@@ -122,6 +122,7 @@ public class MuleConfigGeneratorTest {
         when(raml.getName()).thenReturn("hello.raml");
         when(api.getRamlFile()).thenReturn(raml);
         when(api.getId()).thenReturn("hello");
+        when(api.useListenerMule3()).thenReturn(true);
         File file = folder.newFile("hello.xml");
         when(api.getXmlFile(any(File.class))).thenReturn(file);
 
@@ -169,6 +170,7 @@ public class MuleConfigGeneratorTest {
         when(raml.getName()).thenReturn("hello.raml");
         when(api.getRamlFile()).thenReturn(raml);
         when(api.getId()).thenReturn("hello");
+        when(api.useListenerMule3()).thenReturn(true);
         File file = folder.newFile("hello.xml");
         when(api.getXmlFile(any(File.class))).thenReturn(file);
 

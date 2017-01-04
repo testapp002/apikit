@@ -9,10 +9,13 @@ package org.mule.tools.apikit.output.scopes;
 
 import org.apache.commons.lang.StringUtils;
 import org.jdom2.Element;
+import org.jdom2.Namespace;
+
 import org.mule.tools.apikit.misc.APIKitTools;
 import org.mule.tools.apikit.model.API;
 
 import static org.mule.tools.apikit.output.MuleConfigGenerator.HTTP_NAMESPACE;
+import static org.mule.tools.apikit.output.MuleConfigGenerator.HTTPN_NAMESPACE;
 import static org.mule.tools.apikit.output.MuleConfigGenerator.XMLNS_NAMESPACE;
 
 public class ConsoleFlowScope implements Scope {
@@ -28,7 +31,16 @@ public class ConsoleFlowScope implements Scope {
 
         if (httpListenerConfigRef != null)
         {
-            Element httpListener = new Element("listener", HTTP_NAMESPACE.getNamespace());
+            Namespace namespace = null;
+            if (api.useListenerMule3())
+            {
+                namespace = HTTP_NAMESPACE.getNamespace();
+            }
+            else if (!api.useInboundEndpoint())
+            {
+                namespace = HTTPN_NAMESPACE.getNamespace();
+            }
+            Element httpListener = new Element("listener", namespace);
             httpListener.setAttribute("config-ref", httpListenerConfigRef);
             httpListener.setAttribute("path", API.DEFAULT_CONSOLE_PATH);
             consoleFlow.addContent(httpListener);

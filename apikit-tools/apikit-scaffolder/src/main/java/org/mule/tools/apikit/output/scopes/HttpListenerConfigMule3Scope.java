@@ -13,12 +13,12 @@ import org.mule.tools.apikit.model.HttpListener3xConfig;
 
 import org.jdom2.Element;
 
-public class HttpListenerConfigScope implements Scope
+public class HttpListenerConfigMule3Scope implements Scope
 {
     private final Element mule;
     private final Element httpListenerConfig;
 
-    public HttpListenerConfigScope(API api, Element mule)
+    public HttpListenerConfigMule3Scope(API api, Element mule)
     {
         this.mule = mule;
 
