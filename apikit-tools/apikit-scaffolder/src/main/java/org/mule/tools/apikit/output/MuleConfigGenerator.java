@@ -8,16 +8,16 @@ package org.mule.tools.apikit.output;
 
 import org.mule.tools.apikit.misc.APIKitTools;
 import org.mule.tools.apikit.model.API;
-import org.mule.tools.apikit.model.HttpListener3xConfig;
+import org.mule.tools.apikit.model.IHttpListenerConfig;
 import org.mule.tools.apikit.output.deployer.MuleDeployWriter;
 import org.mule.tools.apikit.output.scopes.APIKitConfigScope;
 import org.mule.tools.apikit.output.scopes.APIKitFlowScope;
+import org.mule.tools.apikit.output.scopes.ConsoleFlowScope;
 import org.mule.tools.apikit.output.scopes.ExceptionStrategyScope;
 import org.mule.tools.apikit.output.scopes.FlowScope;
-import org.mule.tools.apikit.output.scopes.HttpListenerConfigMule4Scope;
 import org.mule.tools.apikit.output.scopes.HttpListenerConfigMule3Scope;
+import org.mule.tools.apikit.output.scopes.HttpListenerConfigMule4Scope;
 import org.mule.tools.apikit.output.scopes.MuleScope;
-import org.mule.tools.apikit.output.scopes.ConsoleFlowScope;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -70,11 +70,11 @@ public class MuleConfigGenerator {
     private final List<GenerationModel> flowEntries;
     private final Log log;
     private final File rootDirectory;
-    private final Map<String, HttpListener3xConfig> domainHttpListenerConfigs;
+    private final Map<String, IHttpListenerConfig> domainHttpListenerConfigs;
     private final String muleVersion;
     private final Set<File> ramlsWithExtensionEnabled;
 
-    public MuleConfigGenerator(Log log, File muleConfigOutputDirectory, List<GenerationModel> flowEntries, Map<String, HttpListener3xConfig> domainHttpListenerConfigs, String muleVersion, Set<File> ramlsWithExtensionEnabled) {
+    public MuleConfigGenerator(Log log, File muleConfigOutputDirectory, List<GenerationModel> flowEntries, Map<String, IHttpListenerConfig> domainHttpListenerConfigs, String muleVersion, Set<File> ramlsWithExtensionEnabled) {
         this.log = log;
         this.flowEntries = flowEntries;
         this.rootDirectory = muleConfigOutputDirectory;

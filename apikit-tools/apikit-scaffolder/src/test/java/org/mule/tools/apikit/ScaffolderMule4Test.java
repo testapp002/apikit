@@ -189,7 +189,7 @@ public class ScaffolderMule4Test {
     }
 
     public void testSimpleGenerateWithListenerAndExtension() throws Exception {
-        File muleXmlFolderOut = simpleGenerationWithExtensionEnabled("simple", "simple", null, "3.8.0");
+        File muleXmlFolderOut = simpleGenerationWithExtensionEnabled("simple", "simple", null, "4.0.0");
         File xmlOut = new File (muleXmlFolderOut, "simple.xml");
         assertTrue(xmlOut.exists());
         String s = IOUtils.toString(new FileInputStream(xmlOut));
@@ -219,7 +219,7 @@ public class ScaffolderMule4Test {
         File muleXmlSimple = simpleGeneration("simple", "custom-domain-4/mule-domain-config.xml","4.0.0");
         assertTrue(muleXmlSimple.exists());
         String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
-        assertEquals(1, countOccurences(s, "<httpn:listener-config"));
+        assertEquals(0, countOccurences(s, "<httpn:listener-config"));
         assertEquals(2, countOccurences(s, "<httpn:listener "));
         assertEquals(1, countOccurences(s, "<httpn:response-builder statusCode=\"#[httpStatus]\""));
         assertEquals(1, countOccurences(s, "<httpn:error-response-builder statusCode=\"#[httpStatus]\""));
@@ -228,7 +228,7 @@ public class ScaffolderMule4Test {
         assertEquals(1, countOccurences(s, "get:/pet:simple-config"));
         assertEquals(0, countOccurences(s, "extensionEnabled"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
-        assertEquals(0, countOccurences(s, "consoleEnabled=\"false\""));
+        assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
     }
 
     //@Test

@@ -20,6 +20,7 @@ import org.mule.raml.interfaces.model.IResource;
 import org.mule.tools.apikit.Helper;
 import org.mule.tools.apikit.model.API;
 import org.mule.tools.apikit.model.HttpListener3xConfig;
+import org.mule.tools.apikit.model.IHttpListenerConfig;
 import org.mule.tools.apikit.output.scopes.APIKitFlowScope;
 
 import java.io.File;
@@ -76,7 +77,7 @@ public class MuleConfigGeneratorTest {
 
 
         Log mock = mock(Log.class);
-        MuleConfigGenerator muleConfigGenerator = new MuleConfigGenerator(mock, new File(""), entries, new HashMap<String, HttpListener3xConfig>(), null, null);
+        MuleConfigGenerator muleConfigGenerator = new MuleConfigGenerator(mock, new File(""), entries, new HashMap<String, IHttpListenerConfig>(), null, null);
         muleConfigGenerator.generate();
 
         assertTrue(file.exists());
@@ -127,7 +128,7 @@ public class MuleConfigGeneratorTest {
         when(api.getXmlFile(any(File.class))).thenReturn(file);
 
         MuleConfigGenerator muleConfigGenerator =
-                new MuleConfigGenerator(mock(Log.class), new File(""), new ArrayList<GenerationModel>(), new HashMap<String, HttpListener3xConfig>(), null, null);
+                new MuleConfigGenerator(mock(Log.class), new File(""), new ArrayList<GenerationModel>(), new HashMap<String, IHttpListenerConfig>(), null, null);
 
         Document document = muleConfigGenerator.getOrCreateDocument(new HashMap<API, Document>(), api);
 
@@ -176,7 +177,7 @@ public class MuleConfigGeneratorTest {
 
 
         MuleConfigGenerator muleConfigGenerator =
-                new MuleConfigGenerator(mock(Log.class), new File(""), new ArrayList<GenerationModel>(), new HashMap<String, HttpListener3xConfig>(), null, null);
+                new MuleConfigGenerator(mock(Log.class), new File(""), new ArrayList<GenerationModel>(), new HashMap<String, IHttpListenerConfig>(), null, null);
 
         Document document = muleConfigGenerator.getOrCreateDocument(new HashMap<API, Document>(), api);
 

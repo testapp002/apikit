@@ -19,8 +19,8 @@ import org.apache.commons.lang.Validate;
 public class APIFactory
 {
     private Map<File, API> apis = new HashMap<File, API>();
-    private Map<String, HttpListener3xConfig> domainHttpListenerConfigs = new HashMap<>();
-    public APIFactory (Map<String, HttpListener3xConfig> domainHttpListenerConfigs)
+    private Map<String, IHttpListenerConfig> domainHttpListenerConfigs = new HashMap<>();
+    public APIFactory (Map<String, IHttpListenerConfig> domainHttpListenerConfigs)
     {
         this.domainHttpListenerConfigs.putAll(domainHttpListenerConfigs);
     }
@@ -75,16 +75,16 @@ public class APIFactory
         return api;
     }
 
-    public Map<String, HttpListener3xConfig> getDomainHttpListenerConfigs() {
+    public Map<String, IHttpListenerConfig> getDomainHttpListenerConfigs() {
         return domainHttpListenerConfigs;
     }
 
-    private HttpListener3xConfig getFirstLC()
+    private IHttpListenerConfig getFirstLC()
     {
-        List<Map.Entry<String,HttpListener3xConfig>> list = new ArrayList<>(domainHttpListenerConfigs.entrySet());
-        Collections.sort(list, new Comparator<Map.Entry<String, HttpListener3xConfig>>(){
+        List<Map.Entry<String,IHttpListenerConfig>> list = new ArrayList<>(domainHttpListenerConfigs.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<String, IHttpListenerConfig>>(){
             @Override
-            public int compare(Map.Entry<String, HttpListener3xConfig> o1, Map.Entry<String, HttpListener3xConfig> o2)
+            public int compare(Map.Entry<String, IHttpListenerConfig> o1, Map.Entry<String, IHttpListenerConfig> o2)
             {
                 Integer i1 = Integer.parseInt(o1.getValue().getPort());
                 Integer i2 = Integer.parseInt(o2.getValue().getPort());

@@ -6,15 +6,15 @@
  */
 package org.mule.tools.apikit.output.scopes;
 
-import org.apache.commons.lang.StringUtils;
-import org.jdom2.Element;
+import static org.mule.tools.apikit.output.MuleConfigGenerator.HTTPN_NAMESPACE;
+import static org.mule.tools.apikit.output.MuleConfigGenerator.HTTP_NAMESPACE;
+import static org.mule.tools.apikit.output.MuleConfigGenerator.XMLNS_NAMESPACE;
 
 import org.mule.tools.apikit.misc.APIKitTools;
 import org.mule.tools.apikit.model.API;
 
-import static org.mule.tools.apikit.output.MuleConfigGenerator.HTTP_NAMESPACE;
-import static org.mule.tools.apikit.output.MuleConfigGenerator.HTTPN_NAMESPACE;
-import static org.mule.tools.apikit.output.MuleConfigGenerator.XMLNS_NAMESPACE;
+import org.apache.commons.lang.StringUtils;
+import org.jdom2.Element;
 
 public class FlowScope implements Scope {
 
@@ -46,7 +46,8 @@ public class FlowScope implements Scope {
                 httpListener.addContent(responseBuilder);
 
                 Element errorResponseBuilder = new Element("error-response-builder", HTTPN_NAMESPACE.getNamespace());
-                errorResponseBuilder.setAttribute("statusCode", "500");
+                errorResponseBuilder.setAttribute("statusCode", "#[httpStatus]");
+                errorResponseBuilder.setAttribute("headersRef", "#[_outboundHeaders_]");
                 httpListener.addContent(errorResponseBuilder);
 
                 main.addContent(httpListener);
