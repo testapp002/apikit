@@ -43,17 +43,11 @@ public class ScaffolderMule4Test {
 
     @Before
     public void setUp() {
-        folder.newFolder("scaffolder-mule-4");
-        folder.newFolder("scaffolder-existing-mule-4");
-        //folder.newFolder("scaffolder-existing-extension");
-        //folder.newFolder("scaffolder-existing-custom-lc");
-        //folder.newFolder("scaffolder-existing-old");
-        //folder.newFolder("scaffolder-existing-old-address");
-        //folder.newFolder("scaffolder-existing-custom-and-normal-lc");
-        //folder.newFolder("double-root-raml");
+        folder.newFolder("scaffolder");
+        folder.newFolder("double-root-raml");
         folder.newFolder("custom-domain-4");
-        //folder.newFolder("empty-domain");
-        //folder.newFolder("custom-domain-multiple-lc");
+        folder.newFolder("empty-domain");
+        folder.newFolder("custom-domain-multiple-lc-4");
     }
 
     @Test
@@ -69,7 +63,7 @@ public class ScaffolderMule4Test {
     }
 
     public void testSimpleGenerate(String name) throws Exception {
-        File muleXmlSimple = simpleGeneration("scaffolder-mule-4", name, null, "4.0.0");
+        File muleXmlSimple = simpleGeneration("scaffolder", name, null, "4.0.0");
         assertTrue(muleXmlSimple.exists());
         String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
         assertEquals(1, countOccurences(s, "<httpn:listener-config"));
@@ -81,10 +75,6 @@ public class ScaffolderMule4Test {
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
         assertEquals(0, countOccurences(s, "#[NullPayload.getInstance()]"));
     }
-
-
-
-
 
     @Test
     public void testSimpleGenerateWithExtensionWithOldParser() throws Exception
@@ -231,614 +221,212 @@ public class ScaffolderMule4Test {
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
     }
 
-    //@Test
-    //public void testSimpleGenerateWithCustomDomainAndExtensionWithOldParser() throws Exception
-    //{
-    //    testSimpleGenerateWithCustomDomainAndExtension();
-    //}
-    //
-    //@Test
-    //public void testSimpleGenerateWithCustomDomainAndExtensionWithNewParser() throws Exception
-    //{
-    //    System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-    //    testSimpleGenerateWithCustomDomainAndExtension();
-    //}
-    //
-    //public void testSimpleGenerateWithCustomDomainAndExtension() throws Exception {
-    //    File muleXmlFolderOut = simpleGenerationWithExtensionEnabled("simple", "simple", "custom-domain/mule-domain-config.xml", "3.8.0");
-    //    File xmlOut = new File (muleXmlFolderOut, "simple.xml");
-    //    assertTrue(xmlOut.exists());
-    //    String s = IOUtils.toString(new FileInputStream(xmlOut));
-    //    assertEquals(0, countOccurences(s, "<http:listener-config"));
-    //    assertEquals(2, countOccurences(s, "config-ref=\"http-lc-0.0.0.0-8081\""));
-    //    assertEquals(1, countOccurences(s, "get:/:simple-config"));
-    //    assertEquals(1, countOccurences(s, "get:/pet:simple-config"));
-    //    assertEquals(1, countOccurences(s, "extensionEnabled"));
-    //    assertEquals(1, countOccurences(s, "<apikit:console"));
-    //    assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
-    //}
-    //
-    //@Test
-    //public void testSimpleGenerateWithCustomDomainWithMultipleLCWithOldParser() throws Exception
-    //{
-    //    testSimpleGenerateWithCustomDomainWithMultipleLC();
-    //}
-    //
-    //@Test
-    //public void testSimpleGenerateWithCustomDomainWithMultipleLCWithNewParser() throws Exception
-    //{
-    //    System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-    //    testSimpleGenerateWithCustomDomainWithMultipleLC();
-    //}
-    //
-    //public void testSimpleGenerateWithCustomDomainWithMultipleLC() throws Exception {
-    //    File muleXmlSimple = simpleGeneration("simple", "custom-domain-multiple-lc/mule-domain-config.xml", null);
-    //    assertTrue(muleXmlSimple.exists());
-    //    String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
-    //    assertEquals(0, countOccurences(s, "<http:listener-config"));
-    //    assertEquals(2, countOccurences(s, "config-ref=\"abcd\""));
-    //    assertEquals(1, countOccurences(s, "get:/:simple-config"));
-    //    assertEquals(1, countOccurences(s, "get:/pet:simple-config"));
-    //    assertEquals(1, countOccurences(s, "<apikit:console"));
-    //    assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
-    //}
-    //
-    //@Test
-    //public void testSimpleGenerateWithEmptyDomainWithOldParser() throws Exception
-    //{
-    //    testSimpleGenerateWithEmptyDomain();
-    //}
-    //
-    //@Test
-    //public void testSimpleGenerateWithEmptyDomainWithNewParser() throws Exception
-    //{
-    //    System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-    //    testSimpleGenerateWithEmptyDomain();
-    //}
-    //
-    //public void testSimpleGenerateWithEmptyDomain() throws Exception {
-    //    File muleXmlSimple = simpleGeneration("simple", "empty-domain/mule-domain-config.xml", null);
-    //    assertTrue(muleXmlSimple.exists());
-    //    String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
-    //    assertEquals(1, countOccurences(s, "<http:listener-config"));
-    //    assertEquals(1, countOccurences(s, "get:/:simple-config"));
-    //    assertEquals(1, countOccurences(s, "get:/pet:simple-config"));
-    //    assertEquals(1, countOccurences(s, "<apikit:console"));
-    //    assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
-    //}
-    //
-    //@Test
-    //public void testTwoResourceGenerateWithOldParser() throws Exception
-    //{
-    //    testTwoResourceGenerate();
-    //}
-    //
-    //@Test
-    //public void testTwoResourceGenerateWithNewParser() throws Exception
-    //{
-    //    System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-    //    testTwoResourceGenerate();
-    //}
-    //
-    //@Test
-    //public void testTwoResourceGenerate() throws Exception {
-    //    File muleXmlSimple = simpleGeneration("two", null, null);
-    //    assertTrue(muleXmlSimple.exists());
-    //    String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
-    //
-    //    assertEquals(1, countOccurences(s, "get:/pet:two-config"));
-    //    assertEquals(1, countOccurences(s, "post:/pet:two-config"));
-    //
-    //    assertEquals(1, countOccurences(s, "get:/car:two-config"));
-    //    assertEquals(1, countOccurences(s, "post:/car:two-config"));
-    //}
-    //
-    //@Test
-    //public void testNestedGenerateWithOldParser() throws Exception
-    //{
-    //    testNestedGenerate();
-    //}
-    //
-    //@Test
-    //public void testNestedGenerateWithNewParser() throws Exception
-    //{
-    //    System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-    //    testNestedGenerate();
-    //}
-    //
-    //public void testNestedGenerate() throws Exception {
-    //    File muleXmlSimple = simpleGeneration("nested", null, null);
-    //    assertTrue(muleXmlSimple.exists());
-    //    String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
-    //    assertEquals(1, countOccurences(s, "get:/pet:nested-config"));
-    //    assertEquals(1, countOccurences(s, "post:/pet:nested-config"));
-    //    assertEquals(1, countOccurences(s, "get:/pet/owner:nested-config"));
-    //    assertEquals(1, countOccurences(s, "get:/car:nested-config"));
-    //    assertEquals(1, countOccurences(s, "post:/car:nested-config"));
-    //}
-    //
-    //@Test
-    //public void testNoNameGenerateWithOldParser() throws Exception
-    //{
-    //    testNoNameGenerate();
-    //}
-    //
-    //@Test
-    //public void testNoNameGenerateWithNewParser() throws Exception
-    //{
-    //    System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-    //    testNoNameGenerate();
-    //}
-    //
-    //public void testNoNameGenerate() throws Exception {
-    //    File muleXmlSimple = simpleGeneration("no-name", null, null);
-    //    assertTrue(muleXmlSimple.exists());
-    //    String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
-    //    assertEquals(1, countOccurences(s, "http:listener-config name=\"no-name-httpListenerConfig\" host=\"0.0.0.0\" port=\"8081\""));
-    //    assertEquals(1, countOccurences(s, "http:listener config-ref=\"no-name-httpListenerConfig\" path=\"/api/*\""));
-    //}
-    //
-    //@Test
-    //public void testExampleGenerateWithOldParser() throws Exception
-    //{
-    //    testExampleGenerate();
-    //}
-    //
-    //@Test
-    //public void testExampleGenerateWithNewParser() throws Exception
-    //{
-    //    System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-    //    testExampleGenerate();
-    //}
-    //
-    //public void testExampleGenerate() throws Exception {
-    //    File muleXmlSimple = simpleGeneration("example", null, null);
-    //    assertTrue(muleXmlSimple.exists());
-    //    String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
-    //
-    //    assertEquals(1, countOccurences(s, "{&#xA;    &quot;name&quot;: &quot;Bobby&quot;,&#xA;    &quot;food&quot;: &quot;Ice Cream&quot;&#xA;}"));
-    //}
-    //
-    //@Test
-    //public void testAlreadyExistsWithExtensionDisabledWithOldParser() throws Exception
-    //{
-    //    testAlreadyExistsWithExtensionDisabled();
-    //}
-    //
-    //@Test
-    //public void testAlreadyExistsWithExtensionDisabledWithNewParser() throws Exception
-    //{
-    //    System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-    //    testAlreadyExistsWithExtensionDisabled();
-    //}
-    //
-    //public void testAlreadyExistsWithExtensionDisabled() throws Exception
-    //{
-    //    List<File> ramls = Arrays.asList(getFile("scaffolder-existing-extension/simple.raml"));
-    //    File xmlFile = getFile("scaffolder-existing-extension/simple-extension-disabled.xml");
-    //    List<File> xmls = Arrays.asList(xmlFile);
-    //    File muleXmlOut = folder.newFolder("mule-xml-out");
-    //
-    //    Set<File> ramlwithEE = new TreeSet<>();
-    //    ramlwithEE.add(getFile("scaffolder-existing-extension/simple.raml"));
-    //    createScaffolder(ramls, xmls, muleXmlOut, null, "3.7.3", ramlwithEE).run();
-    //
-    //    assertTrue(xmlFile.exists());
-    //    String s = IOUtils.toString(new FileInputStream(xmlFile));
-    //    assertEquals(1, countOccurences(s, "http:listener-config name=\"HTTP_Listener_Configuration\" host=\"localhost\" port=\"${serverPort}\""));
-    //    assertEquals(1, countOccurences(s, "http:listener config-ref=\"HTTP_Listener_Configuration\" path=\"/api/*\""));
-    //    assertEquals(0, countOccurences(s, "http:inbound-endpoint"));
-    //    assertEquals(1, countOccurences(s, "get:/pet"));
-    //    assertEquals(1, countOccurences(s, "post:/pet"));
-    //    assertEquals(1, countOccurences(s, "get:/\""));
-    //    assertEquals(1, countOccurences(s, "extensionEnabled=\"false\""));
-    //}
-    //
-    //@Test
-    //public void testAlreadyExistsWithExtensionEnabledWithOldParser() throws Exception
-    //{
-    //    testAlreadyExistsWithExtensionEnabled();
-    //}
-    //
-    //@Test
-    //public void testAlreadyExistsWithExtensionEnabledWithNewParser() throws Exception
-    //{
-    //    System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-    //    testAlreadyExistsWithExtensionEnabled();
-    //}
-    //
-    //@Test
-    //public void testAlreadyExistsWithExtensionEnabled() throws Exception
-    //{
-    //    List<File> ramls = Arrays.asList(getFile("scaffolder-existing-extension/simple.raml"));
-    //    File xmlFile = getFile("scaffolder-existing-extension/simple-extension-enabled.xml");
-    //    List<File> xmls = Arrays.asList(xmlFile);
-    //    File muleXmlOut = folder.newFolder("mule-xml-out");
-    //
-    //    Set<File> ramlwithEE = new TreeSet<>();
-    //    ramlwithEE.add(getFile("scaffolder-existing-extension/simple.raml"));
-    //    createScaffolder(ramls, xmls, muleXmlOut, null, "3.7.3", ramlwithEE).run();
-    //
-    //    assertTrue(xmlFile.exists());
-    //    String s = IOUtils.toString(new FileInputStream(xmlFile));
-    //    assertEquals(1, countOccurences(s, "http:listener-config name=\"HTTP_Listener_Configuration\" host=\"localhost\" port=\"${serverPort}\""));
-    //    assertEquals(1, countOccurences(s, "http:listener config-ref=\"HTTP_Listener_Configuration\" path=\"/api/*\""));
-    //    assertEquals(0, countOccurences(s, "http:inbound-endpoint"));
-    //    assertEquals(1, countOccurences(s, "get:/pet"));
-    //    assertEquals(1, countOccurences(s, "post:/pet"));
-    //    assertEquals(1, countOccurences(s, "get:/\""));
-    //    assertEquals(1, countOccurences(s, "extensionEnabled=\"true\""));
-    //}
-    //
-    //@Test
-    //public void testAlreadyExistsWithExtensionNotPresentWithOldParser() throws Exception
-    //{
-    //    testAlreadyExistsWithExtensionNotPresent();
-    //}
-    //
-    //@Test
-    //public void testAlreadyExistsWithExtensionNotPresentWithNewParser() throws Exception
-    //{
-    //    System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-    //    testAlreadyExistsWithExtensionNotPresent();
-    //}
-    //
-    //public void testAlreadyExistsWithExtensionNotPresent() throws Exception
-    //{
-    //    List<File> ramls = Arrays.asList(getFile("scaffolder-existing-extension/simple.raml"));
-    //    File xmlFile = getFile("scaffolder-existing-extension/simple-extension-not-present.xml");
-    //    List<File> xmls = Arrays.asList(xmlFile);
-    //    File muleXmlOut = folder.newFolder("mule-xml-out");
-    //
-    //    Set<File> ramlwithEE = new TreeSet<>();
-    //    ramlwithEE.add(getFile("scaffolder-existing-extension/simple.raml"));
-    //    createScaffolder(ramls, xmls, muleXmlOut, null, "3.7.3", ramlwithEE).run();
-    //
-    //    assertTrue(xmlFile.exists());
-    //    String s = IOUtils.toString(new FileInputStream(xmlFile));
-    //    assertEquals(1, countOccurences(s, "http:listener-config name=\"HTTP_Listener_Configuration\" host=\"localhost\" port=\"${serverPort}\""));
-    //    assertEquals(1, countOccurences(s, "http:listener config-ref=\"HTTP_Listener_Configuration\" path=\"/api/*\""));
-    //    assertEquals(0, countOccurences(s, "http:inbound-endpoint"));
-    //    assertEquals(1, countOccurences(s, "get:/pet"));
-    //    assertEquals(1, countOccurences(s, "post:/pet"));
-    //    assertEquals(1, countOccurences(s, "get:/\""));
-    //    assertEquals(0, countOccurences(s, "extensionEnabled"));
-    //}
-    //
     @Test
-    public void testAlreadyExistsGenerateWithOldParser() throws Exception
+    public void testSimpleGenerateWithCustomDomainAndExtensionWithOldParser() throws Exception
     {
-        testAlreadyExistsGenerate();
+        testSimpleGenerateWithCustomDomainAndExtension();
     }
 
     @Test
-    public void testAlreadyExistsGenerateWithNewParser() throws Exception
+    public void testSimpleGenerateWithCustomDomainAndExtensionWithNewParser() throws Exception
     {
         System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-        testAlreadyExistsGenerate();
+        testSimpleGenerateWithCustomDomainAndExtension();
     }
 
-    public void testAlreadyExistsGenerate() throws Exception {
-        List<File> ramls = Arrays.asList(getFile("scaffolder-existing-mule-4/simple.raml"));
-        File xmlFile = getFile("scaffolder-existing-mule-4/simple.xml");
-        List<File> xmls = Arrays.asList(xmlFile);
+    public void testSimpleGenerateWithCustomDomainAndExtension() throws Exception {
+        File muleXmlFolderOut = simpleGenerationWithExtensionEnabled("simple", "simple", "custom-domain-4/mule-domain-config.xml", "3.8.0");
+        File xmlOut = new File (muleXmlFolderOut, "simple.xml");
+        assertTrue(xmlOut.exists());
+        String s = IOUtils.toString(new FileInputStream(xmlOut));
+        assertEquals(0, countOccurences(s, "<httpn:listener-config"));
+        assertEquals(2, countOccurences(s, "config-ref=\"http-lc-0.0.0.0-8081\""));
+        assertEquals(1, countOccurences(s, "get:/:simple-config"));
+        assertEquals(1, countOccurences(s, "get:/pet:simple-config"));
+        assertEquals(1, countOccurences(s, "extensionEnabled"));
+        assertEquals(1, countOccurences(s, "<apikit:console"));
+        assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
+    }
+
+    @Test
+    public void testSimpleGenerateWithCustomDomainWithMultipleLCWithOldParser() throws Exception
+    {
+        testSimpleGenerateWithCustomDomainWithMultipleLC();
+    }
+
+    @Test
+    public void testSimpleGenerateWithCustomDomainWithMultipleLCWithNewParser() throws Exception
+    {
+        System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
+        testSimpleGenerateWithCustomDomainWithMultipleLC();
+    }
+
+    public void testSimpleGenerateWithCustomDomainWithMultipleLC() throws Exception {
+        File muleXmlSimple = simpleGeneration("simple", "custom-domain-multiple-lc-4/mule-domain-config.xml", null);
+        assertTrue(muleXmlSimple.exists());
+        String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
+        assertEquals(0, countOccurences(s, "<httpn:listener-config"));
+        assertEquals(2, countOccurences(s, "config-ref=\"abcd\""));
+        assertEquals(1, countOccurences(s, "get:/:simple-config"));
+        assertEquals(1, countOccurences(s, "get:/pet:simple-config"));
+        assertEquals(1, countOccurences(s, "<apikit:console"));
+        assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
+    }
+
+    @Test
+    public void testSimpleGenerateWithEmptyDomainWithOldParser() throws Exception
+    {
+        testSimpleGenerateWithEmptyDomain();
+    }
+
+    @Test
+    public void testSimpleGenerateWithEmptyDomainWithNewParser() throws Exception
+    {
+        System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
+        testSimpleGenerateWithEmptyDomain();
+    }
+
+    public void testSimpleGenerateWithEmptyDomain() throws Exception {
+        File muleXmlSimple = simpleGeneration("simple", "empty-domain/mule-domain-config.xml", null);
+        assertTrue(muleXmlSimple.exists());
+        String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
+        assertEquals(1, countOccurences(s, "<httpn:listener-config"));
+        assertEquals(1, countOccurences(s, "get:/:simple-config"));
+        assertEquals(1, countOccurences(s, "get:/pet:simple-config"));
+        assertEquals(1, countOccurences(s, "<apikit:console"));
+        assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
+    }
+
+    @Test
+    public void testTwoResourceGenerateWithOldParser() throws Exception
+    {
+        testTwoResourceGenerate();
+    }
+
+    @Test
+    public void testTwoResourceGenerateWithNewParser() throws Exception
+    {
+        System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
+        testTwoResourceGenerate();
+    }
+
+    @Test
+    public void testTwoResourceGenerate() throws Exception {
+        File muleXmlSimple = simpleGeneration("two", null, "4.0.0");
+        assertTrue(muleXmlSimple.exists());
+        String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
+
+        assertEquals(1, countOccurences(s, "get:/pet:two-config"));
+        assertEquals(1, countOccurences(s, "post:/pet:two-config"));
+
+        assertEquals(1, countOccurences(s, "get:/car:two-config"));
+        assertEquals(1, countOccurences(s, "post:/car:two-config"));
+    }
+
+    @Test
+    public void testNestedGenerateWithOldParser() throws Exception
+    {
+        testNestedGenerate();
+    }
+
+    @Test
+    public void testNestedGenerateWithNewParser() throws Exception
+    {
+        System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
+        testNestedGenerate();
+    }
+
+    public void testNestedGenerate() throws Exception {
+        File muleXmlSimple = simpleGeneration("nested", null, "4.0.0");
+        assertTrue(muleXmlSimple.exists());
+        String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
+        assertEquals(1, countOccurences(s, "get:/pet:nested-config"));
+        assertEquals(1, countOccurences(s, "post:/pet:nested-config"));
+        assertEquals(1, countOccurences(s, "get:/pet/owner:nested-config"));
+        assertEquals(1, countOccurences(s, "get:/car:nested-config"));
+        assertEquals(1, countOccurences(s, "post:/car:nested-config"));
+    }
+
+    @Test
+    public void testNoNameGenerateWithOldParser() throws Exception
+    {
+        testNoNameGenerate();
+    }
+
+    @Test
+    public void testNoNameGenerateWithNewParser() throws Exception
+    {
+        System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
+        testNoNameGenerate();
+    }
+
+    public void testNoNameGenerate() throws Exception {
+        File muleXmlSimple = simpleGeneration("no-name", null, "4.0.0");
+        assertTrue(muleXmlSimple.exists());
+        String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
+        assertEquals(1, countOccurences(s, "httpn:listener-config name=\"no-name-httpListenerConfig\">"));
+        assertEquals(1, countOccurences(s, "httpn:listener config-ref=\"no-name-httpListenerConfig\" path=\"/api/*\""));
+    }
+
+    @Test
+    public void testExampleGenerateWithOldParser() throws Exception
+    {
+        testExampleGenerate();
+    }
+
+    @Test
+    public void testExampleGenerateWithNewParser() throws Exception
+    {
+        System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
+        testExampleGenerate();
+    }
+
+    public void testExampleGenerate() throws Exception {
+        File muleXmlSimple = simpleGeneration("example", null, "4.0.0");
+        assertTrue(muleXmlSimple.exists());
+        String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
+
+        assertEquals(1, countOccurences(s, "{&#xA;    &quot;name&quot;: &quot;Bobby&quot;,&#xA;    &quot;food&quot;: &quot;Ice Cream&quot;&#xA;}"));
+    }
+
+
+    @Test
+    public void doubleRootRamlWithOldParser() throws Exception {
+        doubleRootRaml();
+    }
+
+    @Test
+    public void doubleRootRamlWithNewParser() throws Exception {
+        System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
+        doubleRootRaml();
+    }
+
+    public void doubleRootRaml() throws Exception
+    {
+        List<File> ramls = Arrays.asList(getFile("double-root-raml/simple.raml"), getFile("double-root-raml/two.raml"));
+
+        List<File> xmls = Arrays.asList();
         File muleXmlOut = folder.newFolder("mule-xml-out");
 
-        Scaffolder scaffolder = createScaffolder(ramls, xmls, muleXmlOut);
+        Scaffolder scaffolder = createScaffolder(ramls, xmls, muleXmlOut, null, "4.0.0", null);
         scaffolder.run();
 
-        assertTrue(xmlFile.exists());
-        String s = IOUtils.toString(new FileInputStream(xmlFile));
-        assertEquals(1, countOccurences(s, "httpn:listener-config name=\"HTTP_Listener_Configuration\""));
-        assertEquals(1, countOccurences(s, "httpn:listener config-ref=\"HTTP_Listener_Configuration\" path=\"/api/*\""));
-        assertEquals(0, countOccurences(s, "httpn:inbound-endpoint"));
-        assertEquals(1, countOccurences(s, "get:/pet"));
-        assertEquals(1, countOccurences(s, "post:/pet"));
-        assertEquals(1, countOccurences(s, "get:/\""));
+        File muleXmlSimple = new File(muleXmlOut, "simple.xml");
+        File muleXmlTwo = new File(muleXmlOut, "two.xml");
+
+        String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
+        assertEquals(1, countOccurences(s, "<httpn:listener-config"));
+        assertEquals(1, countOccurences(s, "get:/:simple-config"));
+        assertEquals(1, countOccurences(s, "get:/pet:simple-config"));
         assertEquals(0, countOccurences(s, "extensionEnabled"));
+
+        String s2 = IOUtils.toString(new FileInputStream(muleXmlTwo));
+        assertEquals(1, countOccurences(s2, "get:/pet:two-config"));
+        assertEquals(1, countOccurences(s2, "post:/pet:two-config"));
+        assertEquals(1, countOccurences(s2, "get:/car:two-config"));
+        assertEquals(1, countOccurences(s2, "post:/car:two-config"));
+        assertEquals(0, countOccurences(s2, "extensionEnabled"));
     }
-    //
-    //@Test
-    //public void testAlreadyExistsGenerateWithCustomDomainWithOldParser() throws Exception
-    //{
-    //    testAlreadyExistsGenerateWithCustomDomain();
-    //}
-    //
-    //@Test
-    //public void testAlreadyExistsGenerateWithCustomDomainWithNewParser() throws Exception
-    //{
-    //    System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-    //    testAlreadyExistsGenerateWithCustomDomain();
-    //}
-    //
-    //public void testAlreadyExistsGenerateWithCustomDomain() throws Exception {
-    //    List<File> ramls = Arrays.asList(getFile("scaffolder-existing-custom-lc/simple.raml"));
-    //    File xmlFile = getFile("scaffolder-existing-custom-lc/simple.xml");
-    //    File domainFile = getFile("custom-domain/mule-domain-config.xml");
-    //
-    //    List<File> xmls = Arrays.asList(xmlFile);
-    //    File muleXmlOut = folder.newFolder("mule-xml-out");
-    //    Scaffolder scaffolder = createScaffolder(ramls, xmls, muleXmlOut,domainFile);
-    //    scaffolder.run();
-    //
-    //    assertTrue(xmlFile.exists());
-    //    String s = IOUtils.toString(new FileInputStream(xmlFile));
-    //    assertEquals(0, countOccurences(s, "<http:listener-config"));
-    //    assertEquals(1, countOccurences(s, "http:listener config-ref=\"http-lc-0.0.0.0-8081\" path=\"/api/*\""));
-    //    assertEquals(0, countOccurences(s, "http:inbound-endpoint"));
-    //    assertEquals(1, countOccurences(s, "get:/pet"));
-    //    assertEquals(1, countOccurences(s, "get:/\""));
-    //    assertEquals(0, countOccurences(s, "extensionEnabled"));
-    //}
-    //
-    //@Test
-    //public void testAlreadyExistsGenerateWithCustomAndNormalLCWithOldParser() throws Exception
-    //{
-    //    testAlreadyExistsGenerateWithCustomAndNormalLC();
-    //}
-    //
-    //@Test
-    //public void testAlreadyExistsGenerateWithCustomAndNormalLCWithNewParser() throws Exception
-    //{
-    //    System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-    //    testAlreadyExistsGenerateWithCustomAndNormalLC();
-    //}
-    //
-    //public void testAlreadyExistsGenerateWithCustomAndNormalLC() throws Exception {
-    //    List<File> ramls = Arrays.asList(getFile("scaffolder-existing-custom-and-normal-lc/leagues-custom-normal-lc.raml"));
-    //    File xmlFile = getFile("scaffolder-existing-custom-and-normal-lc/leagues-custom-normal-lc.xml");
-    //    List<File> xmls = Arrays.asList(xmlFile);
-    //    File muleXmlOut = folder.newFolder("mule-xml-out");
-    //    File domainFile = getFile("custom-domain/mule-domain-config.xml");
-    //
-    //    Scaffolder scaffolder = createScaffolder(ramls, xmls, muleXmlOut, domainFile);
-    //    scaffolder.run();
-    //
-    //    assertTrue(xmlFile.exists());
-    //    String s = IOUtils.toString(new FileInputStream(xmlFile));
-    //    assertEquals(1, countOccurences(s, "<http:listener-config"));
-    //    assertEquals(1, countOccurences(s, "http:listener config-ref=\"http-lc-0.0.0.0-8081\" path=\"/api/*\""));
-    //    assertEquals(0, countOccurences(s, "http:inbound-endpoint"));
-    //    assertEquals(1, countOccurences(s, "get:/leagues/{leagueId}"));
-    //    assertEquals(1, countOccurences(s, "<http:listener config-ref=\"HTTP_Listener_Configuration\""));
-    //    assertEquals(1, countOccurences(s, "<http:listener config-ref=\"http-lc-0.0.0.0-8081\""));
-    //    assertEquals(0, countOccurences(s, "extensionEnabled"));
-    //}
-    //
-    //@Test
-    //public void testAlreadyExistsOldGenerateWithOldParser() throws Exception
-    //{
-    //    testAlreadyExistsOldGenerate();
-    //}
-    //
-    //@Test
-    //public void testAlreadyExistsOldGenerateWithNewParser() throws Exception
-    //{
-    //    System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-    //    testAlreadyExistsOldGenerate();
-    //}
-    //
-    //public void testAlreadyExistsOldGenerate() throws Exception {
-    //    List<File> ramls = Arrays.asList(getFile("scaffolder-existing-old/simple.raml"));
-    //    File xmlFile = getFile("scaffolder-existing-old/simple.xml");
-    //    List<File> xmls = Arrays.asList(xmlFile);
-    //    File muleXmlOut = folder.newFolder("mule-xml-out");
-    //
-    //    Scaffolder scaffolder = createScaffolder(ramls, xmls, muleXmlOut);
-    //    scaffolder.run();
-    //
-    //    assertTrue(xmlFile.exists());
-    //    String s = IOUtils.toString(new FileInputStream(xmlFile));
-    //    assertEquals(0, countOccurences(s, "http:listener-config"));
-    //    assertEquals(0, countOccurences(s, "http:listener"));
-    //    assertEquals(1, countOccurences(s, "http:inbound-endpoint port=\"${serverPort}\" host=\"localhost\" path=\"api\""));
-    //    assertEquals(1, countOccurences(s, "get:/pet"));
-    //    assertEquals(1, countOccurences(s, "post:/pet"));
-    //    assertEquals(0, countOccurences(s, "extensionEnabled"));
-    //}
-    //
-    //@Test
-    //public void testAlreadyExistingMuleConfigWithApikitRouterWithOldParser() throws Exception
-    //{
-    //    testAlreadyExistingMuleConfigWithApikitRouter();
-    //}
-    //
-    //@Test
-    //public void testAlreadyExistingMuleConfigWithApikitRouterWithNewParser() throws Exception
-    //{
-    //    System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-    //    testAlreadyExistingMuleConfigWithApikitRouter();
-    //}
-    //
-    //public void testAlreadyExistingMuleConfigWithApikitRouter() throws Exception {
-    //    List<File> ramls = Arrays.asList(getFile("scaffolder-existing/simple.raml"));
-    //    File xmlFile = getFile("scaffolder-existing/mule-config-no-api-flows.xml");
-    //    List<File> xmls = Arrays.asList(xmlFile);
-    //    File muleXmlOut = folder.newFolder("mule-xml-out");
-    //
-    //    Scaffolder scaffolder = createScaffolder(ramls, xmls, muleXmlOut);
-    //    scaffolder.run();
-    //
-    //    assertTrue(xmlFile.exists());
-    //    String s = IOUtils.toString(new FileInputStream(xmlFile));
-    //    assertEquals(1, countOccurences(s, "http:listener-config name=\"HTTP_Listener_Configuration\" host=\"localhost\" port=\"${serverPort}\""));
-    //    assertEquals(1, countOccurences(s, "http:listener config-ref=\"HTTP_Listener_Configuration\" path=\"/api/*\""));
-    //    assertEquals(1, countOccurences(s, "<apikit:router config-ref=\"apikit-config\" />"));
-    //    assertEquals(0, countOccurences(s, "http:inbound-endpoint"));
-    //    assertEquals(1, countOccurences(s, "get:/pet"));
-    //    assertEquals(1, countOccurences(s, "post:/pet"));
-    //    assertEquals(1, countOccurences(s, "get:/:"));
-    //    Collection<File> newXmlConfigs = FileUtils.listFiles(muleXmlOut, new String[] {"xml"}, true);
-    //    assertEquals(0, newXmlConfigs.size());
-    //    assertEquals(0, countOccurences(s, "extensionEnabled"));
-    //}
-    //
-    //@Test
-    //public void testAlreadyExistsOldWithAddressGenerateWithOldParser() throws Exception
-    //{
-    //    testAlreadyExistsOldWithAddressGenerate();
-    //}
-    //
-    //@Test
-    //public void testAlreadyExistsOldWithAddressGenerateWithNewParser() throws Exception
-    //{
-    //    System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-    //    testAlreadyExistsOldWithAddressGenerate();
-    //}
-    //
-    //@Test
-    //public void testAlreadyExistsOldWithAddressGenerate() throws Exception {
-    //    List<File> ramls = Arrays.asList(getFile("scaffolder-existing-old-address/complex.raml"));
-    //    File xmlFile = getFile("scaffolder-existing-old-address/complex.xml");
-    //    List<File> xmls = Arrays.asList(xmlFile);
-    //    File muleXmlOut = folder.newFolder("mule-xml-out");
-    //
-    //    Scaffolder scaffolder = createScaffolder(ramls, xmls, muleXmlOut);
-    //    scaffolder.run();
-    //
-    //    assertTrue(xmlFile.exists());
-    //    String s = IOUtils.toString(new FileInputStream(xmlFile));
-    //    assertEquals(0, countOccurences(s, "http:listener-config"));
-    //    assertEquals(0, countOccurences(s, "http:listener"));
-    //    assertEquals(1, countOccurences(s, "http:inbound-endpoint address"));
-    //    assertEquals(1, countOccurences(s, "put:/clients/{clientId}:complex-config"));
-    //    assertEquals(1, countOccurences(s, "put:/invoices/{invoiceId}:complex-config"));
-    //    assertEquals(1, countOccurences(s, "put:/items/{itemId}:application/json:complex-config"));
-    //    assertEquals(1, countOccurences(s, "put:/providers/{providerId}:complex-config"));
-    //    assertEquals(1, countOccurences(s, "delete:/clients/{clientId}:complex-config"));
-    //    assertEquals(1, countOccurences(s, "delete:/invoices/{invoiceId}:complex-config"));
-    //    assertEquals(1, countOccurences(s, "delete:/items/{itemId}:multipart/form-data:complex-config"));
-    //    assertEquals(1, countOccurences(s, "delete:/providers/{providerId}:complex-config"));
-    //    assertEquals(1, countOccurences(s, "get:/:complex-config"));
-    //    assertEquals(1, countOccurences(s, "get:/clients/{clientId}:complex-config"));
-    //    assertEquals(1, countOccurences(s, "get:/clients:complex-config"));
-    //    assertEquals(1, countOccurences(s, "get:/invoices/{invoiceId}:complex-config"));
-    //    assertEquals(1, countOccurences(s, "get:/invoices:complex-config"));
-    //    assertEquals(1, countOccurences(s, "get:/items/{itemId}:complex-config"));
-    //    assertEquals(1, countOccurences(s, "get:/items:complex-config"));
-    //    assertEquals(1, countOccurences(s, "get:/providers/{providerId}:complex-config"));
-    //    assertEquals(1, countOccurences(s, "get:/providers:complex-config"));
-    //    assertEquals(1, countOccurences(s, "post:/clients:complex-config"));
-    //    assertEquals(1, countOccurences(s, "post:/invoices:complex-config"));
-    //    assertEquals(1, countOccurences(s, "post:/items:application/json:complex-config"));
-    //    assertEquals(1, countOccurences(s, "post:/providers:complex-config"));
-    //    assertEquals(0, countOccurences(s, "extensionEnabled"));
-    //}
-    //
-    //@Test
-    //public void testMultipleMimeTypesWithoutNamedConfigWithOldParser() throws Exception
-    //{
-    //    testMultipleMimeTypesWithoutNamedConfig();
-    //}
-    //
-    //@Test
-    //public void testMultipleMimeTypesWithoutNamedConfigWithNewParser() throws Exception
-    //{
-    //    System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-    //    testMultipleMimeTypesWithoutNamedConfig();
-    //}
-    //
-    //public void testMultipleMimeTypesWithoutNamedConfig() throws Exception {
-    //    List<File> ramls = Arrays.asList(getFile("scaffolder/multipleMimeTypes.raml"));
-    //    File muleXmlOut = folder.newFolder("scaffolder");
-    //    List<File> xmls = Arrays.asList(getFile("scaffolder/multipleMimeTypes.xml"));
-    //
-    //    createScaffolder(ramls, xmls, muleXmlOut, null).run();
-    //
-    //    File muleXmlSimple = new File(muleXmlOut, "multipleMimeTypes.xml");
-    //    assertTrue(muleXmlSimple.exists());
-    //
-    //    String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
-    //    assertTrue(s.contains("post:/pet:application/json"));
-    //    assertTrue(s.contains("post:/pet:text/xml"));
-    //    assertTrue(s.contains("post:/pet:application/x-www-form-urlencoded"));
-    //    assertTrue(s.contains("post:/pet"));
-    //    assertTrue(!s.contains("post:/pet:application/xml"));
-    //    assertTrue(s.contains("post:/vet"));
-    //    assertTrue(!s.contains("post:/vet:application/xml"));
-    //    assertEquals(0, countOccurences(s, "extensionEnabled"));
-    //}
-    //
-    //@Test
-    //public void testMultipleMimeTypesWithOldParser() throws Exception {
-    //    testMultipleMimeTypes("multipleMimeTypes");
-    //}
-    //
-    //@Test
-    //public void testMultipleMimeTypesWithNewParser() throws Exception {
-    //    System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-    //    testMultipleMimeTypes("multipleMimeTypes");
-    //}
-    //
-    //@Test
-    //public void testMultipleMimeTypesV10() throws Exception {
-    //    testMultipleMimeTypes("multipleMimeTypesV10");
-    //}
-    //
-    //private void testMultipleMimeTypes(String name) throws Exception {
-    //    List<File> ramls = Arrays.asList(getFile("scaffolder/" + name + ".raml"));
-    //    File muleXmlOut = folder.newFolder("scaffolder");
-    //
-    //    createScaffolder(ramls, new ArrayList<File>(), muleXmlOut).run();
-    //
-    //    File muleXmlSimple = new File(muleXmlOut, name + ".xml");
-    //    assertTrue(muleXmlSimple.exists());
-    //
-    //    String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
-    //    assertTrue(s.contains("post:/pet:application/json:" + name + "-config"));
-    //    assertTrue(s.contains("post:/pet:text/xml:" + name + "-config"));
-    //    if (name.endsWith("V10"))
-    //    {
-    //        assertTrue(s.contains("post:/pet:" + name + "-config"));
-    //    }
-    //    else
-    //    {
-    //        assertTrue(s.contains("post:/pet:application/x-www-form-urlencoded:" + name + "-config"));
-    //    }
-    //    assertTrue(s.contains("post:/pet:" + name + "-config"));
-    //    assertTrue(!s.contains("post:/pet:application/xml:" + name + "-config"));
-    //    assertTrue(s.contains("post:/vet:" + name + "-config"));
-    //    assertTrue(!s.contains("post:/vet:application/xml:" + name + "-config"));
-    //    assertEquals(0, countOccurences(s, "extensionEnabled"));
-    //}
-    //
-    //@Test
-    //public void doubleRootRamlWithOldParser() throws Exception {
-    //    doubleRootRaml();
-    //}
-    //
-    //@Test
-    //public void doubleRootRamlWithNewParser() throws Exception {
-    //    System.setProperty(ParserV2Utils.PARSER_V2_PROPERTY, "true");
-    //    doubleRootRaml();
-    //}
-    //
-    //public void doubleRootRaml() throws Exception
-    //{
-    //    List<File> ramls = Arrays.asList(getFile("double-root-raml/simple.raml"), getFile("double-root-raml/two.raml"));
-    //
-    //    List<File> xmls = Arrays.asList();
-    //    File muleXmlOut = folder.newFolder("mule-xml-out");
-    //
-    //    Scaffolder scaffolder = createScaffolder(ramls, xmls, muleXmlOut, null, "3.7.3", null);
-    //    scaffolder.run();
-    //
-    //    File muleXmlSimple = new File(muleXmlOut, "simple.xml");
-    //    File muleXmlTwo = new File(muleXmlOut, "two.xml");
-    //
-    //    String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
-    //    assertEquals(1, countOccurences(s, "<http:listener-config"));
-    //    assertEquals(1, countOccurences(s, "get:/:simple-config"));
-    //    assertEquals(1, countOccurences(s, "get:/pet:simple-config"));
-    //    assertEquals(0, countOccurences(s, "extensionEnabled"));
-    //
-    //    String s2 = IOUtils.toString(new FileInputStream(muleXmlTwo));
-    //    assertEquals(1, countOccurences(s2, "get:/pet:two-config"));
-    //    assertEquals(1, countOccurences(s2, "post:/pet:two-config"));
-    //    assertEquals(1, countOccurences(s2, "get:/car:two-config"));
-    //    assertEquals(1, countOccurences(s2, "post:/car:two-config"));
-    //    assertEquals(0, countOccurences(s2, "extensionEnabled"));
-    //}
 
     private Scaffolder createScaffolder(List<File> ramls, List<File> xmls, File muleXmlOut)
             throws FileNotFoundException
@@ -884,7 +472,7 @@ public class ScaffolderMule4Test {
 
     private File simpleGeneration(String name, String domainPath, String muleVersion) throws Exception
     {
-        return simpleGeneration("scaffolder-mule-4", name, domainPath, muleVersion);
+        return simpleGeneration("scaffolder", name, domainPath, muleVersion);
     }
 
     private File simpleGeneration(String apiPath, String name, String domainPath, String muleVersion) throws Exception {
@@ -902,12 +490,12 @@ public class ScaffolderMule4Test {
 
     private File simpleGenerationWithExtensionEnabled(String raml, String ramlWithExtensionEnabledPath, String domainPath, String muleVersion) throws Exception
     {
-        List<File> ramlList = Arrays.asList(getFile("scaffolder-mule-4/" + raml + ".raml"));
+        List<File> ramlList = Arrays.asList(getFile("scaffolder/" + raml + ".raml"));
         Set<File> ramlWithExtensionEnabled = null;
         if (ramlWithExtensionEnabledPath != null)
         {
             ramlWithExtensionEnabled = new TreeSet<>();
-            ramlWithExtensionEnabled.add(getFile("scaffolder-mule-4/" + ramlWithExtensionEnabledPath + ".raml"));
+            ramlWithExtensionEnabled.add(getFile("scaffolder/" + ramlWithExtensionEnabledPath + ".raml"));
         }
         File domainFile = getFile(domainPath);
 

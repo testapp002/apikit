@@ -8,8 +8,10 @@ package org.mule.tools.apikit.input.parsers;
 
 import static org.mule.tools.apikit.output.MuleConfigGenerator.HTTPN_NAMESPACE;
 
+import org.mule.tools.apikit.model.API;
 import org.mule.tools.apikit.model.HttpListener3xConfig;
 import org.mule.tools.apikit.model.HttpListener4xConfig;
+import org.mule.tools.apikit.model.HttpListenerConnection;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,16 +38,6 @@ public class HttpListener4xConfigParser implements MuleConfigFileParser
             {
                 throw new IllegalStateException("Cannot retrieve name.");
             }
-            //String host = element.getAttributeValue("host");
-            //if (host == null)
-            //{
-            //    throw new IllegalStateException("Cannot retrieve host.");
-            //}
-            //String port = element.getAttributeValue("port");
-            //if (port == null)
-            //{
-            //    port = Integer.toString(API.DEFAULT_PORT);
-            //}
             String basePath = element.getAttributeValue("basePath");
             if (basePath == null)
             {
@@ -54,7 +46,28 @@ public class HttpListener4xConfigParser implements MuleConfigFileParser
             else  if (!basePath.startsWith("/")) {
                 basePath = "/" + basePath;
             }
-            httpListenerConfigMap.put(name, new HttpListener4xConfig(name, basePath, new HttpListenerConnectionParser().parse(document)));
+            for (Element child : element.getChildren())
+            {
+                if (child.getName().equals("listener-connection"))
+                {
+                    String host = child.getAttributeValue("host");
+                    if (host == null)
+                    {
+                        throw new IllegalStateException("Cannot retrieve host.");
+                    }
+                    String port = child.getAttributeValue("port");
+                    if (port == null)
+                    {
+                        port = Integer.toString(API.DEFAULT_PORT);
+                    }
+                    String protocol = child.getAttributeValue("protocol");
+                    if (protocol == null)
+                    {
+                        protocol = API.DEFAULT_PROTOCOL;
+                    }
+                    httpListenerConfigMap.put(name, new HttpListener4xConfig(name, basePath, new HttpListenerConnection(host, port, protocol)));
+                }
+            }
         }
         return httpListenerConfigMap;
     }

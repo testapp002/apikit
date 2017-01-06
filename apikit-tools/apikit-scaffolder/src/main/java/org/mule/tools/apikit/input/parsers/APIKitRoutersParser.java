@@ -12,6 +12,7 @@ import org.mule.tools.apikit.model.API;
 import org.mule.tools.apikit.model.APIFactory;
 import org.mule.tools.apikit.model.APIKitConfig;
 import org.mule.tools.apikit.model.HttpListener3xConfig;
+import org.mule.tools.apikit.model.HttpListener4xConfig;
 import org.mule.tools.apikit.model.IHttpListenerConfig;
 
 import java.io.File;
@@ -77,7 +78,12 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
                     {
                         IHttpListenerConfig httpListenerConfig = getHTTPListenerConfig(inbound);
                         String path = getPathFromInbound(inbound);
-                        includedApis.put(configId, apiFactory.createAPIBinding(ramlPath, file, null, path, config, httpListenerConfig, "3.7.0"));
+                        String muleVersion = "3.7.0";
+                        if (httpListenerConfig instanceof HttpListener4xConfig)
+                        {
+                            muleVersion = "4.0.0";
+                        }
+                        includedApis.put(configId, apiFactory.createAPIBinding(ramlPath, file, null, path, config, httpListenerConfig, muleVersion));
                     }
                     else if ("inbound-endpoint".equals(inbound.getName()))
                     {

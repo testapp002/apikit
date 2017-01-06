@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 
 public class APIFactory
@@ -81,8 +82,21 @@ public class APIFactory
 
     private IHttpListenerConfig getFirstLC()
     {
-        List<Map.Entry<String,IHttpListenerConfig>> list = new ArrayList<>(domainHttpListenerConfigs.entrySet());
-        Collections.sort(list, new Comparator<Map.Entry<String, IHttpListenerConfig>>(){
+        List<Map.Entry<String,IHttpListenerConfig>> numericPortsList = new ArrayList<>();
+        List<Map.Entry<String,IHttpListenerConfig>> nonNumericPortsList = new ArrayList<>();
+
+        for (Map.Entry<String, IHttpListenerConfig> entry : domainHttpListenerConfigs.entrySet())
+        {
+            if (StringUtils.isNumeric(entry.getValue().getPort()))
+            {
+                numericPortsList.add(entry);
+            }
+            else
+            {
+                nonNumericPortsList.add(entry);
+            }
+        }
+        Collections.sort(numericPortsList, new Comparator<Map.Entry<String, IHttpListenerConfig>>(){
             @Override
             public int compare(Map.Entry<String, IHttpListenerConfig> o1, Map.Entry<String, IHttpListenerConfig> o2)
             {
@@ -91,6 +105,7 @@ public class APIFactory
                 return i1.compareTo(i2);
             }
         });
-        return list.get(0).getValue();
+        numericPortsList.addAll(nonNumericPortsList);
+        return numericPortsList.get(0).getValue();
     }
 }

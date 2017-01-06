@@ -5,25 +5,7 @@
       xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
                http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
                http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd">
-
     <http:listener-config name="HTTP_Listener_Configuration" host="localhost" port="${serverPort}"/>
-
-    <apikit:config raml="simple.raml" />
-
-    <flow name="main">
-        <http:listener config-ref="HTTP_Listener_Configuration" path="/api/*"/>
-        <apikit:router />
-        <exception-strategy ref="apiKitGlobalExceptionMapping"/>
-    </flow>
-
-    <flow name="get:/">
-        <set-payload xmlns="" value="Root!"/>
-    </flow>
-
-    <flow name="get:/pet">
-        <set-payload xmlns="" value="Hello world!"/>
-    </flow>
-
     <apikit:mapping-exception-strategy name="apiKitGlobalExceptionMapping">
         <apikit:mapping statusCode="404">
             <apikit:exception value="org.mule.module.apikit.exception.NotFoundException"/>
@@ -47,4 +29,19 @@
         </apikit:mapping>
     </apikit:mapping-exception-strategy>
 
+    <apikit:config raml="multipleMimeTypes.raml" />
+
+    <flow name="main">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/api/*"/>
+        <apikit:router />
+        <exception-strategy ref="apiKitGlobalExceptionMapping"/>
+    </flow>
+
+
+    <flow name="get:/pet">
+        <set-payload xmlns="" value="Hello world!"/>
+    </flow>
+
+    <flow name="post:/vet:text/xml">
+    </flow>
 </mule>
