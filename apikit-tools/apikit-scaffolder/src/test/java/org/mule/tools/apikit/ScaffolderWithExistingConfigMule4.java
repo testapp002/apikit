@@ -76,13 +76,15 @@ public class ScaffolderWithExistingConfigMule4
 
         assertTrue(xmlFile.exists());
         String s = IOUtils.toString(new FileInputStream(xmlFile));
-        assertEquals(1, countOccurences(s, "httpn:listener-config name=\"HTTP_Listener_Configuration\">"));
+        assertEquals(1, countOccurences(s, "httpn:listener-config name=\"HTTP_Listener_Configuration\""));
+        assertEquals(1, countOccurences(s, "httpn:listener-connection host=\"0.0.0.0\" port=\"${serverPort}\""));
         assertEquals(1, countOccurences(s, "httpn:listener config-ref=\"HTTP_Listener_Configuration\" path=\"/api/*\""));
         assertEquals(0, countOccurences(s, "httpn:inbound-endpoint"));
         assertEquals(1, countOccurences(s, "get:/pet"));
         assertEquals(1, countOccurences(s, "post:/pet"));
         assertEquals(1, countOccurences(s, "get:/\""));
         assertEquals(1, countOccurences(s, "extensionEnabled=\"false\""));
+        assertEquals(1, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -98,7 +100,6 @@ public class ScaffolderWithExistingConfigMule4
         testAlreadyExistsWithExtensionEnabled();
     }
 
-    @Test
     public void testAlreadyExistsWithExtensionEnabled() throws Exception
     {
         List<File> ramls = Arrays.asList(getFile("scaffolder-existing-extension/simple.raml"));
@@ -113,12 +114,14 @@ public class ScaffolderWithExistingConfigMule4
         assertTrue(xmlFile.exists());
         String s = IOUtils.toString(new FileInputStream(xmlFile));
         assertEquals(1, countOccurences(s, "httpn:listener-config name=\"HTTP_Listener_Configuration\">"));
+        assertEquals(1, countOccurences(s, "httpn:listener-connection host=\"0.0.0.0\" port=\"${serverPort}\""));
         assertEquals(1, countOccurences(s, "httpn:listener config-ref=\"HTTP_Listener_Configuration\" path=\"/api/*\""));
         assertEquals(0, countOccurences(s, "httpn:inbound-endpoint"));
         assertEquals(1, countOccurences(s, "get:/pet"));
         assertEquals(1, countOccurences(s, "post:/pet"));
         assertEquals(1, countOccurences(s, "get:/\""));
         assertEquals(1, countOccurences(s, "extensionEnabled=\"true\""));
+        assertEquals(1, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -137,24 +140,26 @@ public class ScaffolderWithExistingConfigMule4
     public void testAlreadyExistsWithExtensionNotPresent() throws Exception
     {
         List<File> ramls = Arrays.asList(getFile("scaffolder-existing-extension/simple.raml"));
-        File xmlFile = getFile("scaffolder-existing-extension/simple-extension-not-present.xml");
+        File xmlFile = getFile("scaffolder-existing-extension/simple-extension-not-present-4.xml");
         List<File> xmls = Arrays.asList(xmlFile);
         File muleXmlOut = folder.newFolder("mule-xml-out");
 
         Set<File> ramlwithEE = new TreeSet<>();
         ramlwithEE.add(getFile("scaffolder-existing-extension/simple.raml"));
-        createScaffolder(ramls, xmls, muleXmlOut, null, "3.7.3", ramlwithEE).run();
+        createScaffolder(ramls, xmls, muleXmlOut, null, "4.0.0", ramlwithEE).run();
 
         assertTrue(xmlFile.exists());
         String s = IOUtils.toString(new FileInputStream(xmlFile));
-        assertEquals(1, countOccurences(s, "http:listener-config name=\"HTTP_Listener_Configuration\" host=\"localhost\" port=\"${serverPort}\""));
-        assertEquals(1, countOccurences(s, "http:listener config-ref=\"HTTP_Listener_Configuration\" path=\"/api/*\""));
+        assertEquals(1, countOccurences(s, "httpn:listener-config name=\"HTTP_Listener_Configuration\""));
+        assertEquals(1, countOccurences(s, "httpn:listener-connection host=\"0.0.0.0\" port=\"${serverPort}\""));
+        assertEquals(1, countOccurences(s, "httpn:listener config-ref=\"HTTP_Listener_Configuration\" path=\"/api/*\""));
         assertEquals(0, countOccurences(s, "http:inbound-endpoint"));
         assertEquals(1, countOccurences(s, "get:/pet"));
         assertEquals(1, countOccurences(s, "post:/pet"));
         assertEquals(1, countOccurences(s, "get:/\""));
         assertEquals(0, countOccurences(s, "extensionEnabled"));
-    }
+        assertEquals(1, countOccurences(s, "#[null]"));
+     }
 
     @Test
     public void testAlreadyExistsGenerateWithOldParser() throws Exception
@@ -187,6 +192,7 @@ public class ScaffolderWithExistingConfigMule4
         assertEquals(1, countOccurences(s, "post:/pet"));
         assertEquals(1, countOccurences(s, "get:/\""));
         assertEquals(0, countOccurences(s, "extensionEnabled"));
+        assertEquals(1, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -215,12 +221,16 @@ public class ScaffolderWithExistingConfigMule4
         assertTrue(xmlFile.exists());
         String s = IOUtils.toString(new FileInputStream(xmlFile));
         assertEquals(0, countOccurences(s, "<httpn:listener-config"));
+        assertEquals(0, countOccurences(s, "httpn:listener-connection"));
+
         assertEquals(1, countOccurences(s, "httpn:listener config-ref=\"http-lc-0.0.0.0-8081\" path=\"/api/*\""));
         assertEquals(0, countOccurences(s, "inbound-endpoint"));
         assertEquals(1, countOccurences(s, "get:/pet"));
         assertEquals(1, countOccurences(s, "get:/\""));
         assertEquals(0, countOccurences(s, "extensionEnabled"));
         assertEquals(0, countOccurences(s, "#[NullPayload.getInstance()]"));
+        assertEquals(1, countOccurences(s, "#[null]"));
+
     }
 
     @Test
@@ -255,6 +265,8 @@ public class ScaffolderWithExistingConfigMule4
         assertEquals(1, countOccurences(s, "<httpn:listener config-ref=\"HTTP_Listener_Configuration\""));
         assertEquals(1, countOccurences(s, "<httpn:listener config-ref=\"http-lc-0.0.0.0-8081\""));
         assertEquals(0, countOccurences(s, "extensionEnabled"));
+        assertEquals(0, countOccurences(s, "#[NullPayload.getInstance()]"));
+        assertEquals(5, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -291,6 +303,8 @@ public class ScaffolderWithExistingConfigMule4
         Collection<File> newXmlConfigs = FileUtils.listFiles(muleXmlOut, new String[] {"xml"}, true);
         assertEquals(0, newXmlConfigs.size());
         assertEquals(0, countOccurences(s, "extensionEnabled"));
+        assertEquals(0, countOccurences(s, "#[NullPayload.getInstance()]"));
+        assertEquals(3, countOccurences(s, "#[null]"));
     }
 
     @Test
@@ -325,6 +339,8 @@ public class ScaffolderWithExistingConfigMule4
         assertTrue(s.contains("post:/vet"));
         assertTrue(!s.contains("post:/vet:application/xml"));
         assertEquals(0, countOccurences(s, "extensionEnabled"));
+        assertEquals(0, countOccurences(s, "#[NullPayload.getInstance()]"));
+        assertEquals(5, countOccurences(s, "#[null]"));
     }
 
     @Test

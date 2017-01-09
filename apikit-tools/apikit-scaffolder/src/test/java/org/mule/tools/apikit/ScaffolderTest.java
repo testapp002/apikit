@@ -72,6 +72,13 @@ public class ScaffolderTest {
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
         assertEquals(0, countOccurences(s, "#[null]"));
+        assertEquals(2, countOccurences(s, "#[NullPayload.getInstance()]"));
+        assertEquals(3, countOccurences(s, "exception-strategy"));
+        assertEquals(0, countOccurences(s, "error-handler name=\"simpleV10-apiKitGlobalExceptionMapping\""));
+        assertEquals(0, countOccurences(s, "expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>"));
+        assertEquals(0, countOccurences(s, "set-variable variableName=\"_outboundHeaders_\" value=\"#[new java.util.HashMap()]\" />"));
+
+
     }
 
     @Test

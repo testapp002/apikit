@@ -72,10 +72,12 @@ public class FlowScope implements Scope {
         }
         main.addContent(restProcessor);
 
-        Element exceptionStrategy = new Element("exception-strategy", XMLNS_NAMESPACE.getNamespace());
-        exceptionStrategy.setAttribute("ref", exceptionStrategyRef);
-
-        main.addContent(exceptionStrategy);
+        if (APIKitTools.usesListenersMuleV3(api.getMuleVersion()) || APIKitTools.defaultIsInboundEndpoint(api.getMuleVersion()))
+        {
+            Element exceptionStrategy = new Element("exception-strategy", XMLNS_NAMESPACE.getNamespace());
+            exceptionStrategy.setAttribute("ref", exceptionStrategyRef);
+            main.addContent(exceptionStrategy);
+        }
 
         mule.addContent(main);
     }

@@ -7,6 +7,8 @@
                http://www.mulesoft.org/schema/mule/httpn http://www.mulesoft.org/schema/mule/httpn/current/mule-httpn.xsd
                http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd">
 
+    <configuration defaultErrorHandler-ref="defaultErrorHandler"/>
+
     <httpn:listener-config name="HTTP_Listener_Configuration">
         <httpn:listener-connection host="0.0.0.0" port="${serverPort}"/>
     </httpn:listener-config>

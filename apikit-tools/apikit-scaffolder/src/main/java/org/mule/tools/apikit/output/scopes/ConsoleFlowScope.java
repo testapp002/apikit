@@ -31,19 +31,36 @@ public class ConsoleFlowScope implements Scope {
 
         if (httpListenerConfigRef != null)
         {
-            Namespace namespace = null;
-            if (api.useListenerMule3())
+            if (APIKitTools.usesListenersMuleV3(api.getMuleVersion()) || api.getMuleVersion() == null) //api.getMuleVersion() == null makes this option the default one.
             {
-                namespace = HTTP_NAMESPACE.getNamespace();
+                Element httpListener = new Element("listener", HTTP_NAMESPACE.getNamespace());
+                httpListener.setAttribute("config-ref", httpListenerConfigRef);
+                httpListener.setAttribute("path", API.DEFAULT_CONSOLE_PATH);
+                consoleFlow.addContent(httpListener);
             }
-            else if (!api.useInboundEndpoint())
+            else
             {
-                namespace = HTTPN_NAMESPACE.getNamespace();
+                Element httpListener = new Element("listener", HTTPN_NAMESPACE.getNamespace());
+                httpListener.setAttribute("config-ref", httpListenerConfigRef);
+                httpListener.setAttribute("path", API.DEFAULT_CONSOLE_PATH);
+
+                Element responseBuilder = new Element("response-builder", HTTPN_NAMESPACE.getNamespace());
+                responseBuilder.setAttribute("statusCode", "#[httpStatus]");
+                responseBuilder.setAttribute("headersRef", "#[_outboundHeaders_]");
+                httpListener.addContent(responseBuilder);
+
+                Element errorResponseBuilder = new Element("error-response-builder", HTTPN_NAMESPACE.getNamespace());
+                errorResponseBuilder.setAttribute("statusCode", "#[httpStatus]");
+                errorResponseBuilder.setAttribute("headersRef", "#[_outboundHeaders_]");
+                httpListener.addContent(errorResponseBuilder);
+
+                consoleFlow.addContent(httpListener);
+
+                Element setVariable = new Element("set-variable", XMLNS_NAMESPACE.getNamespace());
+                setVariable.setAttribute("variableName", "_outboundHeaders_");
+                setVariable.setAttribute("value", "#[new java.util.HashMap()]");
+                consoleFlow.addContent(setVariable);
             }
-            Element httpListener = new Element("listener", namespace);
-            httpListener.setAttribute("config-ref", httpListenerConfigRef);
-            httpListener.setAttribute("path", API.DEFAULT_CONSOLE_PATH);
-            consoleFlow.addContent(httpListener);
         }
         else
         {

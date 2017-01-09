@@ -66,14 +66,22 @@ public class ScaffolderMule4Test {
         File muleXmlSimple = simpleGeneration("scaffolder", name, null, "4.0.0");
         assertTrue(muleXmlSimple.exists());
         String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
-        assertEquals(1, countOccurences(s, "<httpn:listener-config"));
-        assertEquals(2, countOccurences(s, "<httpn:listener "));
+        assertEquals(1, countOccurences(s, "httpn:listener-config name=\"simple"));
+        assertEquals(1, countOccurences(s, "httpn:connection host=\"0.0.0.0\" port=\"8081\""));
+        assertEquals(2, countOccurences(s, "httpn:listener "));
+        assertEquals(2, countOccurences(s, "httpn:response-builder statusCode=\"#[httpStatus]\" headersRef=\"#[_outboundHeaders_]\""));
+        assertEquals(2, countOccurences(s, "httpn:error-response-builder statusCode=\"#[httpStatus]\" headersRef=\"#[_outboundHeaders_]\""));
         assertEquals(1, countOccurences(s, "get:/:" + name + "-config"));
         assertEquals(1, countOccurences(s, "get:/pet:" + name + "-config"));
         assertEquals(0, countOccurences(s, "extensionEnabled"));
-        assertEquals(1, countOccurences(s, "<apikit:console"));
+        assertEquals(1, countOccurences(s, "apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
         assertEquals(0, countOccurences(s, "#[NullPayload.getInstance()]"));
+        assertEquals(2, countOccurences(s, "#[null]"));
+        assertEquals(2, countOccurences(s, "error-handler name=\"simple"));
+        assertEquals(5, countOccurences(s, "expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>"));
+        assertEquals(2, countOccurences(s, "set-variable variableName=\"_outboundHeaders_\" value=\"#[new java.util.HashMap()]\" />"));
+        assertEquals(0, countOccurences(s, "exception-strategy"));
     }
 
     @Test
@@ -211,8 +219,8 @@ public class ScaffolderMule4Test {
         String s = IOUtils.toString(new FileInputStream(muleXmlSimple));
         assertEquals(0, countOccurences(s, "<httpn:listener-config"));
         assertEquals(2, countOccurences(s, "<httpn:listener "));
-        assertEquals(1, countOccurences(s, "<httpn:response-builder statusCode=\"#[httpStatus]\""));
-        assertEquals(1, countOccurences(s, "<httpn:error-response-builder statusCode=\"#[httpStatus]\""));
+        assertEquals(2, countOccurences(s, "<httpn:response-builder statusCode=\"#[httpStatus]\""));
+        assertEquals(2, countOccurences(s, "<httpn:error-response-builder statusCode=\"#[httpStatus]\""));
         assertEquals(2, countOccurences(s, "config-ref=\"http-lc-0.0.0.0-8081\""));
         assertEquals(1, countOccurences(s, "get:/:simple-config"));
         assertEquals(1, countOccurences(s, "get:/pet:simple-config"));
