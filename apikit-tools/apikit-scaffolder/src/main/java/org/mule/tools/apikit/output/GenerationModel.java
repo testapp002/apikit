@@ -26,6 +26,7 @@ public class GenerationModel implements Comparable<GenerationModel> {
 
     private static final char FLOW_NAME_SEPARATOR = ':';
     public static final String DEFAULT_TEXT = "#[NullPayload.getInstance()]";
+    public static final String DEFAULT_TEXT_MULE_4 = "#[null]";
 
     private final String verb;
     private IAction action;
@@ -79,7 +80,14 @@ public class GenerationModel implements Comparable<GenerationModel> {
         if (exampleWrappee != null) {
             return exampleWrappee;
         } else {
-            return DEFAULT_TEXT;
+            if (api.useListenerMule3() || api.useInboundEndpoint())
+            {
+                return DEFAULT_TEXT;
+            }
+            else
+            {
+                return DEFAULT_TEXT_MULE_4;
+            }
         }
 
     }

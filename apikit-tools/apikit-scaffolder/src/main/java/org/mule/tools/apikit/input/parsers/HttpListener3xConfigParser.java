@@ -7,7 +7,7 @@
 package org.mule.tools.apikit.input.parsers;
 
 import org.mule.tools.apikit.model.API;
-import org.mule.tools.apikit.model.HttpListenerConfig;
+import org.mule.tools.apikit.model.HttpListener3xConfig;
 
 import static org.mule.tools.apikit.output.MuleConfigGenerator.HTTP_NAMESPACE;
 
@@ -21,11 +21,11 @@ import org.jdom2.filter.Filters;
 import org.jdom2.xpath.XPathExpression;
 import org.jdom2.xpath.XPathFactory;
 
-public class HttpListenerConfigParser implements MuleConfigFileParser
+public class HttpListener3xConfigParser implements MuleConfigFileParser
 {
-    public Map<String, HttpListenerConfig> parse(Document document){
-        Map<String,HttpListenerConfig> httpListenerConfigMap = new HashMap<String, HttpListenerConfig>();
-        XPathExpression<Element> xp = XPathFactory.instance().compile("//*/*[local-name()='" + HttpListenerConfig.ELEMENT_NAME + "']",
+    public Map<String, HttpListener3xConfig> parse(Document document){
+        Map<String,HttpListener3xConfig> httpListenerConfigMap = new HashMap<String, HttpListener3xConfig>();
+        XPathExpression<Element> xp = XPathFactory.instance().compile("//*/*[local-name()='" + HttpListener3xConfig.ELEMENT_NAME + "']",
                                                                       Filters.element(HTTP_NAMESPACE.getNamespace()));
         List<Element> elements = xp.evaluate(document);
         for (Element element : elements) {
@@ -52,7 +52,7 @@ public class HttpListenerConfigParser implements MuleConfigFileParser
             else  if (!basePath.startsWith("/")) {
                 basePath = "/" + basePath;
             }
-            httpListenerConfigMap.put(name, new HttpListenerConfig(name,host,port,basePath));
+            httpListenerConfigMap.put(name, new HttpListener3xConfig(name, host, port, basePath));
         }
         return httpListenerConfigMap;
     }

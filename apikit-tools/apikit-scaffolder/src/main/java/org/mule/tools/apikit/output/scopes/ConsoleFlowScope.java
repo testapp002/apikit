@@ -9,10 +9,13 @@ package org.mule.tools.apikit.output.scopes;
 
 import org.apache.commons.lang.StringUtils;
 import org.jdom2.Element;
+import org.jdom2.Namespace;
+
 import org.mule.tools.apikit.misc.APIKitTools;
 import org.mule.tools.apikit.model.API;
 
 import static org.mule.tools.apikit.output.MuleConfigGenerator.HTTP_NAMESPACE;
+import static org.mule.tools.apikit.output.MuleConfigGenerator.HTTPN_NAMESPACE;
 import static org.mule.tools.apikit.output.MuleConfigGenerator.XMLNS_NAMESPACE;
 
 public class ConsoleFlowScope implements Scope {
@@ -28,10 +31,36 @@ public class ConsoleFlowScope implements Scope {
 
         if (httpListenerConfigRef != null)
         {
-            Element httpListener = new Element("listener", HTTP_NAMESPACE.getNamespace());
-            httpListener.setAttribute("config-ref", httpListenerConfigRef);
-            httpListener.setAttribute("path", API.DEFAULT_CONSOLE_PATH);
-            consoleFlow.addContent(httpListener);
+            if (APIKitTools.usesListenersMuleV3(api.getMuleVersion()) || api.getMuleVersion() == null) //api.getMuleVersion() == null makes this option the default one.
+            {
+                Element httpListener = new Element("listener", HTTP_NAMESPACE.getNamespace());
+                httpListener.setAttribute("config-ref", httpListenerConfigRef);
+                httpListener.setAttribute("path", API.DEFAULT_CONSOLE_PATH);
+                consoleFlow.addContent(httpListener);
+            }
+            else
+            {
+                Element httpListener = new Element("listener", HTTPN_NAMESPACE.getNamespace());
+                httpListener.setAttribute("config-ref", httpListenerConfigRef);
+                httpListener.setAttribute("path", API.DEFAULT_CONSOLE_PATH);
+
+                Element responseBuilder = new Element("response-builder", HTTPN_NAMESPACE.getNamespace());
+                responseBuilder.setAttribute("statusCode", "#[httpStatus]");
+                responseBuilder.setAttribute("headersRef", "#[_outboundHeaders_]");
+                httpListener.addContent(responseBuilder);
+
+                Element errorResponseBuilder = new Element("error-response-builder", HTTPN_NAMESPACE.getNamespace());
+                errorResponseBuilder.setAttribute("statusCode", "#[httpStatus]");
+                errorResponseBuilder.setAttribute("headersRef", "#[_outboundHeaders_]");
+                httpListener.addContent(errorResponseBuilder);
+
+                consoleFlow.addContent(httpListener);
+
+                Element setVariable = new Element("set-variable", XMLNS_NAMESPACE.getNamespace());
+                setVariable.setAttribute("variableName", "_outboundHeaders_");
+                setVariable.setAttribute("value", "#[new java.util.HashMap()]");
+                consoleFlow.addContent(setVariable);
+            }
         }
         else
         {

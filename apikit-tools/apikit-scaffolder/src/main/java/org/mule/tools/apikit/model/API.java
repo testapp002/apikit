@@ -16,11 +16,12 @@ public class API {
     public static final int DEFAULT_PORT = 8081;
     public static final String DEFAULT_BASE_URI = "http://0.0.0.0:" + DEFAULT_PORT + "/api";
     public static final String DEFAULT_BASE_PATH = "/";
+    public static final String DEFAULT_PROTOCOL = "HTTP";
     public static final String DEFAULT_CONSOLE_PATH = "/console/*";
     public static final String DEFAULT_CONSOLE_PATH_INBOUND = "http://0.0.0.0:" + DEFAULT_PORT + "/console";
 
     private APIKitConfig config;
-    private HttpListenerConfig httpListenerConfig;
+    private IHttpListenerConfig httpListenerConfig;
     private String path;
 
     private String baseUri;
@@ -76,7 +77,7 @@ public class API {
         this.path = path;
     }
 
-    public HttpListenerConfig getHttpListenerConfig() {
+    public IHttpListenerConfig getHttpListenerConfig() {
         return httpListenerConfig;
     }
 
@@ -88,7 +89,7 @@ public class API {
         this.config = config;
     }
 
-    public void setHttpListenerConfig(HttpListenerConfig httpListenerConfig) {
+    public void setHttpListenerConfig(IHttpListenerConfig httpListenerConfig) {
         this.httpListenerConfig = httpListenerConfig;
     }
 
@@ -98,8 +99,8 @@ public class API {
 
     public void setDefaultHttpListenerConfig()
     {
-        String httpListenerConfigName = id == null? HttpListenerConfig.DEFAULT_CONFIG_NAME : id + "-" + HttpListenerConfig.DEFAULT_CONFIG_NAME;
-        httpListenerConfig = new HttpListenerConfig.Builder(httpListenerConfigName, API.DEFAULT_BASE_URI).build();
+        String httpListenerConfigName = id == null ? HttpListener3xConfig.DEFAULT_CONFIG_NAME : id + "-" + HttpListener3xConfig.DEFAULT_CONFIG_NAME;
+        httpListenerConfig = new HttpListener3xConfig.Builder(httpListenerConfigName, API.DEFAULT_BASE_URI).build();
     }
 
     public Boolean useInboundEndpoint()

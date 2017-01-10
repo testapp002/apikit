@@ -19,7 +19,8 @@ import org.mule.raml.interfaces.model.IActionType;
 import org.mule.raml.interfaces.model.IResource;
 import org.mule.tools.apikit.Helper;
 import org.mule.tools.apikit.model.API;
-import org.mule.tools.apikit.model.HttpListenerConfig;
+import org.mule.tools.apikit.model.HttpListener3xConfig;
+import org.mule.tools.apikit.model.IHttpListenerConfig;
 import org.mule.tools.apikit.output.scopes.APIKitFlowScope;
 
 import java.io.File;
@@ -64,7 +65,7 @@ public class MuleConfigGeneratorTest {
         File raml = mock(File.class);
         when(raml.getName()).thenReturn("hello.raml");
         File file = folder.newFile("hello.xml");
-        HttpListenerConfig listenerConfig = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME,"localhost","8080",API.DEFAULT_BASE_PATH);
+        HttpListener3xConfig listenerConfig = new HttpListener3xConfig(HttpListener3xConfig.DEFAULT_CONFIG_NAME, "localhost", "8080", API.DEFAULT_BASE_PATH);
         when(api.getId()).thenReturn("hello");
         when(api.getRamlFile()).thenReturn(raml);
         when(api.getXmlFile(any(File.class))).thenReturn(file);
@@ -76,7 +77,7 @@ public class MuleConfigGeneratorTest {
 
 
         Log mock = mock(Log.class);
-        MuleConfigGenerator muleConfigGenerator = new MuleConfigGenerator(mock, new File(""), entries, new HashMap<String, HttpListenerConfig>(), null, null);
+        MuleConfigGenerator muleConfigGenerator = new MuleConfigGenerator(mock, new File(""), entries, new HashMap<String, IHttpListenerConfig>(), null, null);
         muleConfigGenerator.generate();
 
         assertTrue(file.exists());
@@ -114,7 +115,7 @@ public class MuleConfigGeneratorTest {
     @Test
     public void blankDocumentWithoutLCInDomain() throws Exception {
 
-        HttpListenerConfig listenerConfig = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME,"localhost","8080","");
+        HttpListener3xConfig listenerConfig = new HttpListener3xConfig(HttpListener3xConfig.DEFAULT_CONFIG_NAME, "localhost", "8080", "");
         API api = mock(API.class);
         when(api.getPath()).thenReturn("/api/*");
         when(api.getHttpListenerConfig()).thenReturn(listenerConfig);
@@ -122,11 +123,12 @@ public class MuleConfigGeneratorTest {
         when(raml.getName()).thenReturn("hello.raml");
         when(api.getRamlFile()).thenReturn(raml);
         when(api.getId()).thenReturn("hello");
+        when(api.useListenerMule3()).thenReturn(true);
         File file = folder.newFile("hello.xml");
         when(api.getXmlFile(any(File.class))).thenReturn(file);
 
         MuleConfigGenerator muleConfigGenerator =
-                new MuleConfigGenerator(mock(Log.class), new File(""), new ArrayList<GenerationModel>(), new HashMap<String, HttpListenerConfig>(), null, null);
+                new MuleConfigGenerator(mock(Log.class), new File(""), new ArrayList<GenerationModel>(), new HashMap<String, IHttpListenerConfig>(), null, null);
 
         Document document = muleConfigGenerator.getOrCreateDocument(new HashMap<API, Document>(), api);
 
@@ -161,7 +163,7 @@ public class MuleConfigGeneratorTest {
     @Test
     public void blankDocumentWithLCInDomain() throws Exception {
 
-        HttpListenerConfig listenerConfig = new HttpListenerConfig(HttpListenerConfig.DEFAULT_CONFIG_NAME,"localhost","8080","");
+        HttpListener3xConfig listenerConfig = new HttpListener3xConfig(HttpListener3xConfig.DEFAULT_CONFIG_NAME, "localhost", "8080", "");
         API api = mock(API.class);
         when(api.getPath()).thenReturn("/api/*");
         when(api.getHttpListenerConfig()).thenReturn(listenerConfig);
@@ -169,12 +171,13 @@ public class MuleConfigGeneratorTest {
         when(raml.getName()).thenReturn("hello.raml");
         when(api.getRamlFile()).thenReturn(raml);
         when(api.getId()).thenReturn("hello");
+        when(api.useListenerMule3()).thenReturn(true);
         File file = folder.newFile("hello.xml");
         when(api.getXmlFile(any(File.class))).thenReturn(file);
 
 
         MuleConfigGenerator muleConfigGenerator =
-                new MuleConfigGenerator(mock(Log.class), new File(""), new ArrayList<GenerationModel>(), new HashMap<String, HttpListenerConfig>(), null, null);
+                new MuleConfigGenerator(mock(Log.class), new File(""), new ArrayList<GenerationModel>(), new HashMap<String, IHttpListenerConfig>(), null, null);
 
         Document document = muleConfigGenerator.getOrCreateDocument(new HashMap<API, Document>(), api);
 

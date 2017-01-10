@@ -14,13 +14,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 
 public class APIFactory
 {
     private Map<File, API> apis = new HashMap<File, API>();
-    private Map<String, HttpListenerConfig> domainHttpListenerConfigs = new HashMap<>();
-    public APIFactory (Map<String, HttpListenerConfig> domainHttpListenerConfigs)
+    private Map<String, IHttpListenerConfig> domainHttpListenerConfigs = new HashMap<>();
+    public APIFactory (Map<String, IHttpListenerConfig> domainHttpListenerConfigs)
     {
         this.domainHttpListenerConfigs.putAll(domainHttpListenerConfigs);
     }
@@ -34,12 +35,12 @@ public class APIFactory
         return createAPIBinding(ramlFile, xmlFile, baseUri, path, config, null, "3.5.0");
     }
 
-    public API createAPIBindingListenerMule3(File ramlFile, File xmlFile, String path, APIKitConfig config, HttpListenerConfig httpListenerConfig)
+    public API createAPIBindingListenerMule3(File ramlFile, File xmlFile, String path, APIKitConfig config, IHttpListenerConfig httpListener3xConfig)
     {
-        return createAPIBinding(ramlFile, xmlFile, null, path, config, httpListenerConfig, "3.7.0");
+        return createAPIBinding(ramlFile, xmlFile, null, path, config, httpListener3xConfig, "3.7.0");
     }
 
-    public API createAPIBinding(File ramlFile, File xmlFile, String baseUri, String path, APIKitConfig config, HttpListenerConfig httpListenerConfig, String muleVersion)
+    public API createAPIBinding(File ramlFile, File xmlFile, String baseUri, String path, APIKitConfig config, IHttpListenerConfig httpListenerConfig, String muleVersion)
     {
         Validate.notNull(ramlFile);
         if(apis.containsKey(ramlFile))
@@ -75,22 +76,36 @@ public class APIFactory
         return api;
     }
 
-    public Map<String, HttpListenerConfig> getDomainHttpListenerConfigs() {
+    public Map<String, IHttpListenerConfig> getDomainHttpListenerConfigs() {
         return domainHttpListenerConfigs;
     }
 
-    private HttpListenerConfig getFirstLC()
+    private IHttpListenerConfig getFirstLC()
     {
-        List<Map.Entry<String,HttpListenerConfig>> list = new ArrayList<>(domainHttpListenerConfigs.entrySet());
-        Collections.sort(list, new Comparator<Map.Entry<String, HttpListenerConfig>>(){
+        List<Map.Entry<String,IHttpListenerConfig>> numericPortsList = new ArrayList<>();
+        List<Map.Entry<String,IHttpListenerConfig>> nonNumericPortsList = new ArrayList<>();
+
+        for (Map.Entry<String, IHttpListenerConfig> entry : domainHttpListenerConfigs.entrySet())
+        {
+            if (StringUtils.isNumeric(entry.getValue().getPort()))
+            {
+                numericPortsList.add(entry);
+            }
+            else
+            {
+                nonNumericPortsList.add(entry);
+            }
+        }
+        Collections.sort(numericPortsList, new Comparator<Map.Entry<String, IHttpListenerConfig>>(){
             @Override
-            public int compare(Map.Entry<String, HttpListenerConfig> o1, Map.Entry<String, HttpListenerConfig> o2)
+            public int compare(Map.Entry<String, IHttpListenerConfig> o1, Map.Entry<String, IHttpListenerConfig> o2)
             {
                 Integer i1 = Integer.parseInt(o1.getValue().getPort());
                 Integer i2 = Integer.parseInt(o2.getValue().getPort());
                 return i1.compareTo(i2);
             }
         });
-        return list.get(0).getValue();
+        numericPortsList.addAll(nonNumericPortsList);
+        return numericPortsList.get(0).getValue();
     }
 }

@@ -11,7 +11,9 @@ import org.mule.tools.apikit.misc.APIKitTools;
 import org.mule.tools.apikit.model.API;
 import org.mule.tools.apikit.model.APIFactory;
 import org.mule.tools.apikit.model.APIKitConfig;
-import org.mule.tools.apikit.model.HttpListenerConfig;
+import org.mule.tools.apikit.model.HttpListener3xConfig;
+import org.mule.tools.apikit.model.HttpListener4xConfig;
+import org.mule.tools.apikit.model.IHttpListenerConfig;
 
 import java.io.File;
 import java.util.HashMap;
@@ -29,13 +31,13 @@ import org.jdom2.xpath.XPathFactory;
 public class APIKitRoutersParser implements MuleConfigFileParser {
 
     private final Map<String, APIKitConfig> apikitConfigs;
-    private final Map<String, HttpListenerConfig> httpListenerConfigs;
+    private final Map<String, IHttpListenerConfig> httpListenerConfigs;
     private final Set<File> ramlPaths;
     private final File file;
     private final APIFactory apiFactory;
 
     public APIKitRoutersParser(final Map<String, APIKitConfig> apikitConfigs,
-                               final Map<String, HttpListenerConfig> httpListenerConfigs,
+                               final Map<String, IHttpListenerConfig> httpListenerConfigs,
                                final Set<File> ramlPaths,
                                final File file,
                                final APIFactory apiFactory) {
@@ -74,9 +76,14 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
                     }
                     if ("listener".equals(inbound.getName()))
                     {
-                        HttpListenerConfig httpListenerConfig = getHTTPListenerConfig(inbound);
+                        IHttpListenerConfig httpListenerConfig = getHTTPListenerConfig(inbound);
                         String path = getPathFromInbound(inbound);
-                        includedApis.put(configId, apiFactory.createAPIBinding(ramlPath, file,null, path, config, httpListenerConfig, "3.7.0"));
+                        String muleVersion = "3.7.0";
+                        if (httpListenerConfig instanceof HttpListener4xConfig)
+                        {
+                            muleVersion = "4.0.0";
+                        }
+                        includedApis.put(configId, apiFactory.createAPIBinding(ramlPath, file, null, path, config, httpListenerConfig, muleVersion));
                     }
                     else if ("inbound-endpoint".equals(inbound.getName()))
                     {
@@ -121,12 +128,12 @@ public class APIKitRoutersParser implements MuleConfigFileParser {
         return null;
     }
 
-    private HttpListenerConfig getHTTPListenerConfig(Element inbound)
+    private IHttpListenerConfig getHTTPListenerConfig(Element inbound)
     {
         Attribute httpListenerConfigRef = inbound.getAttribute("config-ref");
-        String httpListenerConfigId = httpListenerConfigRef != null ? httpListenerConfigRef.getValue() : HttpListenerConfig.DEFAULT_CONFIG_NAME;
+        String httpListenerConfigId = httpListenerConfigRef != null ? httpListenerConfigRef.getValue() : HttpListener3xConfig.DEFAULT_CONFIG_NAME;
 
-        HttpListenerConfig httpListenerConfig = httpListenerConfigs.get(httpListenerConfigId);
+        IHttpListenerConfig httpListenerConfig = httpListenerConfigs.get(httpListenerConfigId);
         if (httpListenerConfig == null)
         {
             throw new IllegalStateException("An HTTP Listener configuration is mandatory.");

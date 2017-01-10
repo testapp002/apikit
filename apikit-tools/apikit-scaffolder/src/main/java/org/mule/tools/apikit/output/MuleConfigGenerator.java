@@ -8,16 +8,16 @@ package org.mule.tools.apikit.output;
 
 import org.mule.tools.apikit.misc.APIKitTools;
 import org.mule.tools.apikit.model.API;
-import org.mule.tools.apikit.model.HttpListenerConfig;
+import org.mule.tools.apikit.model.IHttpListenerConfig;
 import org.mule.tools.apikit.output.deployer.MuleDeployWriter;
 import org.mule.tools.apikit.output.scopes.APIKitConfigScope;
 import org.mule.tools.apikit.output.scopes.APIKitFlowScope;
+import org.mule.tools.apikit.output.scopes.ConsoleFlowScope;
 import org.mule.tools.apikit.output.scopes.ExceptionStrategyScope;
 import org.mule.tools.apikit.output.scopes.FlowScope;
+import org.mule.tools.apikit.output.scopes.HttpListenerConfigMule3Scope;
 import org.mule.tools.apikit.output.scopes.HttpListenerConfigMule4Scope;
-import org.mule.tools.apikit.output.scopes.HttpListenerConfigScope;
 import org.mule.tools.apikit.output.scopes.MuleScope;
-import org.mule.tools.apikit.output.scopes.ConsoleFlowScope;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -70,11 +70,11 @@ public class MuleConfigGenerator {
     private final List<GenerationModel> flowEntries;
     private final Log log;
     private final File rootDirectory;
-    private final Map<String, HttpListenerConfig> domainHttpListenerConfigs;
+    private final Map<String, IHttpListenerConfig> domainHttpListenerConfigs;
     private final String muleVersion;
     private final Set<File> ramlsWithExtensionEnabled;
 
-    public MuleConfigGenerator(Log log, File muleConfigOutputDirectory, List<GenerationModel> flowEntries, Map<String, HttpListenerConfig> domainHttpListenerConfigs, String muleVersion, Set<File> ramlsWithExtensionEnabled) {
+    public MuleConfigGenerator(Log log, File muleConfigOutputDirectory, List<GenerationModel> flowEntries, Map<String, IHttpListenerConfig> domainHttpListenerConfigs, String muleVersion, Set<File> ramlsWithExtensionEnabled) {
         this.log = log;
         this.flowEntries = flowEntries;
         this.rootDirectory = muleConfigOutputDirectory;
@@ -195,7 +195,7 @@ public class MuleConfigGenerator {
             {
                 if (api.useListenerMule3())
                 {
-                    new HttpListenerConfigScope(api, mule).generate();
+                    new HttpListenerConfigMule3Scope(api, mule).generate();
                 }
                 else if (!api.useInboundEndpoint())
                 {
@@ -205,8 +205,12 @@ public class MuleConfigGenerator {
             listenerConfigRef = api.getHttpListenerConfig().getName();
             api.setPath(APIKitTools.addAsteriskToPath(api.getPath()));
         }
+        if (!api.useListenerMule3() && !api.useInboundEndpoint())
+        {
+            addGlobalExceptionStrategy(mule, api.getId());
+        }
         new APIKitConfigScope(api.getConfig(), mule, muleVersion).generate();
-        Element exceptionStrategy = new ExceptionStrategyScope(api.getId()).generate();
+        Element exceptionStrategy = new ExceptionStrategyScope(api.useInboundEndpoint() || api.useListenerMule3(), api.getId()).generate();
         String configRef = api.getConfig() != null? api.getConfig().getName() : null;
 
         new FlowScope(mule, exceptionStrategy.getAttribute("name").getValue(),
@@ -215,6 +219,15 @@ public class MuleConfigGenerator {
         new ConsoleFlowScope(mule, api, configRef, listenerConfigRef).generate();
 
         mule.addContent(exceptionStrategy);
+    }
+
+    private void addGlobalExceptionStrategy(Element mule, String apiId)
+    {
+        Element globalExceptionStrategy = new Element("error-handler",
+                                                        XMLNS_NAMESPACE.getNamespace());
+        globalExceptionStrategy.setAttribute("name", apiId + "-" + "apiKitGlobalExceptionMapping");
+        mule.addContent(globalExceptionStrategy);
+
     }
 
 }

@@ -9,22 +9,22 @@ package org.mule.tools.apikit.output.scopes;
 import static org.mule.tools.apikit.output.MuleConfigGenerator.HTTP_NAMESPACE;
 
 import org.mule.tools.apikit.model.API;
-import org.mule.tools.apikit.model.HttpListenerConfig;
+import org.mule.tools.apikit.model.HttpListener3xConfig;
 
 import org.jdom2.Element;
 
-public class HttpListenerConfigScope implements Scope
+public class HttpListenerConfigMule3Scope implements Scope
 {
     private final Element mule;
     private final Element httpListenerConfig;
 
-    public HttpListenerConfigScope(API api, Element mule)
+    public HttpListenerConfigMule3Scope(API api, Element mule)
     {
         this.mule = mule;
 
         if (api.getHttpListenerConfig() != null)
         {
-            httpListenerConfig = new Element(HttpListenerConfig.ELEMENT_NAME, HTTP_NAMESPACE.getNamespace());
+            httpListenerConfig = new Element(HttpListener3xConfig.ELEMENT_NAME, HTTP_NAMESPACE.getNamespace());
             httpListenerConfig.setAttribute("name", api.getHttpListenerConfig().getName());
             httpListenerConfig.setAttribute("host", api.getHttpListenerConfig().getHost());
             httpListenerConfig.setAttribute("port", api.getHttpListenerConfig().getPort());
