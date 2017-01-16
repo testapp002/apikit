@@ -45,7 +45,7 @@ http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/a
     <error-handler name="defaultErrorHandler">
         <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
             <set-variable variableName="httpStatus" value="400"/>
-            <set-payload value="validation exception: #[exception.causeException.message]"/>
+            <set-payload value="validation exception: #[exception.rootCause.message]"/>
         </on-error-propagate>
         <on-error-propagate>
             <set-variable variableName="httpStatus" value="500"/>

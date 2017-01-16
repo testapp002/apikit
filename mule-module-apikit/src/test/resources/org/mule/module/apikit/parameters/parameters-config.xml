@@ -30,7 +30,7 @@
         </on-error-propagate>
         <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
             <set-variable variableName="httpStatus" value="400"/>
-            <set-payload value="#[exception.causeException.message]"/>
+            <set-payload value="#[exception.rootCause.message]"/>
         </on-error-propagate>
         <on-error-propagate when="#[exception.causedBy(org.mule.examples.leagues.exceptions.ConflictException)]">
             <set-variable variableName="httpStatus" value="409"/>

@@ -297,6 +297,7 @@
             <artifactId>mule-module-http-ext</artifactId>
             <version>${mule.version}</version>
             <scope>provided</scope>
+            <classifier>mule-plugin</classifier>
         </dependency>
         <dependency>
             <groupId>org.mule.modules</groupId>
@@ -315,6 +316,7 @@
             <artifactId>mule-module-sockets</artifactId>
             <version>${mule.version}</version>
             <scope>provided</scope>
+            <classifier>mule-plugin</classifier>
         </dependency>
         <dependency>
             <groupId>org.mule</groupId>
