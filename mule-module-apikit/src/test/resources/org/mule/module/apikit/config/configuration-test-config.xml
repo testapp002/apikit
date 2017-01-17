@@ -45,56 +45,56 @@
 
     <flow name="defaultEntry">
         <httpn:listener config-ref="httpListenerConfigDefault" path="/default/*">
-            <httpn:response-builder statusCode="#[httpStatus]">
-                <httpn:headers>#[_outboundHeaders_]</httpn:headers>
+            <httpn:response-builder statusCode="#[mel:httpStatus]">
+                <httpn:headers>#[mel:_outboundHeaders_]</httpn:headers>
             </httpn:response-builder>
-            <httpn:error-response-builder statusCode="#[httpStatus]"/>
+            <httpn:error-response-builder statusCode="#[mel:httpStatus]"/>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
         <apikit:router config-ref="default"/>
     </flow>
 
     <flow name="customEntry">
         <httpn:listener config-ref="httpListenerConfigCustom" path="/custom/*">
-            <httpn:response-builder statusCode="#[httpStatus]">
-                <httpn:headers>#[_outboundHeaders_]</httpn:headers>
+            <httpn:response-builder statusCode="#[mel:httpStatus]">
+                <httpn:headers>#[mel:_outboundHeaders_]</httpn:headers>
             </httpn:response-builder>
-            <httpn:error-response-builder statusCode="#[httpStatus]"/>
+            <httpn:error-response-builder statusCode="#[mel:httpStatus]"/>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
         <apikit:router config-ref="custom"/>
     </flow>
 
     <flow name="noConsoleEntry">
         <httpn:listener config-ref="httpListenerConfigNoConsole" path="/no-console/*">
-            <httpn:response-builder statusCode="#[httpStatus]">
-                <httpn:headers>#[_outboundHeaders_]</httpn:headers>
+            <httpn:response-builder statusCode="#[mel:httpStatus]">
+                <httpn:headers>#[mel:_outboundHeaders_]</httpn:headers>
             </httpn:response-builder>
-            <httpn:error-response-builder statusCode="#[httpStatus]"/>
+            <httpn:error-response-builder statusCode="#[mel:httpStatus]"/>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
         <apikit:router config-ref="no-console"/>
     </flow>
 
     <flow name="mappingEntry">
         <httpn:listener config-ref="httpListenerConfigMapping" path="/mapping/*">
-            <httpn:response-builder statusCode="#[httpStatus]">
-                <httpn:headers>#[_outboundHeaders_]</httpn:headers>
+            <httpn:response-builder statusCode="#[mel:httpStatus]">
+                <httpn:headers>#[mel:_outboundHeaders_]</httpn:headers>
             </httpn:response-builder>
-            <httpn:error-response-builder statusCode="#[httpStatus]"/>
+            <httpn:error-response-builder statusCode="#[mel:httpStatus]"/>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
         <apikit:router config-ref="mapped-flows"/>
     </flow>
 
     <flow name="noValidations">
         <httpn:listener config-ref="httpListenerConfigNoValidations" path="/no-validations/*">
-            <httpn:response-builder statusCode="#[httpStatus]">
-                <httpn:headers>#[_outboundHeaders_]</httpn:headers>
+            <httpn:response-builder statusCode="#[mel:httpStatus]">
+                <httpn:headers>#[mel:_outboundHeaders_]</httpn:headers>
             </httpn:response-builder>
-            <httpn:error-response-builder statusCode="#[httpStatus]"/>
+            <httpn:error-response-builder statusCode="#[mel:httpStatus]"/>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
         <apikit:router config-ref="no-validations"/>
     </flow>
 
@@ -103,7 +103,7 @@
     </flow>
 
     <flow name="patch:/resource">
-        <set-payload value="#[null]"/>
+        <set-payload value="#[mel:null]"/>
     </flow>
 
     <flow name="retrieve">
@@ -116,7 +116,7 @@
 
 
     <error-handler name="defaultErrorHandler">
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotFoundException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.NotFoundException)]">
             <set-variable variableName="httpStatus" value="404"/>
             <set-payload value="{ &quot;message&quot;: &quot;resource not found&quot; }" mimeType="application/json" />
         </on-error-propagate>

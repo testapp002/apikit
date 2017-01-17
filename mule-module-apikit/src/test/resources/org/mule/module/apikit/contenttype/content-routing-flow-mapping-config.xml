@@ -28,49 +28,49 @@
 
     <flow name="doorway">
         <httpn:listener config-ref="httpListenerConfigDefault" path="/api/*">
-            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
-            <httpn:error-response-builder statusCode="#[httpStatus]"/>
+            <httpn:response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <httpn:error-response-builder statusCode="#[mel:httpStatus]"/>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
         <apikit:router/>
     </flow>
 
     <flow name="console">
         <httpn:listener config-ref="httpListenerConfigDefault" path="/console/*">
-            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
-            <httpn:error-response-builder statusCode="#[httpStatus]"/>
+            <httpn:response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <httpn:error-response-builder statusCode="#[mel:httpStatus]"/>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
         <apikit:console/>
     </flow>
 
 
     <flow name="post-leagues-json">
-        <expression-component>flowVars['_outboundHeaders_'].put('incoming-content-type', 'application/json')</expression-component>
+        <expression-component>mel:flowVars['_outboundHeaders_'].put('incoming-content-type', 'application/json')</expression-component>
     </flow>
 
     <flow name="post-leagues-xml">
-        <expression-component>flowVars['_outboundHeaders_'].put('incoming-content-type', 'application/xml')</expression-component>
+        <expression-component>mel:flowVars['_outboundHeaders_'].put('incoming-content-type', 'application/xml')</expression-component>
     </flow>
 
     <flow name="post-leagues2-json">
-        <expression-component>flowVars['_outboundHeaders_'].put('incoming-content-type', 'application/json')</expression-component>
+        <expression-component>mel:flowVars['_outboundHeaders_'].put('incoming-content-type', 'application/json')</expression-component>
     </flow>
 
     <flow name="post-leagues3">
-        <expression-component>flowVars['_outboundHeaders_'].put('incoming-content-type', 'application/json')</expression-component>
+        <expression-component>mel:flowVars['_outboundHeaders_'].put('incoming-content-type', 'application/json')</expression-component>
     </flow>
 
     <flow name="get-leagueId">
-        <set-payload value="leagueId: #[leagueId]"/>
+        <set-payload value="leagueId: #[mel:leagueId]"/>
     </flow>
 
     <flow name="put-leagueId">
-        <expression-component>flowVars['_outboundHeaders_'].put('incoming-content-type', message.getAttributes().getHeaders()['content-type'])</expression-component>
+        <expression-component>mel:flowVars['_outboundHeaders_'].put('incoming-content-type', message.getAttributes().getHeaders()['content-type'])</expression-component>
     </flow>
 
     <error-handler name="defaultErrorHandler">
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.UnsupportedMediaTypeException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.UnsupportedMediaTypeException)]">
             <set-variable variableName="httpStatus" value="415"/>
             <set-payload value="unsupported media type"/>
         </on-error-propagate>

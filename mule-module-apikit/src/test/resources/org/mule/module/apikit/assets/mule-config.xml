@@ -25,34 +25,34 @@
 
     <flow name="router">
         <httpn:listener config-ref="httpListenerConfigDefault" path="/api/*">
-            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <httpn:response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:response-builder>
             <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
         <!--<cors:validate publicResource="true" config-ref="defaultConfig" />-->
         <apikit:router config-ref="localhost"/>
     </flow>
 
     <flow name="console">
         <httpn:listener config-ref="httpListenerConfigDefault" path="/konsole/*">
-            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <httpn:response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:response-builder>
             <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
         <apikit:console config-ref="localhost"/>
     </flow>
 
     <flow name="consoleNoPath">
         <httpn:listener config-ref="httpListenerConfigDefault2" path="/konsole/*">
-            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <httpn:response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:response-builder>
             <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
         <apikit:console config-ref="localhost"/>
     </flow>
 
     <flow name="get:/user">
-        <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
+        <expression-component>mel:flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
         <!--<set-property propertyName="Content-Type" value="application/json"/>-->
         <set-payload value="{ &quot;name&quot;: &quot;Lisa&quot; }"/>
     </flow>

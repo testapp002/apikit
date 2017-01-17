@@ -12,23 +12,23 @@
     <configuration defaultErrorHandler-ref="defaultErrorHandler"/>
 
     <error-handler name="defaultErrorHandler">
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotFoundException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.NotFoundException)]">
             <set-variable variableName="httpStatus" value="404"/>
             <set-payload value="resource not found"/>
         </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.MethodNotAllowedException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.MethodNotAllowedException)]">
             <set-variable variableName="httpStatus" value="405"/>
             <set-payload value="method not allowed"/>
         </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.UnsupportedMediaTypeException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.UnsupportedMediaTypeException)]">
             <set-variable variableName="httpStatus" value="415"/>
             <set-payload value="unsupported media type"/>
         </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotAcceptableException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.NotAcceptableException)]">
             <set-variable variableName="httpStatus" value="406"/>
             <set-payload value="not acceptable"/>
         </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
             <set-variable variableName="httpStatus" value="400"/>
             <set-payload value="bad request"/>
         </on-error-propagate>
@@ -46,41 +46,41 @@
 
     <flow name="doorway">
         <httpn:listener config-ref="httpListenerConfigDefault" path="/api/*">
-            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
-            <httpn:error-response-builder statusCode="#[httpStatus]"/>
+            <httpn:response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <httpn:error-response-builder statusCode="#[mel:httpStatus]"/>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
         <apikit:router/>
     </flow>
 
     <flow name="get:/resources">
         <logger level="INFO" message="siamo qui"/>
-        <set-payload value="#[null]"/>
+        <set-payload value="#[mel:null]"/>
     </flow>
 
     <flow name="get:/multitype">
-        <logger level="INFO" message="content type hint: #[message.getAttributes().getHeaders()['ctype']]"/>
+        <logger level="INFO" message="content type hint: #[mel:message.getAttributes().getHeaders()['ctype']]"/>
         <choice>
-            <when expression="#[message.getAttributes().getHeaders()['ctype'] == 'json']">
+            <when expression="#[mel:message.getAttributes().getHeaders()['ctype'] == 'json']">
                 <logger level="INFO" message="returning json"/>
-                <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
+                <expression-component>mel:flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
 
                 <!--<set-property propertyName="Content-Type" value="application/json"/>-->
             </when>
-            <when expression="#[message.getAttributes().getHeaders()['ctype'] == 'xml']">
+            <when expression="#[mel:message.getAttributes().getHeaders()['ctype'] == 'xml']">
                 <logger level="INFO" message="returning xml"/>
-                <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/xml')</expression-component>
+                <expression-component>mel:flowVars['_outboundHeaders_'].put('Content-Type', 'application/xml')</expression-component>
 
                 <!--<set-property propertyName="Content-Type" value="application/xml"/>-->
             </when>
             <otherwise>
                 <logger level="INFO" message="returning html"/>
-                <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'text/html')</expression-component>
+                <expression-component>mel:flowVars['_outboundHeaders_'].put('Content-Type', 'text/html')</expression-component>
 
                 <!--<set-property propertyName="Content-Type" value="text/html"/>-->
             </otherwise>
         </choice>
-        <set-payload value="#[null]"/>
+        <set-payload value="#[mel:null]"/>
         <set-payload value="never mind"/>
     </flow>
 

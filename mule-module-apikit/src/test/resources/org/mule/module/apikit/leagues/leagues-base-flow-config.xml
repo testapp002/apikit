@@ -12,23 +12,23 @@
     <configuration defaultErrorHandler-ref="defaultErrorHandler"/>
 
     <error-handler name="defaultErrorHandler">
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotFoundException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.NotFoundException)]">
             <set-variable variableName="httpStatus" value="404"/>
             <set-payload value="resource not found"/>
         </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.MethodNotAllowedException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.MethodNotAllowedException)]">
             <set-variable variableName="httpStatus" value="405"/>
             <set-payload value="method not allowed"/>
         </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.UnsupportedMediaTypeException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.UnsupportedMediaTypeException)]">
             <set-variable variableName="httpStatus" value="415"/>
             <set-payload value="unsupported media type"/>
         </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotAcceptableException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.NotAcceptableException)]">
             <set-variable variableName="httpStatus" value="406"/>
             <set-payload value="not acceptable"/>
         </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
             <set-variable variableName="httpStatus" value="400"/>
             <set-payload value="bad request"/>
         </on-error-propagate>
@@ -43,7 +43,7 @@
     </httpn:listener-config>
 
     <flow name="get:/leagues">
-        <set-payload value="#[app.registry['list-of-leagues']]"/>
+        <set-payload value="#[mel:app.registry['list-of-leagues']]"/>
     </flow>
 
     <flow name="get:/leagues.json">
@@ -58,26 +58,26 @@
         <custom-transformer class="org.mule.module.apikit.transform.PayloadNormalizerTransformer"
                             returnClass="org.mule.module.apikit.leagues.League"/>
         <choice>
-            <when expression="#[!payload.name.matches('[\\w ]+')]">
+            <when expression="#[mel:!payload.name.matches('[\\w ]+')]">
                 <set-variable variableName="httpStatus" value="400"/>
                 <set-payload value="Invalid League Name"/>
             </when>
             <otherwise>
-                <expression-component>
+                <expression-component>mel:
                     flowVars['_outboundHeaders_'].put('Location', 'http://localhost:${serverPort}/api/leagues/' + (app.registry['list-of-leagues'].getLeagues().size() + 1))
                     payload.id = message.getAttributes().getHeader('Location');
                     app.registry['list-of-leagues'].getLeagues().add(payload);
                 </expression-component>
-                <set-payload value="#[payload.description]" mimeType="text/plain" encoding="windows-1252"/>
+                <set-payload value="#[mel:payload.description]" mimeType="text/plain" encoding="windows-1252"/>
             </otherwise>
         </choice>
     </flow>
 
     <flow name="get:/leagues/{leagueId}">
-        <logger level="WARN" message="leagueId: #[leagueId]"/>
+        <logger level="WARN" message="leagueId: #[mel:leagueId]"/>
         <choice>
-            <when expression="#[app.registry['list-of-leagues'].getLeague(leagueId)]">
-                <set-payload value="#[app.registry['list-of-leagues'].getLeague(leagueId)]"/>
+            <when expression="#[mel:app.registry['list-of-leagues'].getLeague(leagueId)]">
+                <set-payload value="#[mel:app.registry['list-of-leagues'].getLeague(leagueId)]"/>
             </when>
             <otherwise>
                 <set-property propertyName="http.status" value="404"/>
@@ -89,13 +89,13 @@
         <custom-transformer class="org.mule.module.apikit.transform.PayloadNormalizerTransformer"
                             returnClass="org.mule.module.apikit.leagues.League"/>
         <choice>
-            <when expression="#[!payload.name.matches('[\\w ]+')]">
+            <when expression="#[mel:!payload.name.matches('[\\w ]+')]">
                 <logger level="WARN" message="invalid name returning 400"/>
                 <set-variable variableName="httpStatus" value="400"/>
                 <set-payload value=""/>
             </when>
             <otherwise>
-                <expression-component>
+                <expression-component>mel:
                     league = app.registry['list-of-leagues'].getLeague(leagueId);
                     league.name = payload.name;
                 </expression-component>
@@ -104,39 +104,39 @@
     </flow>
 
     <flow name="delete:/leagues/{leagueId}">
-        <expression-component>
+        <expression-component>mel:
             app.registry['list-of-leagues'].deleteLeague(leagueId)
         </expression-component>
     </flow>
 
     <flow name="get:/leagues/{leagueId}/teams">
-        <expression-component>
+        <expression-component>mel:
             teams = app.registry['list-of-leagues'].getLeague(leagueId).getTeams();
             int from = Integer.valueOf(message.getAttributes().getQueryParams().get('offset'));
             to = Math.min(Integer.valueOf(message.getAttributes().getQueryParams().get('limit')), teams.size());
             payload = teams.subList(from, to);
         </expression-component>
-        <expression-component>flowVars['_outboundHeaders_'].put('preferred-team', message.getAttributes().getHeaders().get('preferred'))</expression-component>
+        <expression-component>mel:flowVars['_outboundHeaders_'].put('preferred-team', message.getAttributes().getHeaders().get('preferred'))</expression-component>
     </flow>
 
     <flow name="put:/leagues/{leagueId}/badge">
         <set-variable variableName="mp1"
-                      value="#[org.mule.util.IOUtils.toString(message.inboundAttachments['description'].getDataSource().getInputStream())]"/>
+                      value="#[mel:org.mule.util.IOUtils.toString(message.inboundAttachments['description'].getDataSource().getInputStream())]"/>
         <set-variable variableName="mp2"
-                      value="#[message.inboundAttachments['image'].getDataSource().getPart().getContentDispositionFilename()]"/>
+                      value="#[mel:message.inboundAttachments['image'].getDataSource().getPart().getContentDispositionFilename()]"/>
         <!--<set-property propertyName="Content-Type" value="application/json"/>-->
-        <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
+        <expression-component>mel:flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
         <set-payload value="{ &quot;upload&quot;: &quot;OK&quot; }"/>
     </flow>
 
     <flow name="get:/leagues/{leagueId}/badge">
-        <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
+        <expression-component>mel:flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
         <!--<set-property propertyName="Content-Type" value="application/json"/>-->
         <set-payload value="{ &quot;name&quot;: &quot;Liga BBVA&quot; }"/>
     </flow>
 
     <flow name="get:/leagues/{leagueId}/teams/leader">
-        <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
+        <expression-component>mel:flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
         <!--<set-property propertyName="Content-Type" value="application/json"/>-->
         <set-payload value="{ &quot;name&quot;: &quot;Aleti&quot; }"/>
     </flow>

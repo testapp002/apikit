@@ -11,7 +11,7 @@
     <flow name="exception-strategy">
         <set-payload value="none" />
         <error-handler>
-            <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotFoundException)]">
+            <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.NotFoundException)]">
                 <set-variable variableName="httpStatus" value="404"/>
                 <set-payload value="resource not found"/>
             </on-error-propagate>

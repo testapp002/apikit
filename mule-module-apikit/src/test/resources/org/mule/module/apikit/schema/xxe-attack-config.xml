@@ -22,30 +22,30 @@ http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/a
 
     <flow name="api-main">
         <httpn:listener config-ref="api-httpListenerConfig" path="/api/*">
-            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
-            <httpn:error-response-builder statusCode="#[httpStatus]"/>
+            <httpn:response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <httpn:error-response-builder statusCode="#[mel:httpStatus]"/>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
         <apikit:router config-ref="api-config"/>
     </flow>
 
     <flow name="post:/test:application/xml:api-config">
-        <set-payload value="#[NullPayload.getInstance()]"/>
+        <set-payload value="#[mel:NullPayload.getInstance()]"/>
     </flow>
 
     <flow name="should-not-be-called-flow">
         <httpn:listener config-ref="api-httpListenerConfig2" path="/*">
-            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
-            <httpn:error-response-builder statusCode="#[httpStatus]"/>
+            <httpn:response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <httpn:error-response-builder statusCode="#[mel:httpStatus]"/>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
         <set-property propertyName="invalidheader" value="invalid"/>
     </flow>
 
     <error-handler name="defaultErrorHandler">
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
             <set-variable variableName="httpStatus" value="400"/>
-            <set-payload value="validation exception: #[exception.rootCause.message]"/>
+            <set-payload value="validation exception: #[mel:exception.rootCause.message]"/>
         </on-error-propagate>
         <on-error-propagate>
             <set-variable variableName="httpStatus" value="500"/>

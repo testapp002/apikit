@@ -17,56 +17,56 @@
 
     <flow name="doorway10">
         <httpn:listener config-ref="api-httpListenerConfig" path="/api10/*">
-            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <httpn:response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:response-builder>
             <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
         <apikit:router config-ref="raml10"/>
     </flow>
 
     <flow name="doorway08">
         <httpn:listener config-ref="api-httpListenerConfig" path="/api08/*">
-            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <httpn:response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:response-builder>
             <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
         <apikit:router config-ref="raml08"/>
     </flow>
 
     <flow name="doorway10string">
         <httpn:listener config-ref="api-httpListenerConfig" path="/api10str/*">
-            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <httpn:response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:response-builder>
             <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
        <object-to-string-transformer/>
         <apikit:router config-ref="raml10"/>
     </flow>
 
     <flow name="doorway08string">
         <httpn:listener config-ref="api-httpListenerConfig" path="/api08str/*">
-            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <httpn:response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:response-builder>
             <httpn:error-response-builder statusCode="500"/>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
         <object-to-string-transformer/>
         <apikit:router config-ref="raml08"/>
     </flow>
 
     <flow name="post:/testXml:raml10">
-        <set-payload value="#[payload]"/>
+        <set-payload value="#[mel:payload]"/>
     </flow>
 
     <flow name="post:/testJson:raml10">
-        <set-payload value="#[payload]"/>
+        <set-payload value="#[mel:payload]"/>
     </flow>
 
     <flow name="post:/testXml:raml08">
-        <set-payload value="#[payload]"/>
+        <set-payload value="#[mel:payload]"/>
     </flow>
 
     <flow name="post:/testJson:raml08">
-        <set-payload value="#[payload]"/>
+        <set-payload value="#[mel:payload]"/>
     </flow>
 
 </mule>

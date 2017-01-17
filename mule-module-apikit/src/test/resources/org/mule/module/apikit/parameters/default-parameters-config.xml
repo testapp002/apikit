@@ -19,54 +19,54 @@
 
     <flow name="doorwayPathless">
         <httpn:listener config-ref="httpListenerConfigDefault" path="/api/*">
-            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
-            <httpn:error-response-builder statusCode="#[httpStatus]"/>
+            <httpn:response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <httpn:error-response-builder statusCode="#[mel:httpStatus]"/>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
         <apikit:router/>
     </flow>
 
     <flow name="get:/headers">
-        <expression-component>flowVars['_outboundHeaders_'].put('one', message.getAttributes().getHeaders().get('one'))</expression-component>
+        <expression-component>mel:flowVars['_outboundHeaders_'].put('one', message.getAttributes().getHeaders().get('one'))</expression-component>
     </flow>
 
     <flow name="get:/queryParams">
-        <expression-component>flowVars['_outboundHeaders_'].put('default', message.getAttributes().getQueryParams().get('first'))</expression-component>
+        <expression-component>mel:flowVars['_outboundHeaders_'].put('default', message.getAttributes().getQueryParams().get('first'))</expression-component>
     </flow>
 
     <flow name="post:/url-encoded">
-        <expression-component>flowVars['_outboundHeaders_'].put('first', payload.first)</expression-component>
+        <expression-component>mel:flowVars['_outboundHeaders_'].put('first', payload.first)</expression-component>
 
-        <!--<set-property propertyName="first" value="#[payload.first]"/>-->
+        <!--<set-property propertyName="first" value="#[mel:payload.first]"/>-->
     </flow>
 
     <flow name="post:/multipart">
         <!-- TODO CHANGE HOW TO READ INBOUND ATTACHMENTS -->
-        <expression-component>flowVars['_outboundHeaders_'].put('second', org.mule.util.IOUtils.toString(payload.getPart('second').getPayload().getDataSource().getInputStream()))</expression-component>
+        <expression-component>mel:flowVars['_outboundHeaders_'].put('second', org.mule.util.IOUtils.toString(payload.getPart('second').getPayload().getDataSource().getInputStream()))</expression-component>
 
         <!--((MultiPartPayload) requestEvent.getMessage().getPayload().getValue()).getPart(expectedKey)-->
-        <!--<set-property propertyName="second" value="#[org.mule.util.IOUtils.toString(message.inboundAttachments['second'].getDataSource().getInputStream())]"/>-->
+        <!--<set-property propertyName="second" value="#[mel:org.mule.util.IOUtils.toString(message.inboundAttachments['second'].getDataSource().getInputStream())]"/>-->
     </flow>
 
 
     <error-handler name="defaultErrorHandler">
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotFoundException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.NotFoundException)]">
             <set-variable variableName="httpStatus" value="404"/>
             <set-payload value="resource not found"/>
         </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.MethodNotAllowedException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.MethodNotAllowedException)]">
             <set-variable variableName="httpStatus" value="405"/>
             <set-payload value="method not allowed"/>
         </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.UnsupportedMediaTypeException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.UnsupportedMediaTypeException)]">
             <set-variable variableName="httpStatus" value="415"/>
             <set-payload value="unsupported media type"/>
         </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotAcceptableException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.NotAcceptableException)]">
             <set-variable variableName="httpStatus" value="406"/>
             <set-payload value="not acceptable"/>
         </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
             <set-variable variableName="httpStatus" value="400"/>
             <set-payload value="bad request"/>
         </on-error-propagate>

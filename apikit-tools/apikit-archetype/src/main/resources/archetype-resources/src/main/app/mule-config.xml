@@ -61,10 +61,10 @@
     <flow name="api-main">
 #if ($Integer.parseInt($muleVersion)>=$Integer.parseInt($mule4Version))
         <httpn:httpn:error-response-builder config-ref="httpListenerConfig" path="/api/*">
-            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
-            <httpn:error-response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:httpn:error-response-builder>
+            <httpn:response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <httpn:error-response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:httpn:error-response-builder>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
 #else
 #if( $Integer.parseInt($muleVersion)>=$Integer.parseInt($listenerVersion ) )
 #if( $useSharedHttpListener )
@@ -85,10 +85,10 @@
     <flow name="api-console">
 #if ($Integer.parseInt($muleVersion)>=$Integer.parseInt($mule4Version))
         <httpn:listener config-ref="httpListenerConfig" path="/console/*">
-            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
-            <httpn:error-response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:httpn:error-response-builder>
+            <httpn:response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <httpn:error-response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:httpn:error-response-builder>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
 #else
 #if( $Integer.parseInt($muleVersion)>=$Integer.parseInt($listenerVersion ) )
 #if( $useSharedHttpListener )
@@ -133,34 +133,34 @@
     </apikit:mapping-exception-strategy>
 #else
     <error-handler name="defaultErrorHandler">
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotFoundException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.NotFoundException)]">
             <set-variable variableName="httpStatus" value="404"/>
-            <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
+            <expression-component>mel:flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
             <set-payload value="{ &quot;message&quot;: &quot;Resource not found&quot; }" />
         </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.MethodNotAllowedException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.MethodNotAllowedException)]">
             <set-variable variableName="httpStatus" value="405"/>
-            <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
+            <expression-component>mel:flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
             <set-payload value="{ &quot;message&quot;: &quot;Method not allowed&quot; }" />
         </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.UnsupportedMediaTypeException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.UnsupportedMediaTypeException)]">
             <set-variable variableName="httpStatus" value="415"/>
-            <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
+            <expression-component>mel:flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
             <set-payload value="{ &quot;message&quot;: &quot;Unsupported media type&quot; }" />
         </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.NotAcceptableException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.NotAcceptableException)]">
             <set-variable variableName="httpStatus" value="406"/>
-            <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
+            <expression-component>mel:flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
             <set-payload value="{ &quot;message&quot;: &quot;Not acceptable&quot; }" />
         </on-error-propagate>
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
             <set-variable variableName="httpStatus" value="400"/>
-            <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
+            <expression-component>mel:flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
             <set-payload value="{ &quot;message&quot;: &quot;Bad request&quot; }" />
         </on-error-propagate>
         <on-error-propagate>
             <set-variable variableName="httpStatus" value="500"/>
-            <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
+            <expression-component>mel:flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
             <set-payload value="{ &quot;message&quot;: &quot;Server error&quot; }" />
         </on-error-propagate>
     </error-handler>

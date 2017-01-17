@@ -17,10 +17,10 @@
 
     <flow name="api-main">
         <httpn:listener config-ref="httpListenerConfig" path="/api/*">
-            <httpn:response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:response-builder>
-            <httpn:error-response-builder statusCode="#[httpStatus]"><httpn:headers>#[_outboundHeaders_]</httpn:headers></httpn:error-response-builder>
+            <httpn:response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:response-builder>
+            <httpn:error-response-builder statusCode="#[mel:httpStatus]"><httpn:headers>#[mel:_outboundHeaders_]</httpn:headers></httpn:error-response-builder>
         </httpn:listener>
-        <set-variable variableName="_outboundHeaders_" value="#[new java.util.HashMap()]"/>
+        <set-variable variableName="_outboundHeaders_" value="#[mel:new java.util.HashMap()]"/>
         <apikit:router config-ref="apiConfig" />
     </flow>
 
@@ -29,10 +29,10 @@
     </flow>
 
     <error-handler name="defaultErrorHandler">
-        <on-error-propagate when="#[exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
+        <on-error-propagate when="#[mel:exception.causedBy(org.mule.module.apikit.exception.BadRequestException)]">
             <set-variable variableName="httpStatus" value="400"/>
-            <expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
-            <set-payload value="{&quot;error&quot;:&quot;#[exception.cause.message]&quot;}" mimeType="application/json"/>
+            <expression-component>mel:flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>
+            <set-payload value="{&quot;error&quot;:&quot;#[mel:exception.cause.message]&quot;}" mimeType="application/json"/>
         </on-error-propagate>
         <on-error-propagate>
             <set-variable variableName="httpStatus" value="500"/>
