@@ -111,7 +111,7 @@ public class ExceptionStrategyScope implements Scope {
             mapping.addContent(statusCode);
 
             Element setContentType = new Element("expression-component", XMLNS_NAMESPACE.getNamespace());
-            setContentType.setText("flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')");
+            setContentType.setText("mel:flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')");
             mapping.addContent(setContentType);
 
             Element setPayload = new Element("set-payload", XMLNS_NAMESPACE.getNamespace());

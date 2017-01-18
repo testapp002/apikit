@@ -90,7 +90,7 @@ public class ScaffolderWithExistingConfigMule4
         assertEquals(1, countOccurences(s, "post:/pet"));
         assertEquals(1, countOccurences(s, "get:/\""));
         assertEquals(1, countOccurences(s, "extensionEnabled=\"false\""));
-        assertEquals(1, countOccurences(s, "#[null]"));
+        assertEquals(1, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
@@ -127,7 +127,7 @@ public class ScaffolderWithExistingConfigMule4
         assertEquals(1, countOccurences(s, "post:/pet"));
         assertEquals(1, countOccurences(s, "get:/\""));
         assertEquals(1, countOccurences(s, "extensionEnabled=\"true\""));
-        assertEquals(1, countOccurences(s, "#[null]"));
+        assertEquals(1, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
@@ -164,7 +164,7 @@ public class ScaffolderWithExistingConfigMule4
         assertEquals(1, countOccurences(s, "post:/pet"));
         assertEquals(1, countOccurences(s, "get:/\""));
         assertEquals(0, countOccurences(s, "extensionEnabled"));
-        assertEquals(1, countOccurences(s, "#[null]"));
+        assertEquals(1, countOccurences(s, "#[mel:null]"));
      }
 
     @Test
@@ -198,7 +198,7 @@ public class ScaffolderWithExistingConfigMule4
         assertEquals(1, countOccurences(s, "post:/pet"));
         assertEquals(1, countOccurences(s, "get:/\""));
         assertEquals(0, countOccurences(s, "extensionEnabled"));
-        assertEquals(1, countOccurences(s, "#[null]"));
+        assertEquals(1, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
@@ -235,7 +235,7 @@ public class ScaffolderWithExistingConfigMule4
         assertEquals(1, countOccurences(s, "get:/\""));
         assertEquals(0, countOccurences(s, "extensionEnabled"));
         assertEquals(0, countOccurences(s, "#[NullPayload.getInstance()]"));
-        assertEquals(1, countOccurences(s, "#[null]"));
+        assertEquals(1, countOccurences(s, "#[mel:null]"));
 
     }
 
@@ -272,7 +272,7 @@ public class ScaffolderWithExistingConfigMule4
         assertEquals(1, countOccurences(s, "<httpn:listener config-ref=\"http-lc-0.0.0.0-8081\""));
         assertEquals(0, countOccurences(s, "extensionEnabled"));
         assertEquals(0, countOccurences(s, "#[NullPayload.getInstance()]"));
-        assertEquals(5, countOccurences(s, "#[null]"));
+        assertEquals(5, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
@@ -310,7 +310,7 @@ public class ScaffolderWithExistingConfigMule4
         assertEquals(0, newXmlConfigs.size());
         assertEquals(0, countOccurences(s, "extensionEnabled"));
         assertEquals(0, countOccurences(s, "#[NullPayload.getInstance()]"));
-        assertEquals(3, countOccurences(s, "#[null]"));
+        assertEquals(3, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
@@ -346,7 +346,7 @@ public class ScaffolderWithExistingConfigMule4
         assertTrue(!s.contains("post:/vet:application/xml"));
         assertEquals(0, countOccurences(s, "extensionEnabled"));
         assertEquals(0, countOccurences(s, "#[NullPayload.getInstance()]"));
-        assertEquals(5, countOccurences(s, "#[null]"));
+        assertEquals(5, countOccurences(s, "#[mel:null]"));
     }
 
     @Test

@@ -58,7 +58,7 @@ public class ConsoleFlowScope implements Scope {
 
                 Element setVariable = new Element("set-variable", XMLNS_NAMESPACE.getNamespace());
                 setVariable.setAttribute("variableName", "_outboundHeaders_");
-                setVariable.setAttribute("value", "#[new java.util.HashMap()]");
+                setVariable.setAttribute("value", "#[mel:new java.util.HashMap()]");
                 consoleFlow.addContent(setVariable);
             }
         }

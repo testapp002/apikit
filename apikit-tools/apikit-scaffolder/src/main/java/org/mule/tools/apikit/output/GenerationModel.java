@@ -26,7 +26,7 @@ public class GenerationModel implements Comparable<GenerationModel> {
 
     private static final char FLOW_NAME_SEPARATOR = ':';
     public static final String DEFAULT_TEXT = "#[NullPayload.getInstance()]";
-    public static final String DEFAULT_TEXT_MULE_4 = "#[null]";
+    public static final String DEFAULT_TEXT_MULE_4 = "#[mel:null]";
 
     private final String verb;
     private IAction action;

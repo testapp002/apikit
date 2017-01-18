@@ -71,7 +71,7 @@ public class ScaffolderTest {
         assertEquals(0, countOccurences(s, "extensionEnabled"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
-        assertEquals(0, countOccurences(s, "#[null]"));
+        assertEquals(0, countOccurences(s, "#[mel:null]"));
         assertEquals(2, countOccurences(s, "#[NullPayload.getInstance()]"));
         assertEquals(3, countOccurences(s, "exception-strategy"));
         assertEquals(0, countOccurences(s, "error-handler name=\"simpleV10-apiKitGlobalExceptionMapping\""));
@@ -102,7 +102,7 @@ public class ScaffolderTest {
         assertNotNull(s);
         assertEquals(1, countOccurences(s, "post:/Queue:application/json:api-config"));
         assertEquals(1, countOccurences(s, "post:/Queue:text/xml:api-config"));
-        assertEquals(0, countOccurences(s, "#[null]"));
+        assertEquals(0, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
@@ -120,7 +120,7 @@ public class ScaffolderTest {
         assertNotNull(s);
         assertEquals(1, countOccurences(s, "post:/Queue:application/json:api-config"));
         assertEquals(1, countOccurences(s, "post:/Queue:text/xml:api-config"));
-        assertEquals(0, countOccurences(s, "#[null]"));
+        assertEquals(0, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
@@ -141,7 +141,7 @@ public class ScaffolderTest {
         assertEquals(1, countOccurences(s, "extensionEnabled"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
-        assertEquals(0, countOccurences(s, "#[null]"));
+        assertEquals(0, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
@@ -168,7 +168,7 @@ public class ScaffolderTest {
         assertEquals(0, countOccurences(s, "extensionEnabled"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
-        assertEquals(0, countOccurences(s, "#[null]"));
+        assertEquals(0, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
@@ -195,7 +195,7 @@ public class ScaffolderTest {
         assertEquals(0, countOccurences(s, "extensionEnabled"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
-        assertEquals(0, countOccurences(s, "#[null]"));
+        assertEquals(0, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
@@ -222,7 +222,7 @@ public class ScaffolderTest {
         assertEquals(0, countOccurences(s, "extensionEnabled"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
-        assertEquals(0, countOccurences(s, "#[null]"));
+        assertEquals(0, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
@@ -250,7 +250,7 @@ public class ScaffolderTest {
         assertEquals(1, countOccurences(s, "extensionEnabled"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
-        assertEquals(0, countOccurences(s, "#[null]"));
+        assertEquals(0, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
@@ -277,7 +277,7 @@ public class ScaffolderTest {
         assertEquals(0, countOccurences(s, "extensionEnabled"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
-        assertEquals(0, countOccurences(s, "#[null]"));
+        assertEquals(0, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
@@ -305,7 +305,7 @@ public class ScaffolderTest {
         assertEquals(1, countOccurences(s, "extensionEnabled"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
-        assertEquals(0, countOccurences(s, "#[null]"));
+        assertEquals(0, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
@@ -331,7 +331,7 @@ public class ScaffolderTest {
         assertEquals(1, countOccurences(s, "get:/pet:simple-config"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
-        assertEquals(0, countOccurences(s, "#[null]"));
+        assertEquals(0, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
@@ -356,7 +356,7 @@ public class ScaffolderTest {
         assertEquals(1, countOccurences(s, "get:/pet:simple-config"));
         assertEquals(1, countOccurences(s, "<apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
-        assertEquals(0, countOccurences(s, "#[null]"));
+        assertEquals(0, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
@@ -383,7 +383,7 @@ public class ScaffolderTest {
 
         assertEquals(1, countOccurences(s, "get:/car:two-config"));
         assertEquals(1, countOccurences(s, "post:/car:two-config"));
-        assertEquals(0, countOccurences(s, "#[null]"));
+        assertEquals(0, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
@@ -408,7 +408,7 @@ public class ScaffolderTest {
         assertEquals(1, countOccurences(s, "get:/pet/owner:nested-config"));
         assertEquals(1, countOccurences(s, "get:/car:nested-config"));
         assertEquals(1, countOccurences(s, "post:/car:nested-config"));
-        assertEquals(0, countOccurences(s, "#[null]"));
+        assertEquals(0, countOccurences(s, "#[mel:null]"));
     }
 
     @Test

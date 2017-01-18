@@ -89,7 +89,7 @@ public class ScaffolderWithExistingConfig
         assertEquals(1, countOccurences(s, "post:/pet"));
         assertEquals(1, countOccurences(s, "get:/\""));
         assertEquals(1, countOccurences(s, "extensionEnabled=\"false\""));
-        assertEquals(0, countOccurences(s, "#[null]"));
+        assertEquals(0, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
@@ -194,7 +194,7 @@ public class ScaffolderWithExistingConfig
         assertEquals(1, countOccurences(s, "post:/pet"));
         assertEquals(1, countOccurences(s, "get:/\""));
         assertEquals(0, countOccurences(s, "extensionEnabled"));
-        assertEquals(0, countOccurences(s, "#[null]"));
+        assertEquals(0, countOccurences(s, "#[mel:null]"));
     }
 
     @Test
