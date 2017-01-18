@@ -33,7 +33,6 @@ import org.mule.raml.interfaces.model.IResponse;
 import org.mule.raml.interfaces.model.parameter.IParameter;
 import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.api.message.Message;
-import org.mule.runtime.api.message.MuleEvent;
 import org.mule.runtime.api.message.MultiPartPayload;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
@@ -68,13 +67,13 @@ public class HttpRestRequest
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-    protected MuleEvent requestEvent;
+    protected Event requestEvent;
     protected AbstractConfiguration config;
     protected IAction action;
     protected HttpProtocolAdapter adapter;
     protected MuleContext muleContext;
 
-    public HttpRestRequest(MuleEvent event, MuleContext muleContext, AbstractConfiguration config)
+    public HttpRestRequest(Event event, MuleContext muleContext, AbstractConfiguration config)
     {
         requestEvent = event;
         this.config = config;
@@ -116,7 +115,7 @@ public class HttpRestRequest
      * @return the updated Mule Event
      * @throws MuleException
      */
-    public MuleEvent validate(IAction action) throws MuleException
+    public Event validate(IAction action) throws MuleException
     {
         this.action = action;
         if (!config.isDisableValidations())

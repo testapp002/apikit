@@ -7,7 +7,6 @@
 package org.mule.module.apikit.spi;
 
 import org.mule.runtime.api.exception.MuleException;
-import org.mule.runtime.api.message.MuleEvent;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.processor.Processor;
 
@@ -31,6 +30,6 @@ public interface RouterService
      * @param event
      * @return
      */
-    boolean isExecutable(MuleEvent event);
+    boolean isExecutable(Event event);
 
 }

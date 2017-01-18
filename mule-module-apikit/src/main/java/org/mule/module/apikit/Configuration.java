@@ -11,7 +11,6 @@ import org.mule.module.apikit.transform.ApikitResponseTransformer;
 import org.mule.raml.interfaces.model.IAction;
 import org.mule.raml.interfaces.model.IResource;
 import org.mule.runtime.api.exception.MuleException;
-import org.mule.runtime.api.message.MuleEvent;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.processor.DynamicPipelineException;
@@ -75,7 +74,7 @@ public class Configuration extends AbstractConfiguration
     }
 
     @Override
-    protected HttpRestRequest getHttpRestRequest(MuleEvent event)
+    protected HttpRestRequest getHttpRestRequest(Event event)
     {
         return new HttpRestRequest(event, muleContext, this);
     }

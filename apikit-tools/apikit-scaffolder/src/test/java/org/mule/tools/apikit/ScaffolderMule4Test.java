@@ -77,9 +77,10 @@ public class ScaffolderMule4Test {
         assertEquals(1, countOccurences(s, "apikit:console"));
         assertEquals(1, countOccurences(s, "consoleEnabled=\"false\""));
         assertEquals(0, countOccurences(s, "#[NullPayload.getInstance()]"));
-        assertEquals(2, countOccurences(s, "#[null]"));
+        assertEquals(2, countOccurences(s, "#[mel:null]"));
+        assertEquals(0, countOccurences(s, "#[null]"));
         assertEquals(2, countOccurences(s, "error-handler name=\"simple"));
-        assertEquals(5, countOccurences(s, "expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>"));
+        assertEquals(5, countOccurences(s, "mel:expression-component>flowVars['_outboundHeaders_'].put('Content-Type', 'application/json')</expression-component>"));
         assertEquals(2, countOccurences(s, "set-variable variableName=\"_outboundHeaders_\" value=\"#[new java.util.HashMap()]\" />"));
         assertEquals(0, countOccurences(s, "exception-strategy"));
     }
@@ -106,7 +107,7 @@ public class ScaffolderMule4Test {
         assertEquals(1, countOccurences(s, "post:/Queue:application/json:api-config"));
         assertEquals(1, countOccurences(s, "post:/Queue:text/xml:api-config"));
         assertEquals(0, countOccurences(s, "#[NullPayload.getInstance()]"));
-        assertEquals(2, countOccurences(s, "#[null]"));
+        assertEquals(2, countOccurences(s, "#[mel:null]"));
 
     }
 

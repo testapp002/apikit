@@ -21,7 +21,6 @@ import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.api.lifecycle.Initialisable;
 import org.mule.runtime.api.lifecycle.InitialisationException;
 import org.mule.runtime.api.lifecycle.Startable;
-import org.mule.runtime.api.message.MuleEvent;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.config.MuleProperties;
@@ -278,7 +277,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         return hostRaml;
     }
 
-    public String getApikitRaml(MuleEvent event)
+    public String getApikitRaml(Event event)
     {
         return getApikitRaml(getBaseSchemeHostPort((Event)event));
     }
@@ -288,7 +287,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
      * only when the bind to all interfaces ip (0.0.0.0) is used for the router endpoint.
      * Otherwise it uses the router endpoint address as it is
      */
-    public String getApikitRamlConsole(MuleEvent event)
+    public String getApikitRamlConsole(Event event)
     {
         String schemeHostPort = baseSchemeHostPort;
         String bindAllInterfaces = "0.0.0.0";
@@ -470,7 +469,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         this.raml = raml;
     }
 
-    public IAction getEventAction(MuleEvent event)
+    public IAction getEventAction(Event event)
     {
         HttpRestRequest request = getHttpRestRequest(event);
         String path = request.getResourcePath();
@@ -487,7 +486,7 @@ public abstract class AbstractConfiguration implements Initialisable, MuleContex
         return resource.getAction(request.getMethod());
     }
 
-    protected abstract HttpRestRequest getHttpRestRequest(MuleEvent muleEvent);
+    protected abstract HttpRestRequest getHttpRestRequest(Event muleEvent);
 
     public static Collection<AbstractConfiguration> getAllConfigurations(MuleContext muleContext)
     {
