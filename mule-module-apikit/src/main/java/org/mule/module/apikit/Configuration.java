@@ -13,7 +13,7 @@ import org.mule.raml.interfaces.model.IResource;
 import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.MuleContext;
-import org.mule.runtime.core.api.processor.DynamicPipelineException;
+//import org.mule.runtime.core.api.processor.DynamicPipelineException;
 import org.mule.runtime.core.api.processor.Processor;
 import org.mule.runtime.core.construct.Flow;
 
@@ -164,25 +164,25 @@ public class Configuration extends AbstractConfiguration
         }
     }
 
-    private void addResponseTransformers(Collection<Flow> flows)
-    {
-        for (Flow flow : flows)
-        {
-
-            try
-            {
-                flow.dynamicPipeline(null).injectAfter(new ApikitResponseTransformer()).resetAndUpdate();
-            }
-            catch (DynamicPipelineException e)
-            {
-                //ignore, transformer already added
-            }
-            catch (MuleException e)
-            {
-                throw new ApikitRuntimeException(e);
-            }
-        }
-    }
+    //private void addResponseTransformers(Collection<Flow> flows)
+    //{
+    //    for (Flow flow : flows)
+    //    {
+    //
+    //        try
+    //        {
+    //            flow.dynamicPipeline(null).injectAfter(new ApikitResponseTransformer()).resetAndUpdate();
+    //        }
+    //        catch (DynamicPipelineException e)
+    //        {
+    //            //ignore, transformer already added
+    //        }
+    //        catch (MuleException e)
+    //        {
+    //            throw new ApikitRuntimeException(e);
+    //        }
+    //    }
+    //}
 
     @Override
     public Set<String> getFlowActionRefs(Flow flow)
@@ -345,9 +345,9 @@ public class Configuration extends AbstractConfiguration
         }
     }
 
-    @Override
-    public void start() throws MuleException
-    {
-        addResponseTransformers(restFlowMap.values());
-    }
+    //@Override
+    //public void start() throws MuleException
+    //{
+    //    addResponseTransformers(restFlowMap.values());
+    //}
 }

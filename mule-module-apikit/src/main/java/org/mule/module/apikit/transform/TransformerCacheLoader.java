@@ -13,8 +13,8 @@ import org.mule.runtime.api.metadata.MediaType;
 import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.core.api.transformer.Transformer;
 import org.mule.runtime.core.internal.transformer.simple.ObjectToString;
-import org.mule.runtime.module.json.transformers.JsonToObject;
-import org.mule.runtime.module.json.transformers.ObjectToJson;
+//import org.mule.runtime.module.json.transformers.JsonToObject;
+//import org.mule.runtime.module.json.transformers.ObjectToJson;
 import org.mule.runtime.module.xml.transformer.jaxb.JAXBMarshallerTransformer;
 import org.mule.runtime.module.xml.transformer.jaxb.JAXBUnmarshallerTransformer;
 
@@ -28,7 +28,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
+//import org.codehaus.jackson.map.ObjectMapper;
 
 public class TransformerCacheLoader extends CacheLoader<DataTypePair, Transformer>
 {
@@ -52,24 +52,25 @@ public class TransformerCacheLoader extends CacheLoader<DataTypePair, Transforme
                                              DataType sourceDataType,
                                              DataType resultDataType) throws MuleException
     {
-        if (isJson(sourceDataType))
-        {
-            JsonToObject jto = new JsonToObject();
-            jto.setReturnDataType(resultDataType);
-            jto.setMapper(new ObjectMapper());
-            muleContext.getRegistry().applyProcessorsAndLifecycle(jto);
-            return jto;
-        }
-        else if (isJson(resultDataType))
-        {
-            ObjectToJson otj = new ObjectToJson();
-            otj.setSourceClass(sourceDataType.getType());
-            otj.setReturnDataType(resultDataType);
-            otj.setMapper(new ObjectMapper());
-            muleContext.getRegistry().applyProcessorsAndLifecycle(otj);
-            return otj;
-        }
-        else if (isXml(sourceDataType))
+        //if (isJson(sourceDataType))
+        //{
+        //    JsonToObject jto = new JsonToObject();
+        //    jto.setReturnDataType(resultDataType);
+        //    jto.setMapper(new ObjectMapper());
+        //    muleContext.getRegistry().applyProcessorsAndLifecycle(jto);
+        //    return jto;
+        //}
+        //else if (isJson(resultDataType))
+        //{
+        //    ObjectToJson otj = new ObjectToJson();
+        //    otj.setSourceClass(sourceDataType.getType());
+        //    otj.setReturnDataType(resultDataType);
+        //    otj.setMapper(new ObjectMapper());
+        //    muleContext.getRegistry().applyProcessorsAndLifecycle(otj);
+        //    return otj;
+        //}
+        //else
+        if (isXml(sourceDataType))
         {
             try
             {
